@@ -1,4 +1,4 @@
-module HtmlMockup
+module Roger
   # Loader for mockupfile
   class Mockupfile
     

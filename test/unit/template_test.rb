@@ -3,7 +3,7 @@
 require "./lib/html_mockup/template.rb"
 require "test/unit"
 
-module HtmlMockup
+module Roger
   class TemplateTest < Test::Unit::TestCase
     def setup
       @base = Pathname.new(File.dirname(__FILE__) + "/../project")

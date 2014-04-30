@@ -1,11 +1,11 @@
-# HtmlMockup
+# Roger
 
 [![Gem Version](https://badge.fury.io/rb/html_mockup.png)](http://badge.fury.io/rb/html_mockup)
 [![Build Status](https://travis-ci.org/DigitPaint/html_mockup.png?branch=master)](https://travis-ci.org/DigitPaint/html_mockup)
 
 ## What is it?
 
-HtmlMockup is your friendly front-end development toolbox! It helps you with these 4 things:
+Roger is your friendly front-end development toolbox! It helps you with these 4 things:
 
 1. **Generate** : Set up your projects
 1. **Serve** : Development server
@@ -16,7 +16,7 @@ HtmlMockup is your friendly front-end development toolbox! It helps you with the
 
 We assume you have a working Ruby 1.9.x or higher running.
 
-1. Install HtmlMockup
+1. Install Roger
 
     ```shell
     gem install html_mockup
@@ -48,15 +48,15 @@ We assume you have a working Ruby 1.9.x or higher running.
 
 Read more documentation:
 
-* [**Templating** Learn the power of HtmlMockup built in templating](doc/templating.md)
+* [**Templating** Learn the power of Roger built in templating](doc/templating.md)
 * [**CLI** Learn about the different `mockup` commands](doc/cli.md)
 * [**Mockupfile** Learn how to configure and extend your Project](doc/mockupfile.md)
 
 ## Why?
 
-When we started with HtmlMockup there was no Grunt/Gulp/whatever and with us being a Ruby shop we wrote HtmlMockup. Since its beginning it has evolved into quite a powerful tool. 
+When we started with Roger there was no Grunt/Gulp/whatever and with us being a Ruby shop we wrote Roger. Since its beginning it has evolved into quite a powerful tool. 
 
-Why would HtmlMockup be better than any other?
+Why would Roger be better than any other?
 It's not it just does some things differently.
 
 * Ruby

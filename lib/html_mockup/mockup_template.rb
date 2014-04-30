@@ -3,7 +3,7 @@ require 'strscan'
 require 'cgi'
 require 'tilt/template'
 
-module HtmlMockup
+module Roger
 
   class MockupTemplate < Tilt::Template
     
@@ -93,5 +93,5 @@ module HtmlMockup
 
 end
 
-Tilt.register HtmlMockup::MockupTemplate, "html"
-Tilt.prefer HtmlMockup::MockupTemplate
+Tilt.register Roger::MockupTemplate, "html"
+Tilt.prefer Roger::MockupTemplate

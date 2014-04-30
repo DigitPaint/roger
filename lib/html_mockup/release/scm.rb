@@ -1,4 +1,4 @@
-module HtmlMockup::Release::Scm
+module Roger::Release::Scm
   class Base
     
     attr_reader :config
@@ -21,7 +21,7 @@ module HtmlMockup::Release::Scm
     
     # Returns a Release::Scm object with the previous version's data
     #
-    # @return HtmlMockup::Release::Scm The previous version
+    # @return Roger::Release::Scm The previous version
     def previous
       raise "Implement in subclass"      
     end

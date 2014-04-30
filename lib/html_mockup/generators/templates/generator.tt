@@ -1,4 +1,4 @@
-class <%= name.capitalize %>Generator < HtmlMockup::Generators::Base
+class <%= name.capitalize %>Generator < Roger::Generators::Base
   
   include Thor::Actions
   
@@ -10,4 +10,4 @@ class <%= name.capitalize %>Generator < HtmlMockup::Generators::Base
   end
 end
 
-HtmlMockup::Generators::Base.register <%= name.capitalize %>Generator
+Roger::Generators::Base.register <%= name.capitalize %>Generator

@@ -2,7 +2,7 @@
 
 ## Directories
 
-Before we get started, it's good to know that there are a couple of "special" folders within any HtmlMockup project. Don't worry, you can configure these; they're not hard-coded. The folders are:
+Before we get started, it's good to know that there are a couple of "special" folders within any Roger project. Don't worry, you can configure these; they're not hard-coded. The folders are:
 
 * **project-path** this is the main directory containing the Mockupfile and all other directories.
 * **html-path** this is the directory where all your HTML/CSS/Javascript will go (in subdirectories of course).

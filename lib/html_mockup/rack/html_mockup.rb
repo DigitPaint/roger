@@ -4,10 +4,10 @@ require 'rack/file'
 
 require File.dirname(__FILE__) + '/../resolver'
 
-module HtmlMockup
+module Roger
   module Rack
     
-    class HtmlMockup
+    class Roger
       
       attr_reader :project
       
@@ -26,7 +26,7 @@ module HtmlMockup
         if template_path = @resolver.url_to_path(url)
           env["rack.errors"].puts "Rendering template #{template_path.inspect} (#{url.inspect})"
           # begin
-            templ = ::HtmlMockup::Template.open(template_path, :partials_path => @project.partials_path, :layouts_path => @project.layouts_path)
+            templ = ::Roger::Template.open(template_path, :partials_path => @project.partials_path, :layouts_path => @project.layouts_path)
             mime = ::Rack::Mime.mime_type(File.extname(template_path), 'text/html')
             resp = ::Rack::Response.new do |res|
               res.headers["Content-Type"] = mime if mime

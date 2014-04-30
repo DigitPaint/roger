@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '../../../resolver'
 
-module HtmlMockup::Release::Processors
+module Roger::Release::Processors
   class UrlRelativizer < Base
     
     def initialize(options={})
@@ -18,7 +18,7 @@ module HtmlMockup::Release::Processors
       
       release.log(self, "Relativizing all URLS in #{options[:match].inspect} files in attributes #{options[:url_attributes].inspect}, skipping #{options[:skip].any? ? options[:skip].inspect : "none" }")
       
-      @resolver = HtmlMockup::Resolver.new(release.build_path)
+      @resolver = Roger::Resolver.new(release.build_path)
      release.get_files(options[:match], options[:skip]).each do |file_path|
         release.debug(self, "Relativizing URLS in #{file_path}") do
           orig_source = File.read(file_path)

@@ -1,7 +1,7 @@
 require 'hpricot'
 require File.dirname(__FILE__) + '/resolver'
 
-module HtmlMockup
+module Roger
   
   # @deprecated Don't use the extractor anymore, use release.use(:mockup, options) processor and release.use(:url_relativizer, options) processor
   class Extractor
@@ -61,7 +61,7 @@ module HtmlMockup
     
     # Runs the extractor on a single file and return processed source.
     def extract_source_from_file(file_path, env = {})
-      source = HtmlMockup::Template.open(file_path, :partials_path => self.project.partial_path, :layouts_path => self.project.layouts_path).render(env.dup)
+      source = Roger::Template.open(file_path, :partials_path => self.project.partial_path, :layouts_path => self.project.layouts_path).render(env.dup)
 
       if @options[:url_relativize]
         source = relativize_urls(source, file_path)

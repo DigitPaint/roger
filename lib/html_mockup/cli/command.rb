@@ -1,4 +1,4 @@
-module HtmlMockup
+module Roger
 
   class Cli::Command < Thor::Group
 

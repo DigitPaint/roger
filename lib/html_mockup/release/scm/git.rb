@@ -1,6 +1,6 @@
 require 'pathname'
 
-module HtmlMockup::Release::Scm
+module Roger::Release::Scm
   class Git < Base
     
     # @option config [String] :ref Ref to use for current tag

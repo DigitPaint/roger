@@ -1,7 +1,7 @@
 require 'rack/request'
 require 'rack/response'
 
-module HtmlMockup
+module Roger
   module Rack
     class HtmlValidator
       def initialize(app)

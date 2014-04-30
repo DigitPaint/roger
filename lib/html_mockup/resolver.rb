@@ -1,4 +1,4 @@
-module HtmlMockup
+module Roger
   class Resolver
 
     attr_reader :load_paths

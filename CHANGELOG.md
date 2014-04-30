@@ -4,7 +4,7 @@
 * More documentation!
 * More tests! (and CI!)
 * Thor and Tilt updates
-* Add possibility to load external generators from gems (with the `HtmlMockup::Generators::Base.register` method)
+* Add possibility to load external generators from gems (with the `Roger::Generators::Base.register` method)
 * Partials now automatically prefer templates of the same extension as the parent
 * ERB Templates now support `content_for(:name) do ... end` blocks which can be yielded by `:name` in the layout
 * Multiple load paths for partials are now supported

@@ -2,11 +2,11 @@
 require "./lib/html_mockup/resolver.rb"
 require "test/unit"
 
-module HtmlMockup
+module Roger
   class ResolverTest < Test::Unit::TestCase
     def setup
       @base = Pathname.new(File.dirname(__FILE__) + "/../project/html")
-      @resolver = HtmlMockup::Resolver.new(@base)
+      @resolver = Roger::Resolver.new(@base)
     end
 
     def test_find_template_path
@@ -61,7 +61,7 @@ module HtmlMockup
   class ResolverMultipleTest < Test::Unit::TestCase
     def setup
       @base = Pathname.new(File.dirname(__FILE__) + "/../project")
-      @resolver = HtmlMockup::Resolver.new([@base + "html", @base + "partials"])
+      @resolver = Roger::Resolver.new([@base + "html", @base + "partials"])
     end
 
     def test_add_load_path

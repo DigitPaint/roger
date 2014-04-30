@@ -1,7 +1,7 @@
 require 'thor'
 require 'thor/group'
 
-module HtmlMockup
+module Roger
   module Generators
 
     class Base < Cli::Command

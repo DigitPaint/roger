@@ -1,4 +1,4 @@
-module HtmlMockup
+module Roger
   class Release::Cleaner
     def initialize(pattern)
       @pattern = pattern

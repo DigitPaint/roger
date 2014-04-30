@@ -7,7 +7,7 @@ require File.dirname(__FILE__) + "/rack/html_validator"
 require 'webrick'
 require 'webrick/https'
 
-module HtmlMockup
+module Roger
   class Server
     
     attr_reader :options, :server_options
@@ -57,7 +57,7 @@ module HtmlMockup
         trap(:INT) do
           ## Use thins' hard #stop! if available, otherwise just #stop
           server.respond_to?(:stop!) ? server.stop! : server.stop
-          puts "Bby HtmlMockup"
+          puts "Bby Roger"
         end
       end
     end
@@ -74,7 +74,7 @@ module HtmlMockup
       return @app if @app
       
       @stack.use Rack::HtmlValidator if self.options[:validate]
-      @stack.run Rack::HtmlMockup.new(self.project)
+      @stack.run Rack::Roger.new(self.project)
       
       @app = @stack
     end    

@@ -1,4 +1,4 @@
-module HtmlMockup
+module Roger
   class Cli::Serve < Cli::Command
 
 
@@ -20,7 +20,7 @@ module HtmlMockup
       server = @project.server
       server.set_options(server_options[:server])
       
-      puts "Running HtmlMockup with #{server.handler.inspect} on port #{server.port}"
+      puts "Running Roger with #{server.handler.inspect} on port #{server.port}"
       puts project_banner(@project) 
       
       server.run!

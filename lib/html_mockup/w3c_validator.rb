@@ -3,7 +3,7 @@ require 'net/http'
 require 'uri'
 require 'yaml'
 
-module HtmlMockup
+module Roger
   class W3CValidator
   
     ValidationUri = "http://validator.w3.org/check"

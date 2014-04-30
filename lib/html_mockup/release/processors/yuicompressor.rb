@@ -1,7 +1,7 @@
 # Use the ruby-yui-compressor gem.
 require 'yui/compressor'
 
-module HtmlMockup::Release::Processors
+module Roger::Release::Processors
   class Yuicompressor < Base
     
     # Compresses all JS and CSS files, it will keep all lines before

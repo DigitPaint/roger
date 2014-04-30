@@ -1,4 +1,4 @@
-module HtmlMockup::Release::Finalizers
+module Roger::Release::Finalizers
   
   class Zip < Base
     

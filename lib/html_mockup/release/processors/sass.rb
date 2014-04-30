@@ -1,7 +1,7 @@
 # Use the sass gem
 require 'sass'
 
-module HtmlMockup::Release::Processors
+module Roger::Release::Processors
   class Sass < Base
     # @param [Hash] options Options as described below, all other options will be passed to Sass.compile_file.
     #

@@ -8,7 +8,7 @@ class RequireJsTest < Test::Unit::TestCase
     # When the user points the requirejs processer to a wrong file
     # it should throw an RunTimeError
     options = {:rjs => "s.js"}
-    requirejs_processor = HtmlMockup::Release::Processors::Requirejs.new(options)
+    requirejs_processor = Roger::Release::Processors::Requirejs.new(options)
     rjs = options[:rjs]
 
     rjs_command = ''
@@ -25,7 +25,7 @@ class RequireJsTest < Test::Unit::TestCase
   
   def test_require_js_bin
     # When no default require.js path is given we expect it to be r.js availble in $PATH
-    requirejs_processor = HtmlMockup::Release::Processors::Requirejs.new
+    requirejs_processor = Roger::Release::Processors::Requirejs.new
     rjs = "r.js" # Default r.js by npm
 
     begin
@@ -45,7 +45,7 @@ class RequireJsTest < Test::Unit::TestCase
     # the user is expected to point to a correct r.js file if he
     # doesn't want to use the r.js shipped with npm
     options = {:rjs => __FILE__}
-    requirejs_processor = HtmlMockup::Release::Processors::Requirejs.new(options)
+    requirejs_processor = Roger::Release::Processors::Requirejs.new(options)
     rjs = options[:rjs]
 
     rjs_command = ''

@@ -2,7 +2,7 @@ require File.dirname(__FILE__) + "/release"
 require File.dirname(__FILE__) + "/server"
 require File.dirname(__FILE__) + "/mockupfile"
 
-module HtmlMockup
+module Roger
   # Loader for mockupfile and project dependencies
   class Project
     

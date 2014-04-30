@@ -1,4 +1,4 @@
-module HtmlMockup::Release::Processors
+module Roger::Release::Processors
   class Base
     
     def initialize(options = {})

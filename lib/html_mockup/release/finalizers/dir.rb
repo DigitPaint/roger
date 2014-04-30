@@ -1,6 +1,6 @@
 require 'fileutils'
 
-module HtmlMockup::Release::Finalizers
+module Roger::Release::Finalizers
   
   # Finalizes the release into a directory in target_path
   # 

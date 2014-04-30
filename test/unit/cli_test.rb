@@ -1,7 +1,7 @@
 require "./lib/html_mockup/cli.rb"
 require "test/unit"
 
-module HtmlMockup
+module Roger
   class CliTest < Test::Unit::TestCase
 
     def test_register_generators

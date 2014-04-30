@@ -1,6 +1,6 @@
 # Finalizes the release into a specific branch of a repository and pushes it
 #
-class GitBranch < HtmlMockup::Release::Finalizers::Base
+class GitBranch < Roger::Release::Finalizers::Base
  
   # @param Hash options The options
   #

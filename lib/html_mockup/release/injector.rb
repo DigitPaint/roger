@@ -1,5 +1,5 @@
 require 'tilt'
-module HtmlMockup
+module Roger
   
   # Inject VERSION / DATE (i.e. in TOC)
   # r.inject({"VERSION" => release.version, "DATE" => release.date}, :into => %w{_doc/toc.html})

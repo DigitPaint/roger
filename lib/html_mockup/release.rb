@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + "/cli"
 
-module HtmlMockup
+module Roger
   class Release
     
     attr_reader :config, :project
@@ -14,7 +14,7 @@ module HtmlMockup
       end    
     
       def default_finalizers
-        [[self.get_callable(:dir, HtmlMockup::Release::Finalizers), {}]]
+        [[self.get_callable(:dir, Roger::Release::Finalizers), {}]]
       end
             
       # Makes callable into a object that responds to call. 
@@ -122,7 +122,7 @@ module HtmlMockup
     # @examples
     #   release.use :sprockets, sprockets_config
     def use(processor, options = {})
-      @stack << [self.class.get_callable(processor, HtmlMockup::Release::Processors), options]
+      @stack << [self.class.get_callable(processor, Roger::Release::Processors), options]
     end
     
     # Write out the whole release into a directory, zip file or anything you can imagine
@@ -135,7 +135,7 @@ module HtmlMockup
     # @examples
     #   release.finalize :zip
     def finalize(finalizer, options = {})
-      @finalizers << [self.class.get_callable(finalizer, HtmlMockup::Release::Finalizers), options]
+      @finalizers << [self.class.get_callable(finalizer, Roger::Release::Finalizers), options]
     end
     
     # Files to clean up in the build directory just before finalization happens
@@ -288,9 +288,9 @@ module HtmlMockup
         run_relativizer = @extractor_options[:url_relativize]
       end
       
-      unless @stack.find{|(processor, options)| processor.class == HtmlMockup::Release::Processors::Mockup }
-        @stack.unshift([HtmlMockup::Release::Processors::UrlRelativizer.new, relativizer_options])        
-        @stack.unshift([HtmlMockup::Release::Processors::Mockup.new, mockup_options])
+      unless @stack.find{|(processor, options)| processor.class == Roger::Release::Processors::Mockup }
+        @stack.unshift([Roger::Release::Processors::UrlRelativizer.new, relativizer_options])        
+        @stack.unshift([Roger::Release::Processors::Mockup.new, mockup_options])
       end
     end
     

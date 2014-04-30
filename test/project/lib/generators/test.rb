@@ -1,4 +1,4 @@
-class TestGenerator < HtmlMockup::Generators::Base
+class TestGenerator < Roger::Generators::Base
 
   def do
     puts "Done!"
@@ -6,4 +6,4 @@ class TestGenerator < HtmlMockup::Generators::Base
 
 end
 
-HtmlMockup::Generators::Base.register TestGenerator
+Roger::Generators::Base.register TestGenerator

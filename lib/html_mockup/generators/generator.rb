@@ -1,4 +1,4 @@
-class HtmlMockup::Generators::GeneratorGenerator < HtmlMockup::Generators::Base
+class Roger::Generators::GeneratorGenerator < Roger::Generators::Base
   
   include Thor::Actions
   
@@ -20,4 +20,4 @@ class HtmlMockup::Generators::GeneratorGenerator < HtmlMockup::Generators::Base
   
 end
 
-HtmlMockup::Generators::Base.register HtmlMockup::Generators::GeneratorGenerator
+Roger::Generators::Base.register Roger::Generators::GeneratorGenerator

@@ -1,4 +1,4 @@
-module HtmlMockup::Release::Processors
+module Roger::Release::Processors
   class Mockup < Base
     
     attr_accessor :project
@@ -35,7 +35,7 @@ module HtmlMockup::Release::Processors
     
     
     def run_on_file!(file_path, env = {})
-      template = HtmlMockup::Template.open(file_path, :partials_path => self.project.partial_path, :layouts_path => self.project.layouts_path)
+      template = Roger::Template.open(file_path, :partials_path => self.project.partial_path, :layouts_path => self.project.layouts_path)
       
       # Clean up source file
       FileUtils.rm(file_path)
@@ -46,7 +46,7 @@ module HtmlMockup::Release::Processors
     
     # Runs the extractor on a single file and return processed source.
     def extract_source_from_file(file_path, env = {})
-      HtmlMockup::Template.open(file_path, :partials_path => self.project.partial_path, :layouts_path => self.project.layouts_path).render(env.dup)
+      Roger::Template.open(file_path, :partials_path => self.project.partial_path, :layouts_path => self.project.layouts_path).render(env.dup)
     end    
     
     protected

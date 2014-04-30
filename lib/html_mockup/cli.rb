@@ -18,7 +18,7 @@ require File.dirname(__FILE__) + "/project"
 require File.dirname(__FILE__) + "/w3c_validator"
 
 
-module HtmlMockup
+module Roger
   module Cli; end
 end
 
@@ -30,7 +30,7 @@ require File.dirname(__FILE__) + "/cli/generate"
 require File.dirname(__FILE__) + "/generators"
 
 
-module HtmlMockup
+module Roger
   class Cli::Base < Thor
 
     def initialize(*args)

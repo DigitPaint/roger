@@ -5,7 +5,7 @@ require "test/unit"
 module CustomGens
   module Generators
 
-    class MockedGenerator < HtmlMockup::Generators::Base
+    class MockedGenerator < Roger::Generators::Base
 
       desc "@mocked description"
       argument :path, :type => :string, :required => false, :desc => "Path to generate mockup into"
@@ -17,7 +17,7 @@ module CustomGens
       end
     end
 
-    class MockedWithProjectGenerator < HtmlMockup::Generators::Base
+    class MockedWithProjectGenerator < Roger::Generators::Base
 
       desc "Returns a project"
       def test
@@ -29,14 +29,14 @@ module CustomGens
   end
 end
 
-module HtmlMockup
+module Roger
   class GeneratorTest < Test::Unit::TestCase
     def setup
       @cli = Cli::Base.new
     end
 
     def test_working_project
-      HtmlMockup::Generators::Base.register CustomGens::Generators::MockedWithProjectGenerator
+      Roger::Generators::Base.register CustomGens::Generators::MockedWithProjectGenerator
       generators = Cli::Generate.new
 
       assert_raise StandardError do
@@ -45,7 +45,7 @@ module HtmlMockup
     end
 
     def test_register_generator
-      HtmlMockup::Generators::Base.register CustomGens::Generators::MockedGenerator
+      Roger::Generators::Base.register CustomGens::Generators::MockedGenerator
       assert_includes Cli::Generate.tasks, "mocked"
       assert_equal Cli::Generate.tasks["mocked"].description, "@mocked description"
       assert_equal Cli::Generate.tasks["mocked"].usage, "mocked PATH ANOTHER_ARG"
@@ -64,7 +64,7 @@ module HtmlMockup
     end
 
     def test_invoke_mocked_generator
-      HtmlMockup::Generators::Base.register CustomGens::Generators::MockedGenerator
+      Roger::Generators::Base.register CustomGens::Generators::MockedGenerator
       
       generators = Cli::Generate.new
       assert_raise NotImplementedError do

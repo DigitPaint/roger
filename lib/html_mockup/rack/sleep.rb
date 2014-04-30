@@ -1,4 +1,4 @@
-module HtmlMockup
+module Roger
   module Rack
     # Listens to the "sleep" parameter and sleeps the amount of seconds specified by the parameter. There is however a maximum of 5 seconds.
     class Sleep

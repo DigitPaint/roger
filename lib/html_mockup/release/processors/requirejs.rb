@@ -1,5 +1,5 @@
 require 'fileutils'
-module HtmlMockup::Release::Processors
+module Roger::Release::Processors
   class Requirejs < Base
     
     def initialize(options = {})
