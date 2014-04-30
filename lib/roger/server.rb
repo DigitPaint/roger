@@ -57,7 +57,7 @@ module Roger
         trap(:INT) do
           ## Use thins' hard #stop! if available, otherwise just #stop
           server.respond_to?(:stop!) ? server.stop! : server.stop
-          puts "Bby Roger"
+          puts "Roger, out!"
         end
       end
     end
