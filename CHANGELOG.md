@@ -1,5 +1,10 @@
 # Changelog
 
+## Version 0.11.0
+* You can now register release processors and finalizers with a name and use them by name (call `Roger::Release::Finalizers.register(:name, Finalizer)` or `Roger::Release::Processors.register(:name, Processor)`)
+* Generators now need to be registered on `Roger::Generators` instead of `Roger::Generators::Base`
+* Minor bugfixes
+
 ## Version 0.10.0
 * Welcome **Roger**
 * Removed requirejs, sass and yuicompressor processors in favour of separate gems
