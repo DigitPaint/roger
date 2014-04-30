@@ -192,10 +192,6 @@ module Roger
       if template_path = self.template.find_template(name, :partials_path)
         partial_template = Tilt.new(template_path.to_s)
         partial_template.render(self, options[:locals] || {})
-      elsif template_path = self.template.find_template(name + ".part", :partials_path)
-        template = Tilt::ERBTemplate.new(template_path.to_s)
-        context = MockupTemplate::TemplateContext.new(options[:locals] || {})
-        template.render(context, :env => self.env)        
       else
         raise ArgumentError, "No such partial #{name}, referenced from #{self.template.source_path}"
       end
