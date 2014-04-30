@@ -64,4 +64,4 @@ class Roger::Generators::NewGenerator < Thor::Group
   
 end
 
-Roger::Generators::Base.register Roger::Generators::NewGenerator
+Roger::Generators.register Roger::Generators::NewGenerator

@@ -6,4 +6,4 @@ class TestGenerator < Roger::Generators::Base
 
 end
 
-Roger::Generators::Base.register TestGenerator
+Roger::Generators.register TestGenerator

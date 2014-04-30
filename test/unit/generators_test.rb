@@ -36,7 +36,7 @@ module Roger
     end
 
     def test_working_project
-      Roger::Generators::Base.register CustomGens::Generators::MockedWithProjectGenerator
+      Roger::Generators.register CustomGens::Generators::MockedWithProjectGenerator
       generators = Cli::Generate.new
 
       assert_raise StandardError do
@@ -45,7 +45,7 @@ module Roger
     end
 
     def test_register_generator
-      Roger::Generators::Base.register CustomGens::Generators::MockedGenerator
+      Roger::Generators.register CustomGens::Generators::MockedGenerator
       assert_includes Cli::Generate.tasks, "mocked"
       assert_equal Cli::Generate.tasks["mocked"].description, "@mocked description"
       assert_equal Cli::Generate.tasks["mocked"].usage, "mocked PATH ANOTHER_ARG"
@@ -64,7 +64,7 @@ module Roger
     end
 
     def test_invoke_mocked_generator
-      Roger::Generators::Base.register CustomGens::Generators::MockedGenerator
+      Roger::Generators.register CustomGens::Generators::MockedGenerator
       
       generators = Cli::Generate.new
       assert_raise NotImplementedError do

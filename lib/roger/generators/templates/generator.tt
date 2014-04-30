@@ -10,4 +10,4 @@ class <%= name.capitalize %>Generator < Roger::Generators::Base
   end
 end
 
-Roger::Generators::Base.register <%= name.capitalize %>Generator
+Roger::Generators.register <%= name.capitalize %>Generator

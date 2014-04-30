@@ -20,4 +20,4 @@ class Roger::Generators::GeneratorGenerator < Roger::Generators::Base
   
 end
 
-Roger::Generators::Base.register Roger::Generators::GeneratorGenerator
+Roger::Generators.register Roger::Generators::GeneratorGenerator
