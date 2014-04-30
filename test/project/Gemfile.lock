@@ -5,10 +5,8 @@ PATH
       hpricot (>= 0.6.4)
       mime-types (~> 2.2)
       rack (>= 1.0.0)
-      sass
       thor (~> 0.16.0)
       tilt (~> 2.0.1)
-      yui-compressor
 
 GEM
   remote: https://rubygems.org/
