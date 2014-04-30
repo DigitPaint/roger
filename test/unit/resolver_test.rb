@@ -1,5 +1,5 @@
 # Generators register themself on the CLI module
-require "./lib/html_mockup/resolver.rb"
+require "./lib/roger/resolver.rb"
 require "test/unit"
 
 module Roger

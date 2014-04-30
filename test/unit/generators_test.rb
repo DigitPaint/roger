@@ -1,5 +1,5 @@
 # Generators register themself on the CLI module
-require "./lib/html_mockup/generators.rb"
+require "./lib/roger/generators.rb"
 require "test/unit"
 
 module CustomGens

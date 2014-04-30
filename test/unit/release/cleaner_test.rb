@@ -1,5 +1,5 @@
-require "./lib/html_mockup/release.rb"
-require "./lib/html_mockup/release/cleaner.rb"
+require "./lib/roger/release.rb"
+require "./lib/roger/release/cleaner.rb"
 require "test/unit"
 
 class CleanerTest < Test::Unit::TestCase

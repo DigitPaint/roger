@@ -1,5 +1,5 @@
-require "./lib/html_mockup/release.rb" 
-require "./lib/html_mockup/release/processors/requirejs"
+require "./lib/roger/release.rb" 
+require "./lib/roger/release/processors/requirejs"
 require "test/unit"
 
 class RequireJsTest < Test::Unit::TestCase

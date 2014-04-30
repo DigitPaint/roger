@@ -1,4 +1,4 @@
-require "./lib/html_mockup/cli.rb"
+require "./lib/roger/cli.rb"
 require "test/unit"
 
 module Roger

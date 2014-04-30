@@ -19,7 +19,7 @@ We assume you have a working Ruby 1.9.x or higher running.
 1. Install Roger
 
     ```shell
-    gem install html_mockup
+    gem install roger
     ```
 
 1. Create a new project

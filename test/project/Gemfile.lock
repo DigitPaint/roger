@@ -1,7 +1,7 @@
 PATH
   remote: /Users/flurin/Projects.local/libraries/html_mockup
   specs:
-    html_mockup (0.8.4)
+    roger (0.10.0)
       hpricot (>= 0.6.4)
       mime-types (~> 2.2)
       rack (>= 1.0.0)
@@ -33,8 +33,8 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  html_mockup!
   pry
   redcarpet
+  roger!
   sass
   yui-compressor

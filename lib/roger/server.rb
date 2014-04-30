@@ -1,7 +1,7 @@
 require 'rack'
 require File.dirname(__FILE__) + "/template"
 require File.dirname(__FILE__) + "/w3c_validator"
-require File.dirname(__FILE__) + "/rack/html_mockup"
+require File.dirname(__FILE__) + "/rack/roger"
 require File.dirname(__FILE__) + "/rack/html_validator"      
 
 require 'webrick'
