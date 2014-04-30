@@ -10,7 +10,7 @@ module Roger
     end
 
     def test_find_template_path
-      assert_equal @resolver.find_template("formats/mockup.html"), @base + "formats/mockup.html"
+      assert_equal @resolver.find_template("formats/index.html"), @base + "formats/index.html"
 
       # This should not be found on it's own as it will be processed
       assert_equal @resolver.find_template("formats/markdown.md"), nil
