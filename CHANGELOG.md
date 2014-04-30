@@ -1,5 +1,10 @@
 # Changelog
 
+## Version 0.10.0
+* Welcome **Roger**
+* Removed requirejs, sass and yuicompressor processors in favour of separate gems
+* Removed legacy templates using `<!-- [START:...] -->` partials (still available in separate gem)
+
 ## Version 0.9.0
 * More documentation!
 * More tests! (and CI!)
