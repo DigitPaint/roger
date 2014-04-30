@@ -1,5 +1,5 @@
 PATH
-  remote: /Users/flurin/Projects.local/libraries/html_mockup
+  remote: /Users/flurin/Projects.local/libraries/roger
   specs:
     roger (0.10.0)
       hpricot (>= 0.6.4)

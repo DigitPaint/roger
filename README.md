@@ -1,7 +1,7 @@
 # Roger
 
-[![Gem Version](https://badge.fury.io/rb/html_mockup.png)](http://badge.fury.io/rb/html_mockup)
-[![Build Status](https://travis-ci.org/DigitPaint/html_mockup.png?branch=master)](https://travis-ci.org/DigitPaint/html_mockup)
+[![Gem Version](https://badge.fury.io/rb/roger.png)](http://badge.fury.io/rb/roger)
+[![Build Status](https://travis-ci.org/DigitPaint/roger.png?branch=master)](https://travis-ci.org/DigitPaint/roger)
 
 ## What is it?
 
@@ -67,7 +67,7 @@ It's not it just does some things differently.
 
 ## Contributors
 
-[View contributors](https://github.com/digitpaint/html_mockup/graphs/contributors)
+[View contributors](https://github.com/digitpaint/roger/graphs/contributors)
 
 ## License
 
