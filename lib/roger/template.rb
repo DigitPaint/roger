@@ -3,8 +3,6 @@ require 'mime/types'
 require 'yaml'
 require 'ostruct'
 
-require File.dirname(__FILE__) + "/mockup_template"
-
 # We're enforcing Encoding to UTF-8
 Encoding.default_external = "UTF-8"
 
