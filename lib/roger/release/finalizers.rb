@@ -1,13 +1,17 @@
-module Roger::Release::Finalizers
-  class Base    
-    
-    def initialize(options = {})
-      @options = {}
-      @options.update(options) if options
-    end
-    
-    def call(release, options = {})
-      raise ArgumentError, "Implement in subclass"
+module Roger
+  module Release
+    module Finalizers
+      class Base    
+        
+        def initialize(options = {})
+          @options = {}
+          @options.update(options) if options
+        end
+        
+        def call(release, options = {})
+          raise ArgumentError, "Implement in subclass"
+        end
+      end
     end
   end
 end
