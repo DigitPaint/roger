@@ -91,3 +91,5 @@ module Roger::Release::Processors
     
   end
 end
+
+Roger::Release::Processors.register(:mockup, Roger::Release::Processors::Mockup)

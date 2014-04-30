@@ -14,22 +14,18 @@ module Roger
       end    
     
       def default_finalizers
-        [[self.get_callable(:dir, Roger::Release::Finalizers), {}]]
+        [[self.get_callable(:dir, Roger::Release::Finalizers.map), {}]]
       end
             
       # Makes callable into a object that responds to call. 
       #
       # @param [#call, Symbol, Class] callable If callable already responds to #call will just return callable, a Symbol will be searched for in the scope parameter, a class will be instantiated (and checked if it will respond to #call)
-      # @param [Module] scope The scope in which to search callable in if it's a Symbol
-      def get_callable(callable, scope)
+      # @param [Hash] map, Mapping to match symbol to a callable
+      def get_callable(callable, map)
         return callable if callable.respond_to?(:call)
       
-        if callable.kind_of?(Symbol)
-          callable = camel_case(callable.to_s).to_sym
-          if scope.constants.include?(callable)
-            c = scope.const_get(callable)
-            callable = c if c.is_a?(Class)
-          end
+        if callable.kind_of?(Symbol) && map.has_key?(callable)
+          callable = map[callable]
         end
       
         if callable.kind_of?(Class)
@@ -43,14 +39,6 @@ module Roger
         end
       
       end
-    
-      # Nothing genius adjusted from:
-      # http://stackoverflow.com/questions/9524457/converting-string-from-snake-case-to-camel-case-in-ruby
-      def camel_case(string)
-        return string if string !~ /_/ && string =~ /[A-Z]+.*/
-        string.split('_').map{|e| e.capitalize}.join
-      end
-      
     end
     
     # @option config [Symbol] :scm The SCM to use (default = :git)
@@ -122,7 +110,7 @@ module Roger
     # @examples
     #   release.use :sprockets, sprockets_config
     def use(processor, options = {})
-      @stack << [self.class.get_callable(processor, Roger::Release::Processors), options]
+      @stack << [self.class.get_callable(processor, Roger::Release::Processors.map), options]
     end
     
     # Write out the whole release into a directory, zip file or anything you can imagine
@@ -135,7 +123,7 @@ module Roger
     # @examples
     #   release.finalize :zip
     def finalize(finalizer, options = {})
-      @finalizers << [self.class.get_callable(finalizer, Roger::Release::Finalizers), options]
+      @finalizers << [self.class.get_callable(finalizer, Roger::Release::Finalizers.map), options]
     end
     
     # Files to clean up in the build directory just before finalization happens

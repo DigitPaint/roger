@@ -40,3 +40,5 @@ module Roger::Release::Finalizers
  
   end
 end
+
+Roger::Release::Finalizers.register(:zip, Roger::Release::Finalizers::Zip)

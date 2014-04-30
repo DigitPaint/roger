@@ -43,3 +43,5 @@ module Roger::Release::Processors
     end
   end
 end
+
+Roger::Release::Processors.register(:url_relativizer, Roger::Release::Processors::UrlRelativizer)

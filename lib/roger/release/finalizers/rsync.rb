@@ -75,3 +75,5 @@ module Roger::Release::Finalizers
   
   end
 end
+
+Roger::Release::Finalizers.register(:rsync, Roger::Release::Finalizers::Rsync)

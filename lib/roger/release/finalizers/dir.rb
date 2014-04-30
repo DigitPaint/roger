@@ -27,3 +27,5 @@ module Roger::Release::Finalizers
     end
   end
 end
+
+Roger::Release::Finalizers.register(:dir, Roger::Release::Finalizers::Dir)
