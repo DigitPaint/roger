@@ -1,5 +1,8 @@
 # Changelog
 
+## Version 0.12.0
+* Allow passing blocks to partials. Keep in mind that you'll need to use the `<% ... %>` form when using blocks.
+
 ## Version 0.11.0
 * You can now register release processors and finalizers with a name and use them by name (call `Roger::Release::Finalizers.register(:name, Finalizer)` or `Roger::Release::Processors.register(:name, Processor)`)
 * Generators now need to be registered on `Roger::Generators` instead of `Roger::Generators::Base`
