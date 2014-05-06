@@ -99,6 +99,19 @@ module Roger
 
     end
 
+    def test_partial_with_block
+      template = Template.new("<% partial 'test/yield' do %>CONTENT<% end %>", @config.update(:source_path => @base + "html/test.html.erb"))
+      assert_equal template.render, "B-CONTENT-A"
+
+      template = Template.new("<% partial 'test/yield' do %><%= 'CONTENT' %><% end %>", @config.update(:source_path => @base + "html/test.html.erb"))
+      assert_equal template.render, "B-CONTENT-A"
+    end
+
+    def test_partial_with_block_without_yield
+      template = Template.new("<% partial 'test/simple' do %>CONTENT<% end %>", @config.update(:source_path => @base + "html/test.html.erb"))
+      assert_equal template.render, "ERB"
+    end
+
     # Content for parts
 
     def test_content_for_not_returning_in_template

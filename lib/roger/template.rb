@@ -177,21 +177,35 @@ module Roger
     # ```
     #   <%= yield :name %>
     # ```
-    def content_for(block_name, &capture)
+    def content_for(block_name, &block)
+      @_content_for_blocks[block_name] = capture(&block)
+    end
+
+    def capture(&block)
       raise ArgumentError, "content_for works only with ERB Templates" if !self.template.template.kind_of?(Tilt::ERBTemplate)
-      eval "@_erbout_tmp = _erbout", capture.binding
-      eval "_erbout = \"\"", capture.binding
+      eval "@_erbout_tmp = _erbout", block.binding
+      eval "_erbout = \"\"", block.binding
       t = Tilt::ERBTemplate.new(){ "<%= yield %>" }
-      @_content_for_blocks[block_name] = t.render(&capture)
-      return nil
+      t.render(&block)      
     ensure
-      eval "_erbout = @_erbout_tmp", capture.binding
+      eval "_erbout = @_erbout_tmp", block.binding
     end
         
-    def partial(name, options = {})
+    def partial(name, options = {}, &block)
       if template_path = self.template.find_template(name, :partials_path)
         partial_template = Tilt.new(template_path.to_s)
-        partial_template.render(self, options[:locals] || {})
+        if block_given?
+          block_content = capture(&block)
+        else
+          block_content = ""
+        end
+        out = partial_template.render(self, options[:locals] || {}){ block_content }
+
+        if block_given?
+          eval "_erbout.concat(#{out.dump})", block.binding
+        else
+          out
+        end
       else
         raise ArgumentError, "No such partial #{name}, referenced from #{self.template.source_path}"
       end
