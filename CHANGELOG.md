@@ -1,5 +1,8 @@
 # Changelog
 
+## Version 0.12.1
+* Fix bug when passing ENV to templates and added regression test
+
 ## Version 0.12.0
 * Allow passing blocks to partials. Keep in mind that you'll need to use the `<% ... %>` form when using blocks.
 

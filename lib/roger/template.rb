@@ -147,7 +147,8 @@ module Roger
     attr_accessor :_content_for_blocks
 
     def initialize(template, env={})
-      @_template, @_env = template, @_content_for_blocks = {}, env
+      @_content_for_blocks = {}
+      @_template, @_env = template, env
     end
     
     # The current Roger::Template in use

@@ -135,6 +135,14 @@ module Roger
       assert_equal template.render, "BA"
     end    
 
+    # Environment
+
+    def test_template_env
+      template = Template.new("<%= env[:test] %>", @config.update(:source_path => @base + "html/test.html.erb"))
+      assert_equal template.render(:test => "test"), "test"
+    end
+
+
 
   end
 end
