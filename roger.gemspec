@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name = "roger"
-  s.version = "0.12.1"
+  s.version = "0.12.2"
   
   s.authors = ["Flurin Egger", "Edwin van der Graaf", "Joran Kapteijns"]
   s.email = ["info@digitpaint.nl", "flurin@digitpaint.nl"]  
@@ -30,6 +30,7 @@ Gem::Specification.new do |s|
   s.add_dependency("tilt", ["~> 2.0.1"])
   s.add_dependency("mime-types", ["~> 2.2"])
   s.add_dependency("hpricot", [">= 0.6.4"])
+  s.add_dependency("redcarpet", [">= 3.1.1"])
 
   s.add_development_dependency("test-unit", "~> 2.5.5")
 end

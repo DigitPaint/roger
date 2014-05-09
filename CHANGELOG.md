@@ -1,5 +1,8 @@
 # Changelog
 
+## Version 0.12.2
+* Add redcarpet as a dependency so markdown processing always works
+
 ## Version 0.12.1
 * Fix bug when passing ENV to templates and added regression test
 
