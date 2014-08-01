@@ -26,8 +26,10 @@ require File.dirname(__FILE__) + "/cli/command"
 require File.dirname(__FILE__) + "/cli/serve"
 require File.dirname(__FILE__) + "/cli/release"
 require File.dirname(__FILE__) + "/cli/generate"
+require File.dirname(__FILE__) + "/cli/test"
 
 require File.dirname(__FILE__) + "/generators"
+require File.dirname(__FILE__) + "/test"
 
 
 module Roger
@@ -57,6 +59,8 @@ module Roger
       :desc => 'Defaults to [directory]/partials',
       :type => :string
     
+    register Cli::Test, "test", "test [COMMAND]", "Run tests"
+
     register Cli::Generate, "generate", "generate [COMMAND]", "Run a generator"
 
     register Cli::Serve, "serve", "serve #{Cli::Serve.arguments.map{ |arg| arg.banner }.join(" ")}", Cli::Serve.desc
