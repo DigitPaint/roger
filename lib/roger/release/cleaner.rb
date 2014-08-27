@@ -1,22 +1,30 @@
 module Roger
   class Release::Cleaner
     def initialize(pattern)
-      @pattern = pattern
+      @pattern = [pattern].flatten
     end
     
     def call(release, options = {})
       # We switch to the build path and append the globbed files for safety, so even if you manage to sneak in a
       # pattern like "/**/*" it won't do you any good as it will be reappended to the path
       Dir.chdir(release.build_path.to_s) do
-        Dir.glob(@pattern).each do |file|
-          path = File.join(release.build_path.to_s, file)
-          if is_inside_build_path(release.build_path, path)
-            release.log(self, "Cleaning up \"#{path}\" in build")
-            rm_rf(path)
-          else
-            release.log(self, "FAILED cleaning up \"#{path}\" in build")
+        @pattern.each do |pattern|
+          Dir.glob(pattern).each do |file|
+            self.clean_path(release, file)
           end
         end
+      end
+    end
+
+    def clean_path(release, file)
+      path = File.join(release.build_path.to_s, file)
+      if is_inside_build_path(release.build_path, path)
+        release.log(self, "Cleaning up \"#{path}\" in build")
+        rm_rf(path)
+        true
+      else
+        release.log(self, "FAILED cleaning up \"#{path}\" in build")
+        false
       end
     end
 

@@ -8,6 +8,27 @@ class CleanerTest < Test::Unit::TestCase
     @base = File.dirname(__FILE__) + "/../../project"
   end
 
+  def test_use_array_as_pattern
+    dirs = ["dir1", "dir2"]
+
+    dirs.each do |dir|
+      path = @base + "/" +dir
+      mkdir path unless File.directory?(path)
+      assert(File.directory?(path))
+    end
+
+    project = Roger::Project.new(@base)
+    release = Roger::Release.new(project, :build_path => Pathname.new(@base))
+
+    cleaner = Roger::Release::Cleaner.new(dirs)
+    cleaner.call(release)
+
+    dirs.each do |dir|
+      path = @base + "/" + dir
+      assert(!File.directory?(path))
+    end
+  end
+
   def test_only_clean_inside_build_path_relative
   
     cleaner = Roger::Release::Cleaner.new(@base)
