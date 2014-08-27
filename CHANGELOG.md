@@ -1,5 +1,8 @@
 # Changelog
 
+## Version 0.12.3
+* Allow release cleaner to work with arrays of globs/paths
+
 ## Version 0.12.2
 * Add redcarpet as a dependency so markdown processing always works
 
