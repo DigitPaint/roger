@@ -1,5 +1,8 @@
 # Changelog
 
+## Version 0.??.?
+* Change upload prompt to conform to the [y/N] convention
+
 ## Version 0.12.3
 * Allow release cleaner to work with arrays of globs/paths
 

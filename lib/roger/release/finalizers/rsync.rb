@@ -31,7 +31,7 @@ module Roger::Release::Finalizers
       # Validate options
       validate_options!(release, options)
       
-      if !options[:ask] || (prompt("Do you wish to upload to #{options[:host]}? Type y[es]: ")) =~ /\Ay(es)?\Z/
+      if !options[:ask] || (prompt("Do you wish to upload to #{options[:host]}? [y/N]: ")) =~ /\Ay(es)?\Z/
         begin
           `#{@options[:rsync]} --version`
         rescue Errno::ENOENT
