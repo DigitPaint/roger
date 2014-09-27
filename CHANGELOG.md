@@ -1,7 +1,8 @@
 # Changelog
 
-## Version 0.??.?
+## Version 0.12.4
 * Change upload prompt to conform to the [y/N] convention
+* Fix git SCM to properly shell escape arguments so it works with special chars in paths
 
 ## Version 0.12.3
 * Allow release cleaner to work with arrays of globs/paths
