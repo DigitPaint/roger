@@ -1,6 +1,7 @@
-# Finalizes the release into a specific branch of a repository and pushes it
-#
-module Roger::Release::Finalizers
+require 'tmpdir'
+
+module Roger::Release::Finalizers  
+  # Finalizes the release into a specific branch of a repository and pushes it
   class GitBranch < Roger::Release::Finalizers::Base
    
     # @param Hash options The options
@@ -20,6 +21,7 @@ module Roger::Release::Finalizers
     
     
     def call(release, options = {})
+
       options = @options.dup.update(options)  
       git_dir = find_git_dir(release.project.path)
       
@@ -31,7 +33,7 @@ module Roger::Release::Finalizers
       e_remote = Shellwords.escape(remote)
       e_branch = Shellwords.escape(options[:branch])
 
-      tmp_dir = Pathname.new(Dir.mktmpdir)
+      tmp_dir = Pathname.new(::Dir.mktmpdir)
       clone_dir = tmp_dir + "clone"
       
       # Check if remote already has branch
@@ -39,7 +41,7 @@ module Roger::Release::Finalizers
         release.log(self, "Creating empty branch")
         # Branch does not exist yet
         FileUtils.mkdir(clone_dir)
-        Dir.chdir(clone_dir) do
+        ::Dir.chdir(clone_dir) do
           `git init`
           `git remote add origin #{e_remote}`
           `git checkout -b #{e_branch}`
@@ -51,7 +53,7 @@ module Roger::Release::Finalizers
       end
       
       release.log(self, "Working git magic in #{clone_dir}")
-      Dir.chdir(clone_dir) do
+      ::Dir.chdir(clone_dir) do
         # 3. Copy changes
         FileUtils.rm_rf("*")
         FileUtils.cp_r release.build_path.to_s + "/.", clone_dir.to_s
@@ -70,6 +72,8 @@ module Roger::Release::Finalizers
       
       if options[:cleanup]
         FileUtils.rm_rf(tmp_dir)
+      else
+        tmp_dir
       end
       
     end
