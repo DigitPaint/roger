@@ -33,4 +33,5 @@ Gem::Specification.new do |s|
   s.add_dependency("redcarpet", [">= 3.1.1"])
 
   s.add_development_dependency("test-unit", "~> 2.5.5")
+  s.add_development_dependency("mocha", "~> 1.1.0")
 end

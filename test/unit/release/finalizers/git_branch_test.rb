@@ -1,0 +1,46 @@
+require "./lib/roger/release/finalizers/git_branch.rb"
+require "test/unit"
+require "mocha/test_unit"
+require 'tmpdir'
+
+class GitBranchTest < Test::Unit::TestCase
+  
+  def test_basic_functionality
+    # Mock git repo
+    tmp_dir = Pathname.new(::Dir.mktmpdir)
+    mock_repo_path = tmp_dir + "mock_repo"
+    FileUtils.mkdir(mock_repo_path)
+    Dir.chdir(mock_repo_path) do
+      `git init`
+      `mkdir releases`
+      `touch releases/index.html`
+    end
+
+    # Mock release object
+    releaseMock = stub(:project => stub(:path => mock_repo_path))
+
+    releaseMock.stubs({
+      :scm => stub(:version => '0.1.999'), 
+      :log => true, 
+      :build_path => mock_repo_path.to_s + '/releases'
+    })
+
+    gitBranchFinalizer = Roger::Release::Finalizers::GitBranch.new()
+
+    output_dir = gitBranchFinalizer.call(releaseMock, {
+      :remote => "http://we.aint.go/nna.push.git", 
+      :push => false, 
+      :cleanup => false
+    })
+
+    Dir.chdir(output_dir + 'clone') do
+      commit_msg = `git log --pretty=oneline --abbrev-commit`
+      assert_match /Release 0.1.999/, commit_msg
+    end
+
+    FileUtils.rm_rf(tmp_dir)
+    FileUtils.rm_rf(output_dir)
+  end
+
+
+end
