@@ -277,8 +277,11 @@ module Roger
       end
 
       unless @stack.find{|(processor, options)| processor.class == Roger::Release::Processors::Mockup }
-        @stack.push([Roger::Release::Processors::UrlRelativizer.new, relativizer_options])
         @stack.unshift([Roger::Release::Processors::Mockup.new, mockup_options])
+      end
+
+      unless @stack.find{|(processor, options)| processor.class == Roger::Release::Processors::UrlRelativizer }
+        @stack.push([Roger::Release::Processors::UrlRelativizer.new, relativizer_options])
       end
     end
 
