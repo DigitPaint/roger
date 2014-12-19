@@ -1,5 +1,10 @@
 # Changelog
 
+## Version 0.12.5
+* Fix github pages finalizer to work if the Dir finalizer is loaded as well
+* Run relativizer as the last thing before you finalize as to fix resolving issues with generated files
+* Minor coding style issues
+
 ## Version 0.12.4
 * Change upload prompt to conform to the [y/N] convention
 * Fix git SCM to properly shell escape arguments so it works with special chars in paths
