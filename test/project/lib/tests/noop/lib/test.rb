@@ -7,7 +7,7 @@ module RogerNoopTest
     end
 
     def call(test, options={})
-      puts "Nooping"
+      test.log(self, "NOOP")
       true
     end
 
