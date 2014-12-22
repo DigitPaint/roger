@@ -2,7 +2,7 @@ require "./lib/roger/release.rb"
 require "./lib/roger/release/cleaner.rb"
 require "test/unit"
 
-class CleanerTest < Test::Unit::TestCase
+class CleanerTest < ::Test::Unit::TestCase
 
   def setup
     @base = File.dirname(__FILE__) + "/../../project"

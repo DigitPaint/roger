@@ -30,7 +30,7 @@ module CustomGens
 end
 
 module Roger
-  class GeneratorTest < Test::Unit::TestCase
+  class GeneratorTest < ::Test::Unit::TestCase
     def setup
       @cli = Cli::Base.new
     end

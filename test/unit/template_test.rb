@@ -4,7 +4,7 @@ require "./lib/roger/template.rb"
 require "test/unit"
 
 module Roger
-  class TemplateTest < Test::Unit::TestCase
+  class TemplateTest < ::Test::Unit::TestCase
     def setup
       @base = Pathname.new(File.dirname(__FILE__) + "/../project")
       @config = {
