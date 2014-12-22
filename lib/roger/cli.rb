@@ -37,7 +37,7 @@ module Roger
 
     def initialize(*args)
       super
-      self.class.project = initialize_project
+      self.class.project ||= initialize_project
     end
 
     class << self
