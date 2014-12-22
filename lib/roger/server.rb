@@ -1,8 +1,6 @@
 require 'rack'
 require File.dirname(__FILE__) + "/template"
-require File.dirname(__FILE__) + "/w3c_validator"
 require File.dirname(__FILE__) + "/rack/roger"
-require File.dirname(__FILE__) + "/rack/html_validator"      
 
 require 'webrick'
 require 'webrick/https'
@@ -73,7 +71,6 @@ module Roger
     def application
       return @app if @app
       
-      @stack.use Rack::HtmlValidator if self.options[:validate]
       @stack.run Rack::Roger.new(self.project)
       
       @app = @stack

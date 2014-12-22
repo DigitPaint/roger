@@ -1,18 +1,25 @@
-# Example idea for a Mockupfile, a lot of this has to have a sensible default.
+# Example for a Mockupfile, a lot of this has to have a sensible default.
 
 Sass::Plugin.options[:style] = :expanded
 Sass::Plugin.options[:template_location] = "./html/stylesheets"
 Sass::Plugin.options[:css_location] = "./html/stylesheets"
 
-# These are defaults, but can be set here
-# mockup.project.html_path = mockup.project.path + "html"
-# mockup.project.partial_path = mockup.project.path + "partials"
+# Set verbosity to true
+mockup.project.options[:verbose] = true
 
-mockup.serve(config) do |server|
+# These are defaults, but can be set here
+mockup.project.html_path = mockup.project.path + "html"
+mockup.project.partial_path = mockup.project.path + "partials"
+
+mockup.serve do |server|
   server.use :sass
 end
 
-mockup.release(config) do |release|
+mockup.test do |t|
+  t.use :jshint
+end
+
+mockup.release do |release|
   
   release.target_path # The target path where releases are put
   release.build_path # The path where the release gets built
@@ -28,16 +35,17 @@ mockup.release(config) do |release|
   release.scm.date # Get the git date
     
   # Create custom banner
-  release.banner do
-    "bla bla bla"
-  end
-  
+  #
   # The default banner looks like this:
   #
   # =======================
   # = Version : v1.0.0    =
   # = Date : 2012-06-20   =
-  # =======================  
+  # =======================    
+  release.banner do
+    "bla bla bla"
+  end
+  
   
   # Sassify CSS (this are the defaults too), all options except form :match and :skip are passed to Sass.compile_file
   # release.use :sass, :match => ["stylesheets/**/*.scss"], :skip => [/_.*\.scss\Z/], :style => :expanded

@@ -1,14 +1,18 @@
 require File.dirname(__FILE__) + "/cli"
+require File.dirname(__FILE__) + "/helpers/get_callable"
+require File.dirname(__FILE__) + "/helpers/logging"
 
 module Roger
   class Release
+    include Roger::Helpers::Logging
 
     attr_reader :config, :project
 
     attr_reader :finalizers, :injections, :stack, :cleanups
 
     class << self
-
+     include Roger::Helpers::GetCallable
+      
       def default_stack
         []
       end
@@ -17,28 +21,6 @@ module Roger
         [[self.get_callable(:dir, Roger::Release::Finalizers.map), {}]]
       end
 
-      # Makes callable into a object that responds to call.
-      #
-      # @param [#call, Symbol, Class] callable If callable already responds to #call will just return callable, a Symbol will be searched for in the scope parameter, a class will be instantiated (and checked if it will respond to #call)
-      # @param [Hash] map, Mapping to match symbol to a callable
-      def get_callable(callable, map)
-        return callable if callable.respond_to?(:call)
-
-        if callable.kind_of?(Symbol) && map.has_key?(callable)
-          callable = map[callable]
-        end
-
-        if callable.kind_of?(Class)
-          callable = callable.new
-        end
-
-        if callable.respond_to?(:call)
-          callable
-        else
-          raise ArgumentError, "Could not resolve #{callable.inspect}. Callable must be an object that responds to #call or a symbol that resolve to such an object or a class with a #call instance method."
-        end
-
-      end
     end
 
     # @option config [Symbol] :scm The SCM to use (default = :git)
@@ -204,34 +186,10 @@ module Roger
 
       # Cleanup
       cleanup! if self.config[:cleanup_build]
-
-    end
-
-    # Write out a log message
-    def log(part, msg, verbose = false, &block)
-      if !verbose || verbose && self.project.options[:verbose]
-        self.project.shell.say "\033[37m#{part.class.to_s}\033[0m" + " : " + msg.to_s, nil, true
-      end
-      if block_given?
-        begin
-          self.project.shell.padding = self.project.shell.padding + 1
-          yield
-        ensure
-          self.project.shell.padding = self.project.shell.padding - 1
-        end
-      end
-    end
-
-    def debug(part, msg, &block)
-      self.log(part, msg, true, &block)
-    end
-
-    # Write out a warning message
-    def warn(part, msg)
-      self.project.shell.say "\033[37m#{part.class.to_s}\033[0m" + " : " + "\033[31m#{msg.to_s}\033[0m", nil, true
-    end
-
-
+      
+    end    
+    
+    
     # @param [Array] globs an array of file path globs that will be globbed against the build_path
     # @param [Array] excludes an array of regexps that will be excluded from the result
     def get_files(globs, excludes = [])

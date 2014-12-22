@@ -1,5 +1,7 @@
 require File.dirname(__FILE__) + "/release"
 require File.dirname(__FILE__) + "/server"
+require File.dirname(__FILE__) + "/test"
+
 require File.dirname(__FILE__) + "/mockupfile"
 
 module Roger
@@ -10,7 +12,8 @@ module Roger
     # @attr :html_path [Pathname] The path of the HTML mockup
     # @attr :partial_path [Pathname] The path for the partials for this mockup
     # @attr :mockupfile [Mockupfile] The Mockupfile for this project
-    attr_accessor :path, :html_path, :partial_path, :layouts_path, :mockupfile
+    # @attr :mockupfile_path [Pathname] The path to the Mockupfile
+    attr_accessor :path, :html_path, :partial_path, :layouts_path, :mockupfile, :mockupfile_path
     
     attr_accessor :shell
     
@@ -22,7 +25,8 @@ module Roger
       @options = {
         :html_path => @path + "html",
         :partial_path => @path + "partials",
-        :layouts_path => @path + "layouts"
+        :layouts_path => @path + "layouts",
+        :mockupfile_path => @path + "Mockupfile"
       }
       
       # Clumsy string to symbol key conversion
@@ -31,9 +35,16 @@ module Roger
       self.html_path = @options[:html_path]
       self.partial_path = @options[:partials_path] || @options[:partial_path] || self.html_path + "../partials/"
       self.layouts_path = @options[:layouts_path]
+      self.mockupfile_path = @options[:mockupfile_path]
       self.shell = @options[:shell]
       
-      load_mockup!
+      if self.mockupfile_path
+        @mockupfile = Mockupfile.new(self, self.mockupfile_path)
+        @mockupfile.load
+      else
+        @mockupfile = Mockupfile.new(self)
+      end
+
     end
     
     def shell
@@ -48,6 +59,11 @@ module Roger
     def release
       options = @options[:release] || {}      
       @release ||= Release.new(self, options)
+    end
+
+    def test
+      options = @options[:test] || {}
+      @test ||= Test.new(self, options)
     end
     
     def html_path=(p)
@@ -65,11 +81,6 @@ module Roger
     end
     
     protected
-
-    def load_mockup!
-      @mockupfile = Mockupfile.new(self)
-      @mockupfile.load      
-    end
 
     def single_or_multiple_paths(p)
       if p.kind_of?(Array)

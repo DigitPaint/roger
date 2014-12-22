@@ -1,11 +1,12 @@
 PATH
   remote: /Users/flurin/Projects.local/libraries/roger
   specs:
-    roger (0.10.0)
+    roger (0.12.2)
       hpricot (>= 0.6.4)
       mime-types (~> 2.2)
       rack (>= 1.0.0)
-      thor (~> 0.16.0)
+      redcarpet (>= 3.1.1)
+      thor (~> 0.19.0)
       tilt (~> 2.0.1)
 
 GEM
@@ -14,16 +15,16 @@ GEM
     coderay (1.1.0)
     hpricot (0.8.6)
     method_source (0.8.2)
-    mime-types (2.2)
-    pry (0.9.12.6)
-      coderay (~> 1.0)
-      method_source (~> 0.8)
+    mime-types (2.4.3)
+    pry (0.10.1)
+      coderay (~> 1.1.0)
+      method_source (~> 0.8.1)
       slop (~> 3.4)
-    rack (1.5.2)
-    redcarpet (3.1.1)
-    sass (3.3.5)
-    slop (3.5.0)
-    thor (0.16.0)
+    rack (1.6.0)
+    redcarpet (3.2.2)
+    sass (3.4.9)
+    slop (3.6.0)
+    thor (0.19.1)
     tilt (2.0.1)
     yui-compressor (0.12.0)
 

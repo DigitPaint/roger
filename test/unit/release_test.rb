@@ -3,7 +3,7 @@ require "./lib/roger/release.rb"
 require "test/unit"
 
 module Roger
-  class ReleaseTest < Test::Unit::TestCase
+  class ReleaseTest < ::Test::Unit::TestCase
 
     def test_get_callable
       p = lambda{}

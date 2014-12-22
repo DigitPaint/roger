@@ -25,13 +25,13 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
 
-  s.add_dependency("thor", ["~> 0.16.0"])
+  s.add_dependency("thor", ["~> 0.19.0"])
   s.add_dependency("rack", [">= 1.0.0"])
   s.add_dependency("tilt", ["~> 2.0.1"])
   s.add_dependency("mime-types", ["~> 2.2"])
   s.add_dependency("hpricot", [">= 0.6.4"])
   s.add_dependency("redcarpet", [">= 3.1.1"])
 
-  s.add_development_dependency("test-unit", "~> 2.5.5")
+  s.add_development_dependency("test-unit", "~> 3.0.0")
   s.add_development_dependency("mocha", "~> 1.1.0")
 end

@@ -3,7 +3,7 @@ require "./lib/roger/resolver.rb"
 require "test/unit"
 
 module Roger
-  class ResolverTest < Test::Unit::TestCase
+  class ResolverTest < ::Test::Unit::TestCase
     def setup
       @base = Pathname.new(File.dirname(__FILE__) + "/../project/html")
       @resolver = Roger::Resolver.new(@base)
@@ -58,7 +58,7 @@ module Roger
 
   end
 
-  class ResolverMultipleTest < Test::Unit::TestCase
+  class ResolverMultipleTest < ::Test::Unit::TestCase
     def setup
       @base = Pathname.new(File.dirname(__FILE__) + "/../project")
       @resolver = Roger::Resolver.new([@base + "html", @base + "partials"])
