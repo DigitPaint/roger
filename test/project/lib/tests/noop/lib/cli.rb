@@ -1,16 +1,8 @@
 module RogerNoopTest
   class Cli < Roger::Test::Cli
-    default_task :test
-
-    desc "test", "run noop tests"
-    def test
-      test = Test.new
-      test.run!
-    end
-
     desc "init", "init noop tests"
     def init
-      puts "you could init stuff here"
+      puts "initialized"
     end
   end
 end
