@@ -1,3 +1,4 @@
+require 'thor'
 require File.dirname(__FILE__) + "/helpers/get_callable"
 require File.dirname(__FILE__) + "/helpers/logging"
 
