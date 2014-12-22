@@ -23,9 +23,9 @@ module Roger
     # @attr :path [Pathname] The path of the Mockupfile for this project
     attr_accessor :path, :project
         
-    def initialize(project)
+    def initialize(project, path = nil)
       @project = project
-      @path = Pathname.new(project.path + "Mockupfile")
+      @path = (path && Pathname.new(path)) || Pathname.new(project.path + "Mockupfile")
     end
 
     # Actually load the mockupfile
