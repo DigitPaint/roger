@@ -1,11 +1,7 @@
 require File.dirname(__FILE__) + "/lib/test"
 require File.dirname(__FILE__) + "/lib/cli"
 
-module Roger
-  module Test
-    module Noop
-    end
-  end
+module RogerNoopTest
 end
 
-Roger::Test.register "noop", Roger::Test::Noop::Test
+Roger::Test.register :noop, RogerNoopTest::Test

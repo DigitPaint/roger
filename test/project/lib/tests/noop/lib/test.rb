@@ -1,13 +1,15 @@
-module Roger
-  module Test
-    module Noop
-      class Test
+module RogerNoopTest
+  class Test
 
-        def run!
-          puts "noop"
-        end
-        
-      end
+    def initialize(options={})
+      @options = {}
+      @options.update(options) if options            
     end
+
+    def call(test, options={})
+      puts "Nooping"
+      true
+    end
+
   end
 end
