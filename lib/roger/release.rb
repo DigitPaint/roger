@@ -1,9 +1,9 @@
 require File.dirname(__FILE__) + "/cli"
-require File.dirname(__FILE__) + "/logger"
+require File.dirname(__FILE__) + "/helpers/logging"
 
 module Roger
   class Release
-    include Roger::Logger
+    include Roger::Helpers::Logging
 
     attr_reader :config, :project
     
