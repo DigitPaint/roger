@@ -63,9 +63,11 @@ module Roger
       :desc => 'Defaults to [directory]/partials',
       :type => :string
     
-    register Cli::Test, "test", "test [COMMAND]", "Run tests"
+    desc "test [COMMAND]", "Run one or more tests. Test can be 'all' for all defined tests or a specific test name"
+    subcommand "test", Cli::Test
 
-    register Cli::Generate, "generate", "generate [COMMAND]", "Run a generator"
+    desc "generate [COMMAND]", "Run a generator"
+    subcommand "generate", Cli::Generate
 
     register Cli::Serve, "serve", "serve #{Cli::Serve.arguments.map{ |arg| arg.banner }.join(" ")}", Cli::Serve.desc
     self.tasks["serve"].options = Cli::Serve.class_options
