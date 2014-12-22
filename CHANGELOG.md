@@ -1,5 +1,14 @@
 # Changelog
 
+## Version 0.13.0
+*Attention* This is the last call version before 1.0.0 (5 years in sub 1.0.0 is more than enough)
+
+There should be no breaking changes between 0.12.5 and 0.13.0
+
+* Added `test` command infrastructure inlcuding tests
+* Remove W3C Validator, it is now available as a separate gem (`roger_w3cvalidator`)
+* Minor internal refactorings and library updates (mainly Thor and Test-Unit)
+
 ## Version 0.12.5
 * Fix github pages finalizer to work if the Dir finalizer is loaded as well
 * Run relativizer as the last thing before you finalize as to fix resolving issues with generated files
