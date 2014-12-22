@@ -29,6 +29,8 @@ module Roger
     class << self
       include Roger::Helpers::GetCallable
 
+      # Register a test method to Roger::Test so it can be used in the Mockupfile
+
       def register(name, test, cli = nil)
         raise ArgumentError, "Another test has already claimed the name #{name.inspect}" if self.map.has_key?(name)
         raise ArgumentError, "Name must be a symbol" unless name.kind_of?(Symbol)
@@ -65,6 +67,7 @@ module Roger
       @stack << [test, options]
     end
 
+    # Run all tests and return true when succeeded
     def run!
       success = true
       @stack.each do |task|
@@ -75,6 +78,7 @@ module Roger
       success
     end
 
+    # Run a specific test by stack index.
     def run_test!(index)
       test = @stack[index]
       if test
