@@ -56,8 +56,15 @@ module Roger
       end
       self.project.server      
     end
-    
+
     alias :server :serve
+
+    def test
+      if block_given?
+        yield(self.project.test)
+      end
+      self.project.test
+    end
     
   end
 end

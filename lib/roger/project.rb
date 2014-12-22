@@ -1,5 +1,7 @@
 require File.dirname(__FILE__) + "/release"
 require File.dirname(__FILE__) + "/server"
+require File.dirname(__FILE__) + "/test"
+
 require File.dirname(__FILE__) + "/mockupfile"
 
 module Roger
@@ -48,6 +50,11 @@ module Roger
     def release
       options = @options[:release] || {}      
       @release ||= Release.new(self, options)
+    end
+
+    def test
+      options = @options[:test] || {}
+      @test ||= Test.new(self, options)
     end
     
     def html_path=(p)
