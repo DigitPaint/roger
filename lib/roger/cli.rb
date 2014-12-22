@@ -42,6 +42,10 @@ module Roger
 
     class << self
       attr_accessor :project
+
+      def exit_on_failure?
+        true
+      end
     end
 
     class_option :path, 

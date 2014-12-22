@@ -1,12 +1,16 @@
 module Roger
 
   class Cli::Command < Thor::Group
-
+    def self.exit_on_failure?
+      true
+    end
+    
     class_option :verbose,
       :desc =>  "Set's verbose output",
       :aliases => ["-v"],
       :default => false,
       :type => :boolean
+
 
     def initialize_project
       @project = Cli::Base.project
