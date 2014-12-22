@@ -7,6 +7,19 @@ module Roger
       def self.exit_on_failure?
         true
       end
+
+      default_task :test
+
+      class << self
+        attr_accessor :stack_index
+      end
+
+      desc "test", "Run the test"
+      def test
+        unless Roger::Cli::Base.project.test.run_test!(self.class.stack_index)
+          raise Thor::Error, "The test failed"
+        end
+      end
     end
 
     include Roger::Helpers::Logging
@@ -16,10 +29,11 @@ module Roger
     class << self
       include Roger::Helpers::GetCallable
 
-      def register(name, test)
+      def register(name, test, cli = nil)
         raise ArgumentError, "Another test has already claimed the name #{name.inspect}" if self.map.has_key?(name)
         raise ArgumentError, "Name must be a symbol" unless name.kind_of?(Symbol)
         self.map[name] = test
+        self.cli_map[name] = cli if cli
       end
 
       # Mapping names to test callers
@@ -64,7 +78,12 @@ module Roger
     end
 
     def run_test!(index)
-      call_test(@stack[index])
+      test = @stack[index]
+      if test
+        call_test(test) 
+      else
+        false
+      end
     end
 
 
@@ -86,20 +105,10 @@ module Roger
         thor_class = klass
       else
         usage = "#{name}"
-        thor_class = Class.new(Roger::Test::Cli) do
-          default_task :test
+        thor_class = Class.new(Roger::Test::Cli)
+      end
 
-          class << self
-            attr_accessor :stack_index
-          end
-
-          desc "test", "run tests"
-          def test
-            unless Roger::Cli::Base.project.test.run_test!(self.class.stack_index)
-              raise Thor::Error, "The test failed"
-            end
-          end
-        end
+      if thor_class.respond_to?(:stack_index=)
         thor_class.stack_index = stack_index
       end
 
