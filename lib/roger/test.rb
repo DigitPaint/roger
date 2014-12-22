@@ -61,9 +61,7 @@ module Roger
     #   test.use :jshint, config
     def use(processor, options = {})
       test = self.class.get_callable(processor, Roger::Test.map)
-
-      self.register_in_cli(processor, @stack.length, self.class.cli_map[processor])
-
+      self.register_in_cli(processor, @stack.size, self.class.cli_map[processor])
       @stack << [test, options]
     end
 
