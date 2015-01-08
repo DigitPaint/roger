@@ -24,7 +24,7 @@ module CustomGens
         # Somewhat ugly way of checking
         raise StandardError if @project
       end
-    end    
+    end
 
   end
 end
@@ -33,6 +33,10 @@ module Roger
   class GeneratorTest < ::Test::Unit::TestCase
     def setup
       @cli = Cli::Base.new
+
+      # Dirty hack to clean up tasks
+      Cli::Generate.tasks.delete("mocked")
+      Cli::Generate.tasks.delete("mockery")
     end
 
     def test_working_project
@@ -51,6 +55,15 @@ module Roger
       assert_equal Cli::Generate.tasks["mocked"].usage, "mocked PATH ANOTHER_ARG"
     end
 
+    def test_register_generator_with_custom_name
+      Roger::Generators.register :mockery, CustomGens::Generators::MockedGenerator
+      assert_includes Cli::Generate.tasks, "mockery"
+    end
+
+    def test_cli_help_shows_all_available_generators
+
+    end
+
     def test_default_generator
       assert_includes Cli::Generate.tasks, "new"
     end
@@ -65,7 +78,7 @@ module Roger
 
     def test_invoke_mocked_generator
       Roger::Generators.register CustomGens::Generators::MockedGenerator
-      
+
       generators = Cli::Generate.new
       assert_raise NotImplementedError do
         generators.invoke :mocked
