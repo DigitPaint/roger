@@ -1,6 +1,7 @@
 require "./lib/roger/cli.rb"
 require "test/unit"
-require "stringio"
+
+require File.dirname(__FILE__) + "/../../helpers/cli"
 
 require File.dirname(__FILE__) + "/../../project/lib/tests/fail/fail"
 require File.dirname(__FILE__) + "/../../project/lib/tests/succeed/succeed"
@@ -10,46 +11,22 @@ require File.dirname(__FILE__) + "/../../project/lib/tests/noop/noop"
 
 module Roger
   class CliTestTest < ::Test::Unit::TestCase
+    include TestCli
 
     def setup
       @base_path = File.dirname(__FILE__) + "/../../project"
     end
 
-
-    # Capture stdout/stderr output
-    def capture
-      @_orig_stdout, @_orig_stderr = $stdout, $stderr
-      
-      $stdout = StringIO.new
-      $stderr = StringIO.new
-
-      yield
-
-      return [$stdout.string, $stderr.string]
-    ensure
-      $stdout, $stderr = @_orig_stdout, @_orig_stderr
-    end
-
     def run_test_command(args, &block)
-      project = Project.new(@base_path, :mockupfile_path => false)
-
-      mockupfile = Roger::Mockupfile.new(project)
-
-      if block_given?
-        mockupfile.test(&block)
-      else
-        mockupfile.test do |t|
-          t.use :succeed
-          t.use :noop
+      run_command_with_mockupfile(args) do |mockupfile|
+        if block_given?
+          mockupfile.test(&block)
+        else
+          mockupfile.test do |t|
+            t.use :succeed
+            t.use :noop
+          end
         end
-      end
-
-      project.mockupfile = mockupfile
-
-      Cli::Base.project = project
-
-      capture do
-        Cli::Base.start(args, :debug => true)
       end
     end
 
@@ -69,15 +46,15 @@ module Roger
         t.use :succeed
         t.use :noop
       end
-      assert out.index("RogerNoopTest::Test") > out.index("RogerSucceedTest::Test") 
-    end    
+      assert out.index("RogerNoopTest::Test") > out.index("RogerSucceedTest::Test")
+    end
 
     def test_subcommand_all_runs_all_tests_in_order_2
       out, err = run_test_command %w{test all} do |t|
         t.use :noop
-        t.use :succeed        
+        t.use :succeed
       end
-      assert out.index("RogerSucceedTest::Test") > out.index("RogerNoopTest::Test") 
+      assert out.index("RogerSucceedTest::Test") > out.index("RogerNoopTest::Test")
     end
 
     # roger test
@@ -97,7 +74,7 @@ module Roger
 
     # roger test noop
     def test_subcommand_x_runs_only_test_x
-      out, err = run_test_command %w{test noop}      
+      out, err = run_test_command %w{test noop}
       assert_includes out, "RogerNoopTest::Test"
       assert_not_includes out, "RogerSucceedTest::Test"
     end
@@ -117,7 +94,7 @@ module Roger
           t.use :noop
           t.use :fail
         end
-      end      
+      end
     end
 
     def test_subcommand_all_has_exit_code_1_on_failure
@@ -135,7 +112,7 @@ module Roger
           t.use :noop
           t.use :succeed
         end
-      end         
+      end
     end
 
   end
