@@ -28,7 +28,7 @@ module CustomGens
 end
 
 module Roger
-  class CliTestTest < ::Test::Unit::TestCase
+  class CliGenerateTest < ::Test::Unit::TestCase
 
     def setup
       @base_path = File.dirname(__FILE__) + "/../../project"
