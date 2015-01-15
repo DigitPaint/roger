@@ -22,7 +22,10 @@ module Roger
       puts "Running Roger with #{server.handler.inspect} on port #{server.port}"
       puts project_banner(@project)
 
-      server.run!
+    # Hack so we can override it in tests.
+    def start
+      @project.server.run!
     end
   end
 end
+
