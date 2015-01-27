@@ -13,10 +13,6 @@ module Roger
   class CliTestTest < ::Test::Unit::TestCase
     include TestCli
 
-    def setup
-      @base_path = File.dirname(__FILE__) + "/../../project"
-    end
-
     def run_test_command(args, &block)
       run_command_with_mockupfile(args) do |mockupfile|
         if block_given?
