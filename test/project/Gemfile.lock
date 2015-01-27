@@ -1,7 +1,7 @@
 PATH
-  remote: /Users/flurin/Projects.local/libraries/roger
+  remote: /Users/flurin/Projects/roger/roger
   specs:
-    roger (0.12.2)
+    roger (0.13.0)
       hpricot (>= 0.6.4)
       mime-types (~> 2.2)
       rack (>= 1.0.0)
