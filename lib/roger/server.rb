@@ -32,8 +32,6 @@ module Roger
     # Sets the options, this is a separate method as we want to override certain
     # things set in the mockupfile from the commandline
     def set_options(options)
-      puts "server SET OPTIONS #{options.inspect}"
-
       self.port = options[:port] if options.has_key?(:port)
       self.handler = options[:handler] if options.has_key?(:handler)
       self.host = options[:host] if options.has_key?(:host)
