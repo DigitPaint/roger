@@ -5,22 +5,23 @@ module Roger
     desc "Serve the current project"
 
     class_options :port => :string, # Defaults to 9000
-                   :handler => :string, # The handler to use (defaults to mongrel)
+                  :host => :string, # Defaults to 0.0.0.0
+                  :handler => :string # The handler to use (defaults to mongrel)
 
     def serve
-
       server_options = {}
       options.each{|k,v| server_options[k.to_sym] = v }
       server_options[:server] = {}
-      [:port, :handler].each do |k|
+      [:port, :handler, :host].each do |k|
         server_options[:server][k] = server_options.delete(k) if server_options.has_key?(k)
       end
 
       server = @project.server
       server.set_options(server_options[:server])
 
-      puts "Running Roger with #{server.handler.inspect} on port #{server.port}"
+      puts "Running Roger with #{server.handler.inspect} on  #{server.host}:#{server.port}"
       puts project_banner(@project)
+    end
 
     # Hack so we can override it in tests.
     def start
