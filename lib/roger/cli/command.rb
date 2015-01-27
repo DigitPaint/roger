@@ -4,7 +4,7 @@ module Roger
     def self.exit_on_failure?
       true
     end
-    
+
     class_option :verbose,
       :desc =>  "Set's verbose output",
       :aliases => ["-v"],

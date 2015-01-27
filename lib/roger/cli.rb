@@ -47,10 +47,10 @@ module Roger
       end
     end
 
-    class_option :path, 
+    class_option :path,
       :desc => "Project root path",
-      :type => :string, 
-      :required => false, 
+      :type => :string,
+      :required => false,
       :default => "."
 
     class_option :html_path,
@@ -61,7 +61,7 @@ module Roger
     class_option :partial_path,
       :desc => 'Defaults to [directory]/partials',
       :type => :string
-    
+
     desc "test [COMMAND]", "Run one or more tests. Test can be 'all' for all defined tests or a specific test name"
     subcommand "test", Cli::Test
 
@@ -73,7 +73,7 @@ module Roger
 
     register Cli::Release, "release", "release #{Cli::Release.arguments.map{ |arg| arg.banner }.join(" ")}", Cli::Release.desc
     self.tasks["release"].options = Cli::Release.class_options
-    
+
     protected
 
     # TODO: handle options
@@ -82,10 +82,10 @@ module Roger
         puts "[ERROR]: Don't use the \"html\" path, use the project base path instead"
         exit(1)
       end
-      
+
       Project.new(options[:path], {:shell => self.shell}.update(options))
     end
- 
+
   end
 
 end
