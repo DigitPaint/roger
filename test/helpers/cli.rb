@@ -17,14 +17,15 @@ module Roger
     end
 
     def run_command(args, &block)
-      capture do
+      out, err = capture do
         Cli::Base.start(args, :debug => true)
       end
+      [out,err]
     end
 
 
     def run_command_with_mockupfile(args, &block)
-      project = Project.new(@base_path, :mockupfile_path => false)
+      project = Project.new(@base_path || File.dirname(__FILE__) + "/../../project", :mockupfile_path => false)
 
       mockupfile = Roger::Mockupfile.new(project)
 
@@ -36,9 +37,10 @@ module Roger
 
       Cli::Base.project = project
 
-      capture do
+      out, err = capture do
         Cli::Base.start(args, :debug => true)
       end
+      [out,err]
     end
 
   end
