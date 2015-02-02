@@ -91,12 +91,16 @@ module Roger
 
     # Get files from the project path
     #
-    # @param [Array] globs an array of file path globs that will be globbed against the project path
-    # @param [Array] excludes an array of regexps that will be excluded from the result
+    # @param [Array] globs an array of file path globs that will be globbed
+    #                against the project path
+    # @param [Array] excludes an array of regexps[!] that will be excluded
+    #                from the result. N.b. please add an exclamation mark
+    #                if you wasted more then an hour of your life because the
+    #                shell glob didn't 'work'.
     def get_files(globs, excludes = [])
       files = globs.map{|g| Dir.glob(self.project.path + g) }.flatten
       if excludes.any?
-        files.reject{|c| excludes.detect{|e| e.match(c) } }
+        files.reject { |c| excludes.detect { |e| c.match(e) } }
       else
         files
       end
