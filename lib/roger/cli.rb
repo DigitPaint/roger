@@ -57,10 +57,15 @@ module Roger
       :desc => 'The document root, defaults to "[directory]/html"',
       :type => :string
 
-
     class_option :partial_path,
       :desc => 'Defaults to [directory]/partials',
       :type => :string
+
+    class_option :verbose,
+      :desc =>  "Sets verbose output",
+      :aliases => ["-v"],
+      :default => false,
+      :type => :boolean
 
     desc "test [COMMAND]", "Run one or more tests. Test can be 'all' for all defined tests or a specific test name"
     subcommand "test", Cli::Test

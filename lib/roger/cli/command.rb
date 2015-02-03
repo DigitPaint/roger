@@ -5,12 +5,6 @@ module Roger
       true
     end
 
-    class_option :verbose,
-      :desc =>  "Set's verbose output",
-      :aliases => ["-v"],
-      :default => false,
-      :type => :boolean
-
 
     def initialize_project
       @project = Cli::Base.project
