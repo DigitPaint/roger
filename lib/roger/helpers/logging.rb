@@ -15,16 +15,16 @@ module Roger
           end
         end
       end
-      
+
       def debug(part, msg, &block)
         self.log(part, msg, true, &block)
       end
-      
+
       # Write out a warning message
       def warn(part, msg)
         self.project.shell.say "\033[37m#{part.class.to_s}\033[0m" + " : " + "\033[31m#{msg.to_s}\033[0m", nil, true
       end
-      
+
     end
   end
 end
