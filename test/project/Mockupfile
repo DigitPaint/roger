@@ -3,14 +3,11 @@ require File.dirname(__FILE__) + "/lib/tests/noop/noop"
 require File.dirname(__FILE__) + "/lib/tests/fail/fail"
 require File.dirname(__FILE__) + "/lib/tests/succeed/succeed"
 
-mockup.project.options[:verbose] = true;
 
 mockup.project.partial_path = [mockup.project.path + "partials", mockup.project.path + "partials2"]
 
 mockup.serve do |s|
 end
-
-
 
 mockup.test do |t|
   t.use :noop

@@ -13,6 +13,10 @@ module Roger
   class CliTestTest < ::Test::Unit::TestCase
     include TestCli
 
+    def teardown
+      Cli::Base.project = nil
+    end
+
     def run_test_command(args, &block)
       run_command_with_mockupfile(args) do |mockupfile|
         if block_given?
@@ -58,6 +62,12 @@ module Roger
       out, err = run_test_command %w{test}
       assert_includes out, "RogerNoopTest::Test"
       assert_includes out, "RogerSucceedTest::Test"
+    end
+
+    # roger test -v
+    def test_has_option_v
+      out, err = run_test_command %w{test -v}
+      assert_includes out, "NOOP DEBUG", out
     end
 
     # roger help test
