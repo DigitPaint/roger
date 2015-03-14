@@ -66,7 +66,17 @@ module Roger
 
     # roger test -v
     def test_has_option_v
-      out, err = run_test_command %w{test -v}
+      # A somewhat a-typical test,
+      # just to make it work
+      cli = ::Roger::Cli::Base.new [], %w{--verbose}
+      cli.class.project.mockupfile.test do |t|
+        t.use :noop
+      end
+
+      out, _err = capture do
+        cli.invoke "test"
+      end
+
       assert_includes out, "NOOP DEBUG", out
     end
 
