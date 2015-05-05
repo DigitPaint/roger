@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name = "roger"
-  s.version = "0.13.0"
+  s.version = "1.0.0"
 
   s.authors = ["Flurin Egger", "Edwin van der Graaf", "Joran Kapteijns"]
   s.email = ["info@digitpaint.nl", "flurin@digitpaint.nl"]
