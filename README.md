@@ -71,8 +71,10 @@ It's not it just does some things differently.
 
 ## Logos
 
-![Logo Black/Yellow](https://raw.githubusercontent.com/DigitPaint/roger/master/doc/images/logo_black-yellow.svg)
-![Logo Plain](https://raw.githubusercontent.com/DigitPaint/roger/master/doc/images/logo_plain.svg)
+![Logo Black/Yellow](https://raw.githubusercontent.com/DigitPaint/roger/master/doc/images/logo_black-yellow.png)
+![Logo Plain](https://raw.githubusercontent.com/DigitPaint/roger/master/doc/images/logo_plain-square.png)
+
+More logo's [can be found in the doc/images folder](https://github.com/DigitPaint/roger/tree/master/doc/images)
 
 ## License
 
