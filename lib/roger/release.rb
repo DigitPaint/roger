@@ -2,6 +2,8 @@ require File.dirname(__FILE__) + "/cli"
 require File.dirname(__FILE__) + "/helpers/get_callable"
 require File.dirname(__FILE__) + "/helpers/logging"
 
+require "shellwords"
+
 module Roger
   class Release
     include Roger::Helpers::Logging
@@ -27,12 +29,14 @@ module Roger
     # @option config [String, Pathname] :target_path The path/directory to put the release into
     # @option config [String, Pathname]:build_path Temporary path used to build the release
     # @option config [Boolean] :cleanup_build Wether or not to remove the build_path after we're done (default = true)
+    # @option config [Array,String, nil] :cp CP command to use; Array will be escaped with Shellwords. Pass nil to get native Ruby CP. (default = ["cp", "-RL"])
     def initialize(project, config = {})
       defaults = {
         :scm => :git,
         :source_path  => Pathname.new(Dir.pwd) + "html",
         :target_path => Pathname.new(Dir.pwd) + "releases",
         :build_path => Pathname.new(Dir.pwd) + "build",
+        :cp => ["cp", "-RL"],
         :cleanup_build => true
       }
 
@@ -245,7 +249,13 @@ module Roger
 
     def copy_source_path_to_build_path!
       mkdir(self.build_path)
-      cp_r(self.source_path.children, self.build_path)
+
+      if self.config[:cp]
+        command = [self.config[:cp]].flatten
+        system(Shellwords.join(command + ["#{self.source_path}/", self.build_path]))
+      else
+        cp_r(self.source_path.children, self.build_path)
+      end
     end
 
     def run_stack!

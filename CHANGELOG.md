@@ -1,5 +1,9 @@
 # Changelog
 
+## Version 1.0.1
+
+* Release copy command is now configurable by passing :cp configuration option to the mockup.release command in the mockup file. By default the release now uses system cp instead of fileutils cp so we can follow symlinks (you don't want symlinks in your release). If you want the old behaviour you have to pass {cp: nil}.
+
 ## Version 1.0.0
 
 There should be no breaking changes between 0.13.0 and 1.0.0
