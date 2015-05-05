@@ -73,7 +73,7 @@ It's not it just does some things differently.
 
 (The MIT License)
 
-Copyright (c) 2014 Digitpaint
+Copyright (c) 2015 Digitpaint
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
