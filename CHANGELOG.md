@@ -1,5 +1,15 @@
 # Changelog
 
+## Version 1.0.0
+
+There should be no breaking changes between 0.13.0 and 1.0.0
+
+* Add support for generators giving themselves names through `self.register`
+* Add support for setting hostname to listen to
+* Default listening to 0.0.0.0 instead of localhost only
+* Added more unittests for different CLI options
+* Minor fixes
+
 ## Version 0.13.0
 *Attention* This is the last call version before 1.0.0 (5 years in sub 1.0.0 is more than enough)
 
