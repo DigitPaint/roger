@@ -1,6 +1,6 @@
 # Command Line Interface
 
-The easiest way to get help is through the commandline by running 
+The easiest way to get help is through the commandline by running
 
 ```shell
 mockup help
@@ -34,6 +34,15 @@ mockup release [options]
 ```
 
 Releases the project
+
+## Test
+
+```shell
+mockup test [options]
+```
+
+Tests the project
+
 
 ## Global options
 
