@@ -69,6 +69,11 @@ It's not it just does some things differently.
 
 [View contributors](https://github.com/digitpaint/roger/graphs/contributors)
 
+## Logos
+
+![Logo Black/Yellow](https://raw.githubusercontent.com/DigitPaint/roger/master/doc/images/logo_black-yellow.svg)
+![Logo Plain](https://raw.githubusercontent.com/DigitPaint/roger/master/doc/images/logo_plain.svg)
+
 ## License
 
 (The MIT License)
