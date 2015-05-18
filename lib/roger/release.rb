@@ -14,7 +14,7 @@ module Roger
 
     class << self
      include Roger::Helpers::GetCallable
-      
+
       def default_stack
         []
       end
@@ -190,10 +190,10 @@ module Roger
 
       # Cleanup
       cleanup! if self.config[:cleanup_build]
-      
-    end    
-    
-    
+
+    end
+
+
     # @param [Array] globs an array of file path globs that will be globbed against the build_path
     # @param [Array] excludes an array of regexps that will be excluded from the result
     def get_files(globs, excludes = [])
