@@ -34,9 +34,9 @@ module Roger
     def initialize(project, config = {})
       defaults = {
         :scm => :git,
-        :source_path  => Pathname.new(Dir.pwd) + "html",
-        :target_path => Pathname.new(Dir.pwd) + "releases",
-        :build_path => Pathname.new(Dir.pwd) + "build",
+        :source_path  => project.path + "html",
+        :target_path => project.path + "releases",
+        :build_path => project.path + "build",
         :cp => ["cp", "-RL"],
         :blank => false,
         :cleanup_build => true
