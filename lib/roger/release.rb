@@ -10,7 +10,7 @@ module Roger
 
     attr_reader :config, :project
 
-    attr_reader :finalizers, :injections, :stack, :cleanups
+    attr_reader :finalizers, :stack
 
     class << self
      include Roger::Helpers::GetCallable
