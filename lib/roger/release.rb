@@ -30,6 +30,7 @@ module Roger
     # @option config [String, Pathname]:build_path Temporary path used to build the release
     # @option config [Boolean] :cleanup_build Wether or not to remove the build_path after we're done (default = true)
     # @option config [Array,String, nil] :cp CP command to use; Array will be escaped with Shellwords. Pass nil to get native Ruby CP. (default = ["cp", "-RL"])
+    # @option config [Boolean] :blank Keeps the release clean, don't automatically add any processors or finalizers (default = false)
     def initialize(project, config = {})
       defaults = {
         :scm => :git,
@@ -37,6 +38,7 @@ module Roger
         :target_path => Pathname.new(Dir.pwd) + "releases",
         :build_path => Pathname.new(Dir.pwd) + "build",
         :cp => ["cp", "-RL"],
+        :blank => false,
         :cleanup_build => true
       }
 
@@ -227,7 +229,9 @@ module Roger
 
     # Checks if deprecated extractor options have been set
     # Checks if the mockup will be runned
+    # If config[:blank] is true it will automatically add UrlRelativizer or Mockup processor
     def validate_stack!
+      return if config[:blank]
 
       mockup_options = {}
       relativizer_options = {}
@@ -271,8 +275,12 @@ module Roger
       end
     end
 
+    # Will run all finalizers, if no finalizers are set it will take the
+    # default finalizers.
+    #
+    # If config[:blank] is true, it will not use the default finalizers
     def run_finalizers!
-      @finalizers = self.class.default_finalizers.dup if @finalizers.empty?
+      @finalizers = self.class.default_finalizers.dup if @finalizers.empty? && !config[:blank]
 
       # call all objects in @finalizes
       @finalizers.each do |finalizer|

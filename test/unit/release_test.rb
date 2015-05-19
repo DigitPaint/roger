@@ -5,6 +5,18 @@ require "test/unit"
 module Roger
   class ReleaseTest < ::Test::Unit::TestCase
 
+    def setup
+      @project = Project.new(File.dirname(__FILE__) + "/../project", :mockupfile_path => false)
+      @mockupfile = Roger::Mockupfile.new(@project)
+    end
+    def test_blank_release_should_have_no_processors_and_finalizers
+      @mockupfile.release(:blank => true)
+      @project.release.run!
+
+      assert @project.release.stack.empty?
+      assert @project.release.finalizers.empty?
+    end
+
     def test_get_callable
       p = lambda{}
       assert_equal Release.get_callable(p, {}), p
