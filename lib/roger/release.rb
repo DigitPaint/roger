@@ -260,7 +260,7 @@ module Roger
 
       if self.config[:cp]
         command = [self.config[:cp]].flatten
-        system(Shellwords.join(command + ["#{self.source_path}/", self.build_path]))
+        system(Shellwords.join(command + ["#{self.source_path}/", self.build_path.to_s]))
       else
         cp_r(self.source_path.children, self.build_path)
       end
