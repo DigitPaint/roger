@@ -32,11 +32,12 @@ module Roger
     # @option config [Array,String, nil] :cp CP command to use; Array will be escaped with Shellwords. Pass nil to get native Ruby CP. (default = ["cp", "-RL"])
     # @option config [Boolean] :blank Keeps the release clean, don't automatically add any processors or finalizers (default = false)
     def initialize(project, config = {})
+      real_project_path = project.path.realpath
       defaults = {
         :scm => :git,
-        :source_path  => project.path + "html",
-        :target_path => project.path + "releases",
-        :build_path => project.path + "build",
+        :source_path  => real_project_path + "html",
+        :target_path => real_project_path + "releases",
+        :build_path => real_project_path + "build",
         :cp => ["cp", "-RL"],
         :blank => false,
         :cleanup_build => true
