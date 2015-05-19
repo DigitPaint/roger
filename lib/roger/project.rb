@@ -13,7 +13,8 @@ module Roger
     # @attr :partial_path [Pathname] The path for the partials for this mockup
     # @attr :mockupfile [Mockupfile] The Mockupfile for this project
     # @attr :mockupfile_path [Pathname] The path to the Mockupfile
-    attr_accessor :path, :html_path, :partial_path, :layouts_path, :mockupfile, :mockupfile_path
+    # @attr :mode [nil, :test, :server, :release] The mode we're currently in. If nil, we aren't doing anything.
+    attr_accessor :path, :html_path, :partial_path, :layouts_path, :mockupfile, :mockupfile_path, :mode
 
     attr_accessor :shell
 

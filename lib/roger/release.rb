@@ -176,6 +176,8 @@ module Roger
 
     # Actually perform the release
     def run!
+      project.mode = :release
+
       # Validate paths
       validate_paths!
 
@@ -192,7 +194,8 @@ module Roger
 
       # Cleanup
       cleanup! if self.config[:cleanup_build]
-
+    ensure
+      project.mode = nil
     end
 
 

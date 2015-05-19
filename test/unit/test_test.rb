@@ -9,6 +9,22 @@ module Roger
       @files = ["html/javascripts/site.js",
                 "html/vendor/underscore/underscore.js"]
       @globs = stub(map: @files)
+
+      @project = Project.new(File.dirname(__FILE__) + "/../project", :mockupfile_path => false)
+      @mockupfile = Roger::Mockupfile.new(@project)
+    end
+
+    def test_test_run_should_set_project_mode
+      assert_equal @project.mode, nil
+
+      @mockupfile.test do |t|
+        t.use Proc.new{|test|
+          assert_equal test.project.mode, :test
+        }
+      end
+
+      @project.test.run!
+      assert_equal @project.mode, nil
     end
 
     def test_get_files

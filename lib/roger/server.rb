@@ -52,6 +52,7 @@ module Roger
     end
 
     def run!
+      project.mode = :server
       self.handler.run self.application, self.server_options do |server|
         trap(:INT) do
           ## Use thins' hard #stop! if available, otherwise just #stop
@@ -59,6 +60,8 @@ module Roger
           puts "Roger, out!"
         end
       end
+    ensure
+      project.mode = nil
     end
     alias :run :run!
 

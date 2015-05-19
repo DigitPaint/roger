@@ -70,6 +70,8 @@ module Roger
 
     # Run all tests and return true when succeeded
     def run!
+      project.mode = :test
+
       success = true
       @stack.each do |task|
         ret = call_test(task) # Don't put this on one line, you will fail... :)
@@ -77,6 +79,8 @@ module Roger
       end
 
       success
+    ensure
+      project.mode = nil
     end
 
     # Run a specific test by stack index.

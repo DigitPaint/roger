@@ -9,6 +9,22 @@ module Roger
       @project = Project.new(File.dirname(__FILE__) + "/../project", :mockupfile_path => false)
       @mockupfile = Roger::Mockupfile.new(@project)
     end
+
+
+    def test_run_should_set_project_mode
+      assert_equal @project.mode, nil
+
+      # Running a blank release
+      @mockupfile.release(:blank => true) do |r|
+        r.use Proc.new{|release|
+          assert_equal release.project.mode, :release
+        }
+      end
+
+      @project.release.run!
+      assert_equal @project.mode, nil
+    end
+
     def test_blank_release_should_have_no_processors_and_finalizers
       @mockupfile.release(:blank => true)
       @project.release.run!
