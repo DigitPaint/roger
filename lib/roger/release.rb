@@ -43,6 +43,7 @@ module Roger
       }
 
       @config = {}.update(defaults).update(config)
+
       @project = project
       @stack = []
       @finalizers = []

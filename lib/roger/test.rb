@@ -52,11 +52,11 @@ module Roger
 
     def initialize(project, config = {})
       defaults = {}
-      
+
       @config = {}.update(defaults).update(config)
       @project = project
       @stack = []
-    end    
+    end
 
     # Use a certain test, this will also register it on the CLI
     #
@@ -87,7 +87,7 @@ module Roger
     def run_test!(index)
       test = @stack[index]
       if test
-        call_test(test) 
+        call_test(test)
       else
         false
       end
@@ -123,7 +123,7 @@ module Roger
     def register_in_cli(name, stack_index, klass)
       long_desc = "Run #{name} tests"
 
-      if klass && klass.kind_of?(Class) && klass <= Roger::Test::Cli 
+      if klass && klass.kind_of?(Class) && klass <= Roger::Test::Cli
         usage = "#{name} #{klass.arguments.map{ |arg| arg.banner }.join(" ")}"
         thor_class = klass
       else

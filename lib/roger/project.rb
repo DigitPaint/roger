@@ -27,7 +27,7 @@ module Roger
         :html_path => @path + "html",
         :partial_path => @path + "partials",
         :layouts_path => @path + "layouts",
-        :mockupfile_path => @path + "Mockupfile"
+        :mockupfile_path => @path + "Mockupfile",
         :server => {},
         :release => {},
         :test => {}
