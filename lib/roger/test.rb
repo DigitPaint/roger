@@ -58,13 +58,15 @@ module Roger
       @stack = []
     end
 
-    # Use a certain test, this will also register it on the CLI
+    # Use a certain test, this will also register it on the CLI if you supply a symbol.
     #
     # @examples
     #   test.use :jshint, config
     def use(processor, options = {})
       test = self.class.get_callable(processor, Roger::Test.map)
-      self.register_in_cli(processor, @stack.size, self.class.cli_map[processor])
+      if processor.is_a?(Symbol)
+        self.register_in_cli(processor, @stack.size, self.class.cli_map[processor])
+      end
       @stack << [test, options]
     end
 
