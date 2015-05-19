@@ -1,5 +1,12 @@
 # Changelog
 
+## Version 1.1.0
+
+* Allow passing of options to release, test and server from Mockupfile
+* Add option to make blank releases by passing `blank: true`; a blank release will not automatically add default processors and finalizers. This is a non-breaking change, the default is blank: false
+* Add project.mode so we can infer what mode we're in (:test, :release, :server) when running processors, middleware, tests, ets.
+* Release now by default takes project path as root instead of PWD. If you rely on this behaviour you may want to pass your own path definitions in mockup.release(....).
+
 ## Version 1.0.1
 
 * Release copy command is now configurable by passing :cp configuration option to the mockup.release command in the mockup file. By default the release now uses system cp instead of fileutils cp so we can follow symlinks (you don't want symlinks in your release). If you want the old behaviour you have to pass {cp: nil}.
