@@ -1,5 +1,9 @@
 # Changelog
 
+## Version 1.1.1
+
+* Better compatiblity with the release as `build` is a relative path it will give sometimes weird issues. This has now been resolved.
+
 ## Version 1.1.0
 
 * Allow passing of options to release, test and server from Mockupfile
