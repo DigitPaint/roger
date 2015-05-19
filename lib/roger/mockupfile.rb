@@ -43,27 +43,30 @@ module Roger
       @loaded
     end
 
-    def release
+    def release(options = {})
+      release = self.project.release(options)
       if block_given?
-        yield(self.project.release)
+        yield(release)
       end
-      self.project.release
+      release
     end
 
-    def serve
+    def serve(options = {})
+      server = self.project.server(options)
       if block_given?
-        yield(self.project.server)
+        yield(server)
       end
-      self.project.server
+      server
     end
 
     alias :server :serve
 
-    def test
+    def test(options = {})
+      test = self.project.test(options)
       if block_given?
-        yield(self.project.test)
+        yield(test)
       end
-      self.project.test
+      test
     end
 
   end

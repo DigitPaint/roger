@@ -27,6 +27,9 @@ module Roger
         :partial_path => @path + "partials",
         :layouts_path => @path + "layouts",
         :mockupfile_path => @path + "Mockupfile"
+        :server => {},
+        :release => {},
+        :test => {}
       }
 
       # Clumsy string to symbol key conversion
@@ -51,18 +54,18 @@ module Roger
       @shell ||= Thor::Base.shell.new
     end
 
-    def server
-      options = @options[:server] || {}
+    def server(options = {})
+      options = {}.update(@options[:server]).update(options)
       @server ||= Server.new(self, options)
     end
 
-    def release
-      options = @options[:release] || {}
+    def release(options = {})
+      options = {}.update(@options[:release]).update(options)
       @release ||= Release.new(self, options)
     end
 
-    def test
-      options = @options[:test] || {}
+    def test(options = {})
+      options = {}.update(@options[:test]).update(options)
       @test ||= Test.new(self, options)
     end
 
