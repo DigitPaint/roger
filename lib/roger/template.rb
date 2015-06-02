@@ -35,6 +35,10 @@ module Roger
     # @option options [String,Pathname] :partials_path The path to where all partials reside    
     def initialize(source, options = {})
       @options = options
+
+      # Block counter to make sure erbtemp binding is always unique
+      @block_counter = 0
+
       self.source_path = options[:source_path]
       self.data, self.source = extract_front_matter(source)
       self.template = Tilt.new(self.source_path.to_s){ self.source }
@@ -184,12 +188,16 @@ module Roger
 
     def capture(&block)
       raise ArgumentError, "content_for works only with ERB Templates" if !self.template.template.kind_of?(Tilt::ERBTemplate)
-      eval "@_erbout_tmp = _erbout", block.binding
+
+      @block_counter += 1
+      counter = @block_counter
+
+      eval "@_erbout_tmp#{counter} = _erbout", block.binding
       eval "_erbout = \"\"", block.binding
       t = Tilt::ERBTemplate.new(){ "<%= yield %>" }
-      t.render(&block)      
+      t.render(&block)
     ensure
-      eval "_erbout = @_erbout_tmp", block.binding
+      eval "_erbout = @_erbout_tmp#{counter}", block.binding
     end
         
     def partial(name, options = {}, &block)
