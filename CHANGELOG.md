@@ -1,5 +1,9 @@
 # Changelog
 
+## Version 1.1.2
+
+* Fix issue where nested `content_for` statements or partials with blocks within a `content_for` block would yield multiple times.
+
 ## Version 1.1.1
 
 * Better compatiblity with the release as `build` is a relative path it will give sometimes weird issues. This has now been resolved.
