@@ -36,9 +36,6 @@ module Roger
     def initialize(source, options = {})
       @options = options
 
-      # Block counter to make sure erbtemp binding is always unique
-      @block_counter = 0
-
       self.source_path = options[:source_path]
       self.data, self.source = extract_front_matter(source)
       self.template = Tilt.new(self.source_path.to_s){ self.source }
@@ -153,6 +150,9 @@ module Roger
     def initialize(template, env={})
       @_content_for_blocks = {}
       @_template, @_env = template, env
+
+      # Block counter to make sure erbtemp binding is always unique
+      @block_counter = 0
     end
     
     # The current Roger::Template in use
