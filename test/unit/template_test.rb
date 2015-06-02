@@ -135,6 +135,11 @@ module Roger
       assert_equal template.render, "BA"
     end    
 
+    def test_content_for_yield_with_partial_with_block
+      template = Template.new("---\nlayout: \"yield\"\n---\nB<% content_for :one do %><% partial 'test/yield' do %>CONTENT<% end %><% end %>A", @config.update(:source_path => @base + "html/test.html.erb"))
+      assert_equal template.render, "BAB-CONTENT-A"
+    end
+
     # Environment
 
     def test_template_env
