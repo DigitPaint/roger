@@ -4,19 +4,17 @@ require "test/unit"
 
 module Roger
   class ReleaseTest < ::Test::Unit::TestCase
-
     def setup
-      @project = Project.new(File.dirname(__FILE__) + "/../project", :mockupfile_path => false)
+      @project = Project.new(File.dirname(__FILE__) + "/../project", mockupfile_path: false)
       @mockupfile = Roger::Mockupfile.new(@project)
     end
-
 
     def test_run_should_set_project_mode
       assert_equal @project.mode, nil
 
       # Running a blank release
-      @mockupfile.release(:blank => true) do |r|
-        r.use Proc.new{|release|
+      @mockupfile.release(blank: true) do |r|
+        r.use proc{|release|
           assert_equal release.project.mode, :release
         }
       end
@@ -26,7 +24,7 @@ module Roger
     end
 
     def test_blank_release_should_have_no_processors_and_finalizers
-      @mockupfile.release(:blank => true)
+      @mockupfile.release(blank: true)
       @project.release.run!
 
       assert @project.release.stack.empty?
@@ -34,19 +32,19 @@ module Roger
     end
 
     def test_get_callable
-      p = lambda{}
+      p = lambda {}
       assert_equal Release.get_callable(p, {}), p
-      assert_raise(ArgumentError){ Release.get_callable(nil, {})}
+      assert_raise(ArgumentError) { Release.get_callable(nil, {}) }
     end
 
     def test_get_callable_with_map
-      p = lambda{}
+      p = lambda {}
       map = {
-        :lambda => p,
+        lambda: p
       }
 
       assert_equal Release.get_callable(:lambda, map), p
-      assert_raise(ArgumentError){ Release.get_callable(:huh, map)}
+      assert_raise(ArgumentError) { Release.get_callable(:huh, map) }
     end
 
     class Works
@@ -57,8 +55,7 @@ module Roger
 
     def test_get_callable_with_class
       assert Release.get_callable(Works, {}).instance_of?(Works)
-      assert_raise(ArgumentError){ Release.get_callable(Breaks, {}) }
+      assert_raise(ArgumentError) { Release.get_callable(Breaks, {}) }
     end
-
   end
 end

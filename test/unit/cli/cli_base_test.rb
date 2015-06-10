@@ -3,7 +3,6 @@ require "test/unit"
 
 module Roger
   class CliBaseTest < ::Test::Unit::TestCase
-
     def test_has_test_command
       assert_includes Cli::Base.tasks.keys, "test"
     end
@@ -23,6 +22,5 @@ module Roger
     def test_has_version_command
       assert_includes Cli::Base.tasks.keys, "version"
     end
-
   end
 end

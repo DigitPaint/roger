@@ -1,11 +1,9 @@
 module Roger
   # Loader for mockupfile
   class Mockupfile
-
     # This is the context for the mockupfile evaluation. It should be empty except for the
     # #mockup method.
     class Context
-
       def initialize(mockupfile)
         @_mockupfile = mockupfile
       end
@@ -17,7 +15,6 @@ module Roger
       def binding
         ::Kernel.binding
       end
-
     end
 
     # @attr :path [Pathname] The path of the Mockupfile for this project
@@ -44,30 +41,23 @@ module Roger
     end
 
     def release(options = {})
-      release = self.project.release(options)
-      if block_given?
-        yield(release)
-      end
+      release = project.release(options)
+      yield(release) if block_given?
       release
     end
 
     def serve(options = {})
-      server = self.project.server(options)
-      if block_given?
-        yield(server)
-      end
+      server = project.server(options)
+      yield(server) if block_given?
       server
     end
 
-    alias :server :serve
+    alias_method :server, :serve
 
     def test(options = {})
-      test = self.project.test(options)
-      if block_given?
-        yield(test)
-      end
+      test = project.test(options)
+      yield(test) if block_given?
       test
     end
-
   end
 end

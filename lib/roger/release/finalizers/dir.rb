@@ -1,12 +1,11 @@
-require 'fileutils'
+require "fileutils"
 
 module Roger::Release::Finalizers
-  
   # Finalizes the release into a directory in target_path
-  # 
+  #
   # The directory name will have the format PREFIX-VERSION
-  #  
-  class Dir < Base    
+  #
+  class Dir < Base
     # @option options :prefix Prefix to put before the version (default = "html")
     def call(release, options = {})
       if options
@@ -15,14 +14,14 @@ module Roger::Release::Finalizers
         options = @options
       end
 
-      name = [(options[:prefix] || "html"), release.scm.version].join("-")      
+      name = [(options[:prefix] || "html"), release.scm.version].join("-")
       release.log(self, "Finalizing release to #{release.target_path + name}")
-      
+
       if File.exist?(release.target_path + name)
         release.log(self, "Removing existing target #{release.target_path + name}")
         FileUtils.rm_rf(release.target_path + name)
       end
-      
+
       FileUtils.cp_r release.build_path, release.target_path + name
     end
   end

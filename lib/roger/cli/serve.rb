@@ -1,19 +1,17 @@
 module Roger
   class Cli::Serve < Cli::Command
-
-
     desc "Serve the current project"
 
-    class_options :port => :string, # Defaults to 9000
-                  :host => :string, # Defaults to 0.0.0.0
-                  :handler => :string # The handler to use (defaults to mongrel)
+    class_options port: :string, # Defaults to 9000
+                  host: :string, # Defaults to 0.0.0.0
+                  handler: :string # The handler to use (defaults to mongrel)
 
     def serve
       server_options = {}
-      options.each{|k,v| server_options[k.to_sym] = v }
+      options.each { |k, v| server_options[k.to_sym] = v }
       server_options[:server] = {}
       [:port, :handler, :host].each do |k|
-        server_options[:server][k] = server_options.delete(k) if server_options.has_key?(k)
+        server_options[:server][k] = server_options.delete(k) if server_options.key?(k)
       end
 
       server = @project.server
@@ -29,4 +27,3 @@ module Roger
     end
   end
 end
-

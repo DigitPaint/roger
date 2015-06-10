@@ -27,19 +27,19 @@ module Roger
 
     def test_find_template_with_template_extension
       assert_equal @resolver.find_template("formats/markdown"), @base + "formats/markdown.md"
-    end  
+    end
 
     def test_find_template_with_double_extensions
       assert_equal @resolver.find_template("formats/erb"), @base + "formats/erb.html.erb"
       assert_equal @resolver.find_template("formats/erb.html"), @base + "formats/erb.html.erb"
 
       assert_equal @resolver.find_template("formats/json.json"), @base + "formats/json.json.erb"
-    end    
+    end
 
     def test_find_template_with_preferred_extension
-      assert_equal @resolver.find_template("formats/json", :preferred_extension => "json"), @base + "formats/json.json.erb"
+      assert_equal @resolver.find_template("formats/json", preferred_extension: "json"), @base + "formats/json.json.erb"
     end
-    
+
     def test_find_template_exact_match
       # TODO
     end
@@ -55,7 +55,6 @@ module Roger
     def test_path_to_url_relative_to_absolute_path
       assert_equal @resolver.path_to_url(@base + "formats/erb.html.erb", @base.realpath + "front_matter/erb.html.erb"), "../formats/erb.html.erb"
     end
-
   end
 
   class ResolverMultipleTest < ::Test::Unit::TestCase
@@ -82,11 +81,5 @@ module Roger
 
       assert_equal @resolver.find_template("formats/erb"), @base + "partials/formats/erb.html.erb"
     end
-
-
-
-
-
   end
-
 end

@@ -1,31 +1,30 @@
-require File.dirname(__FILE__) + '../../../resolver'
+require File.dirname(__FILE__) + "../../../resolver"
 
 module Roger::Release::Processors
   class UrlRelativizer < Base
-    
-    def initialize(options={})
+    def initialize(options = {})
       @options = {
-        :url_attributes => %w{src href action},
-        :match => ["**/*.html"],
-        :skip => []
+        url_attributes: %w(src href action),
+        match: ["**/*.html"],
+        skip: []
       }
-      
-      @options.update(options) if options            
+
+      @options.update(options) if options
     end
 
-    def call(release, options={})
+    def call(release, options = {})
       options = {}.update(@options).update(options)
-      
-      release.log(self, "Relativizing all URLS in #{options[:match].inspect} files in attributes #{options[:url_attributes].inspect}, skipping #{options[:skip].any? ? options[:skip].inspect : "none" }")
-      
+
+      release.log(self, "Relativizing all URLS in #{options[:match].inspect} files in attributes #{options[:url_attributes].inspect}, skipping #{options[:skip].any? ? options[:skip].inspect : 'none' }")
+
       @resolver = Roger::Resolver.new(release.build_path)
-     release.get_files(options[:match], options[:skip]).each do |file_path|
+      release.get_files(options[:match], options[:skip]).each do |file_path|
         release.debug(self, "Relativizing URLS in #{file_path}") do
           orig_source = File.read(file_path)
-          File.open(file_path,"w") do |f| 
+          File.open(file_path, "w") do |f|
             doc = Hpricot(orig_source)
             options[:url_attributes].each do |attribute|
-              (doc/"*[@#{attribute}]").each do |tag|
+              (doc / "*[@#{attribute}]").each do |tag|
                 converted_url = @resolver.url_to_relative_url(tag[attribute], file_path)
                 release.debug(self, "Converting '#{tag[attribute]}' to '#{converted_url}'")
                 case converted_url
@@ -36,7 +35,7 @@ module Roger::Release::Processors
                 end
               end
             end
-            f.write(doc.to_original_html) 
+            f.write(doc.to_original_html)
           end
         end
       end

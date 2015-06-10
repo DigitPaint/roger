@@ -25,9 +25,7 @@ module Roger::Release::Finalizers
       remote = find_git_remote
 
       # 0. Get remote
-      unless remote
-        raise "No remote found for origin"
-      end
+      fail "No remote found for origin" unless remote
 
       e_remote = Shellwords.escape(remote)
       e_branch = Shellwords.escape(@options[:branch])
@@ -65,9 +63,7 @@ module Roger::Release::Finalizers
         `git commit -a -m "Release #{release.scm.version}"`
 
         # 6. Git push
-        if @options[:push]
-          `git push origin #{e_branch}`
-        end
+        `git push origin #{e_branch}` if @options[:push]
       end
 
       if @options[:cleanup]
@@ -80,16 +76,16 @@ module Roger::Release::Finalizers
     protected
 
     # Find the git dir
-    # TODO this is just a copy from release/scm/git.rb
+    # TODO: this is just a copy from release/scm/git.rb
     def find_git_dir(path)
       path = Pathname.new(path).realpath
       while path.parent != path && !(path + ".git").directory?
         path = path.parent
       end
 
-      path = path + ".git"
+      path += ".git"
 
-      raise "Could not find suitable .git dir in #{path}" if !path.directory?
+      fail "Could not find suitable .git dir in #{path}" unless path.directory?
 
       path
     end

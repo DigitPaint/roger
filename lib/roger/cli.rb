@@ -1,22 +1,18 @@
-require 'rubygems'
+require "rubygems"
 
 # Require bundler gems if available
-if Object.const_defined?(:Bundler)
-  Bundler.require(:default)
-end
+Bundler.require(:default) if Object.const_defined?(:Bundler)
 
+require "thor"
+require "thor/group"
 
-require 'thor'
-require 'thor/group'
-
-require 'pathname'
-require 'fileutils'
+require "pathname"
+require "fileutils"
 include FileUtils
 
 require File.dirname(__FILE__) + "/version"
 require File.dirname(__FILE__) + "/template"
 require File.dirname(__FILE__) + "/project"
-
 
 module Roger
   module Cli; end
@@ -31,10 +27,8 @@ require File.dirname(__FILE__) + "/cli/test"
 require File.dirname(__FILE__) + "/generators"
 require File.dirname(__FILE__) + "/test"
 
-
 module Roger
   class Cli::Base < Thor
-
     def initialize(*args)
       super
       self.class.project ||= initialize_project
@@ -49,26 +43,26 @@ module Roger
     end
 
     class_option :path,
-      :desc => "Project root path",
-      :type => :string,
-      :required => false,
-      :default => "."
+                 desc: "Project root path",
+                 type: :string,
+                 required: false,
+                 default: "."
 
     class_option :html_path,
-      :desc => 'The document root, defaults to "[directory]/html"',
-      :type => :string
+                 desc: 'The document root, defaults to "[directory]/html"',
+                 type: :string
 
     class_option :partial_path,
-      :desc => 'Defaults to [directory]/partials',
-      :type => :string
+                 desc: "Defaults to [directory]/partials",
+                 type: :string
 
     class_option :verbose,
-      :desc =>  "Sets verbose output",
-      :aliases => ["-v"],
-      :default => false,
-      :type => :boolean
+                 desc: "Sets verbose output",
+                 aliases: ["-v"],
+                 default: false,
+                 type: :boolean
 
-    map %w{--version} => :version
+    map %w(--version) => :version
 
     desc "test [COMMAND]", "Run one or more tests. Test can be 'all' for all defined tests or a specific test name"
     subcommand "test", Cli::Test
@@ -76,11 +70,11 @@ module Roger
     desc "generate [COMMAND]", "Run a generator"
     subcommand "generate", Cli::Generate
 
-    register Cli::Serve, "serve", "serve #{Cli::Serve.arguments.map{ |arg| arg.banner }.join(" ")}", Cli::Serve.desc
-    self.tasks["serve"].options = Cli::Serve.class_options
+    register Cli::Serve, "serve", "serve #{Cli::Serve.arguments.map(&:banner).join(' ')}", Cli::Serve.desc
+    tasks["serve"].options = Cli::Serve.class_options
 
-    register Cli::Release, "release", "release #{Cli::Release.arguments.map{ |arg| arg.banner }.join(" ")}", Cli::Release.desc
-    self.tasks["release"].options = Cli::Release.class_options
+    register Cli::Release, "release", "release #{Cli::Release.arguments.map(&:banner).join(' ')}", Cli::Release.desc
+    tasks["release"].options = Cli::Release.class_options
 
     desc "version", "Get the current Roger version"
     def version
@@ -91,14 +85,12 @@ module Roger
 
     # TODO: handle options
     def initialize_project
-      if((Pathname.new(options[:path]) + "../partials").exist?)
+      if (Pathname.new(options[:path]) + "../partials").exist?
         puts "[ERROR]: Don't use the \"html\" path, use the project base path instead"
         exit(1)
       end
 
-      Project.new(options[:path], {:shell => self.shell}.update(options))
+      Project.new(options[:path], { shell: shell }.update(options))
     end
-
   end
-
 end

@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-gem "roger", :path => File.dirname(__FILE__) + "/../../"
+gem "roger", path: File.dirname(__FILE__) + "/../../"
 gem "sass"
 gem "yui-compressor"
 gem "redcarpet"

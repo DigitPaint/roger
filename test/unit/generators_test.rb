@@ -4,28 +4,24 @@ require "test/unit"
 
 module CustomGens
   module Generators
-
     class MockedGenerator < Roger::Generators::Base
-
       desc "@mocked description"
-      argument :path, :type => :string, :required => false, :desc => "Path to generate mockup into"
-      argument :another_arg, :type => :string, :required => false, :desc => "Mocked or what?!"
+      argument :path, type: :string, required: false, desc: "Path to generate mockup into"
+      argument :another_arg, type: :string, required: false, desc: "Mocked or what?!"
 
       def test
         # Somewhat ugly way of checking
-        raise NotImplementedError
+        fail NotImplementedError
       end
     end
 
     class MockedWithProjectGenerator < Roger::Generators::Base
-
       desc "Returns a project"
       def test
         # Somewhat ugly way of checking
-        raise StandardError if @project
+        fail StandardError if @project
       end
     end
-
   end
 end
 
@@ -61,7 +57,6 @@ module Roger
     end
 
     def test_cli_help_shows_all_available_generators
-
     end
 
     def test_default_generator

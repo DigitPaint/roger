@@ -15,14 +15,13 @@ module Roger
     class << self
      include Roger::Helpers::GetCallable
 
-      def default_stack
-        []
-      end
+     def default_stack
+       []
+     end
 
-      def default_finalizers
-        [[self.get_callable(:dir, Roger::Release::Finalizers.map), {}]]
-      end
-
+     def default_finalizers
+       [[get_callable(:dir, Roger::Release::Finalizers.map), {}]]
+     end
     end
 
     # @option config [Symbol] :scm The SCM to use (default = :git)
@@ -34,13 +33,13 @@ module Roger
     def initialize(project, config = {})
       real_project_path = project.path.realpath
       defaults = {
-        :scm => :git,
-        :source_path  => real_project_path + "html",
-        :target_path => real_project_path + "releases",
-        :build_path => real_project_path + "build",
-        :cp => ["cp", "-RL"],
-        :blank => false,
-        :cleanup_build => true
+        scm: :git,
+        source_path: real_project_path + "html",
+        target_path: real_project_path + "releases",
+        build_path: real_project_path + "build",
+        cp: ["cp", "-RL"],
+        blank: false,
+        cleanup_build: true
       }
 
       @config = {}.update(defaults).update(config)
@@ -55,7 +54,7 @@ module Roger
     #
     # @return Pathname the target_path
     def target_path
-      Pathname.new(self.config[:target_path])
+      Pathname.new(config[:target_path])
     end
 
     # Accessor for build_path
@@ -63,7 +62,7 @@ module Roger
     #
     # @return Pathname the build_path
     def build_path
-      Pathname.new(self.config[:build_path])
+      Pathname.new(config[:build_path])
     end
 
     # Accessor for source_path
@@ -71,18 +70,18 @@ module Roger
     #
     # @return Pathanem the source_path
     def source_path
-      Pathname.new(self.config[:source_path])
+      Pathname.new(config[:source_path])
     end
 
     # Get the current SCM object
     def scm(force = false)
       return @_scm if @_scm && !force
 
-      case self.config[:scm]
+      case config[:scm]
       when :git
-        @_scm = Release::Scm::Git.new(:path => self.source_path)
+        @_scm = Release::Scm::Git.new(path: source_path)
       else
-        raise "Unknown SCM #{options[:scm].inspect}"
+        fail "Unknown SCM #{options[:scm].inspect}"
       end
     end
 
@@ -138,20 +137,20 @@ module Roger
     #
     #
     # @option options [:css,:js,:html,false] :comment Wether or not to comment the output and in what style. (default=js)
-    def banner(options = {}, &block)
+    def banner(options = {}, &_block)
       options = {
-        :comment => :js
+        comment: :js
       }.update(options)
 
       if block_given?
         @_banner = yield.to_s
       elsif !@_banner
         banner = []
-        banner << "Version : #{self.scm.version}"
-        banner << "Date  : #{self.scm.date.strftime("%Y-%m-%d")}"
+        banner << "Version : #{scm.version}"
+        banner << "Date  : #{scm.date.strftime('%Y-%m-%d')}"
 
-        size = banner.inject(0){|mem,b| b.size > mem ? b.size : mem }
-        banner.map!{|b| "= #{b.ljust(size)} =" }
+        size = banner.inject(0) { |mem, b| b.size > mem ? b.size : mem }
+        banner.map! { |b| "= #{b.ljust(size)} =" }
         div = "=" * banner.first.size
         banner.unshift(div)
         banner << div
@@ -159,7 +158,7 @@ module Roger
       end
 
       if options[:comment]
-        self.comment(@_banner, :style => options[:comment])
+        comment(@_banner, style: options[:comment])
       else
         @_banner
       end
@@ -172,7 +171,7 @@ module Roger
     #
     # @deprecated Don't use the extractor anymore, use release.use(:mockup, options) processor
     def extract(options = {})
-      self.warn(self, "Don't use the extractor anymore, use release.use(:mockup, options) and release.use(:url_relativizer, options) processors")
+      warn(self, "Don't use the extractor anymore, use release.use(:mockup, options) and release.use(:url_relativizer, options) processors")
       @extractor_options = options
     end
 
@@ -195,18 +194,17 @@ module Roger
       run_finalizers!
 
       # Cleanup
-      cleanup! if self.config[:cleanup_build]
+      cleanup! if config[:cleanup_build]
     ensure
       project.mode = nil
     end
 
-
     # @param [Array] globs an array of file path globs that will be globbed against the build_path
     # @param [Array] excludes an array of regexps that will be excluded from the result
     def get_files(globs, excludes = [])
-      files = globs.map{|g| Dir.glob(self.build_path + g) }.flatten
+      files = globs.map { |g| Dir.glob(build_path + g) }.flatten
       if excludes.any?
-        files.reject{|c| excludes.detect{|e| e.match(c) } }
+        files.reject { |c| excludes.detect { |e| e.match(c) } }
       else
         files
       end
@@ -221,14 +219,14 @@ module Roger
     # Checks if build path exists (and cleans it up)
     # Checks if target path exists (if not, creates it)
     def validate_paths!
-      if self.build_path.exist?
-        log self, "Cleaning up previous build \"#{self.build_path}\""
-        rm_rf(self.build_path)
+      if build_path.exist?
+        log self, "Cleaning up previous build \"#{build_path}\""
+        rm_rf(build_path)
       end
 
-      if !self.target_path.exist?
-        log self, "Creating target path \"#{self.target_path}\""
-        mkdir self.target_path
+      unless target_path.exist?
+        log self, "Creating target path \"#{target_path}\""
+        mkdir target_path
       end
     end
 
@@ -242,28 +240,28 @@ module Roger
       relativizer_options = {}
       run_relativizer = true
       if @extractor_options
-        mockup_options = {:env => @extractor_options[:env]}
-        relativizer_options = {:url_attributes => @extractor_options[:url_attributes]}
+        mockup_options = { env: @extractor_options[:env] }
+        relativizer_options = { url_attributes: @extractor_options[:url_attributes] }
         run_relativizer = @extractor_options[:url_relativize]
       end
 
-      unless @stack.find{|(processor, options)| processor.class == Roger::Release::Processors::Mockup }
+      unless @stack.find { |(processor, _options)| processor.class == Roger::Release::Processors::Mockup }
         @stack.unshift([Roger::Release::Processors::Mockup.new, mockup_options])
       end
 
-      unless @stack.find{|(processor, options)| processor.class == Roger::Release::Processors::UrlRelativizer }
+      unless @stack.find { |(processor, _options)| processor.class == Roger::Release::Processors::UrlRelativizer }
         @stack.push([Roger::Release::Processors::UrlRelativizer.new, relativizer_options])
       end
     end
 
     def copy_source_path_to_build_path!
-      mkdir(self.build_path)
+      mkdir(build_path)
 
-      if self.config[:cp]
-        command = [self.config[:cp]].flatten
-        system(Shellwords.join(command + ["#{self.source_path}/", self.build_path.to_s]))
+      if config[:cp]
+        command = [config[:cp]].flatten
+        system(Shellwords.join(command + ["#{source_path}/", build_path.to_s]))
       else
-        cp_r(self.source_path.children, self.build_path)
+        cp_r(source_path.children, build_path)
       end
     end
 
@@ -272,7 +270,7 @@ module Roger
 
       # call all objects in @stack
       @stack.each do |task|
-        if (task.kind_of?(Array))
+        if task.is_a?(Array)
           task[0].call(self, task[1])
         else
           task.call(self)
@@ -291,12 +289,11 @@ module Roger
       @finalizers.each do |finalizer|
         finalizer[0].call(self, finalizer[1])
       end
-
     end
 
     def cleanup!
-      log(self, "Cleaning up build path #{self.build_path}")
-      rm_rf(self.build_path)
+      log(self, "Cleaning up build path #{build_path}")
+      rm_rf(build_path)
     end
 
     # @param [String] string The string to comment
@@ -305,21 +302,21 @@ module Roger
     # @option options [Boolean] :per_line Comment per line or make one block? (default=true)
     def comment(string, options = {})
       options = {
-        :style => :css,
-        :per_line => true
+        style: :css,
+        per_line: true
       }.update(options)
 
       commenters = {
-        :html => Proc.new{|s| "<!-- #{s} -->" },
-        :css => Proc.new{|s| "/*! #{s} */" },
-        :js => Proc.new{|s| "/*! #{s} */" }
+        html: proc { |s| "<!-- #{s} -->" },
+        css: proc { |s| "/*! #{s} */" },
+        js: proc { |s| "/*! #{s} */" }
       }
 
       commenter = commenters[options[:style]] || commenters[:js]
 
       if options[:per_line]
         string = string.split(/\r?\n/)
-        string.map{|s| commenter.call(s) }.join("\n")
+        string.map { |s| commenter.call(s) }.join("\n")
       else
         commenter.call(s)
       end

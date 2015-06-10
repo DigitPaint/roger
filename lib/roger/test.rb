@@ -18,7 +18,7 @@ module Roger
       desc "test", "Run the test"
       def test
         unless Roger::Cli::Base.project.test.run_test!(self.class.stack_index)
-          raise Thor::Error, "The test failed"
+          fail Thor::Error, "The test failed"
         end
       end
     end
@@ -33,10 +33,10 @@ module Roger
       # Register a test method to Roger::Test so it can be used in the Mockupfile
 
       def register(name, test, cli = nil)
-        raise ArgumentError, "Another test has already claimed the name #{name.inspect}" if self.map.has_key?(name)
-        raise ArgumentError, "Name must be a symbol" unless name.kind_of?(Symbol)
-        self.map[name] = test
-        self.cli_map[name] = cli if cli
+        fail ArgumentError, "Another test has already claimed the name #{name.inspect}" if map.key?(name)
+        fail ArgumentError, "Name must be a symbol" unless name.is_a?(Symbol)
+        map[name] = test
+        cli_map[name] = cli if cli
       end
 
       # Mapping names to test callers
@@ -65,7 +65,7 @@ module Roger
     def use(processor, options = {})
       test = self.class.get_callable(processor, Roger::Test.map)
       if processor.is_a?(Symbol)
-        self.register_in_cli(processor, @stack.size, self.class.cli_map[processor])
+        register_in_cli(processor, @stack.size, self.class.cli_map[processor])
       end
       @stack << [test, options]
     end
@@ -104,7 +104,7 @@ module Roger
     #                if you wasted more then an hour of your life because the
     #                shell glob didn't 'work'.
     def get_files(globs, excludes = [])
-      files = globs.map{|g| Dir.glob(self.project.path + g) }.flatten
+      files = globs.map { |g| Dir.glob(project.path + g) }.flatten
       if excludes.any?
         files.reject { |c| excludes.detect { |e| c.match(e) } }
       else
@@ -115,7 +115,7 @@ module Roger
     protected
 
     def call_test(task)
-      if (task.kind_of?(Array))
+      if task.is_a?(Array)
         task[0].call(self, task[1])
       else
         task.call(self)
@@ -125,8 +125,8 @@ module Roger
     def register_in_cli(name, stack_index, klass)
       long_desc = "Run #{name} tests"
 
-      if klass && klass.kind_of?(Class) && klass <= Roger::Test::Cli
-        usage = "#{name} #{klass.arguments.map{ |arg| arg.banner }.join(" ")}"
+      if klass && klass.is_a?(Class) && klass <= Roger::Test::Cli
+        usage = "#{name} #{klass.arguments.map(&:banner).join(' ')}"
         thor_class = klass
       else
         usage = "#{name}"
@@ -138,7 +138,6 @@ module Roger
       end
 
       Roger::Cli::Test.register thor_class, name, usage, long_desc
-
     end
   end
 end

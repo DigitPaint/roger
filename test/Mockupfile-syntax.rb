@@ -20,20 +20,19 @@ mockup.test do |t|
 end
 
 mockup.release do |release|
-  
   release.target_path # The target path where releases are put
   release.build_path # The path where the release gets built
   release.source_path # The source for this mockup
-  
+
   # Extract mockup
   # Pass custom config to the extractor, this is optional
   # release.extract :url_attributes =>  %w{src href action data-main}
-  
+
   # Get git version
   release.scm.previous # Get the previous version SCM op (looks for tags)
   release.scm.version # Get the git version
   release.scm.date # Get the git date
-    
+
   # Create custom banner
   #
   # The default banner looks like this:
@@ -41,17 +40,16 @@ mockup.release do |release|
   # =======================
   # = Version : v1.0.0    =
   # = Date : 2012-06-20   =
-  # =======================    
+  # =======================
   release.banner do
     "bla bla bla"
   end
-  
-  
+
   # Sassify CSS (this are the defaults too), all options except form :match and :skip are passed to Sass.compile_file
   # release.use :sass, :match => ["stylesheets/**/*.scss"], :skip => [/_.*\.scss\Z/], :style => :expanded
   # The previous statement is the same as:
   release.use :sass
-  
+
   # Run requirejs optimizer
   # release.use :requirejs, {
   #     :build_files => {"javascripts/site.build.js" => "javascripts"},
@@ -59,7 +57,7 @@ mockup.release do |release|
   #     :node => "node"
   #   }
   release.use :requirejs
-    
+
   # Minify, will not minify anything above the :delimiter
   # release.use :yuicompressor, {
   #   :match => ["**/*.{css,js}"],
@@ -68,26 +66,24 @@ mockup.release do |release|
   # }
   # The previous statement is the same as:
   release.use :yuicompressor
-  
-  
+
   # Inject VERSION / DATE (i.e. in TOC)
-  r.inject({"[VERSION]" => release.scm.version, "[DATE]" => release.scm.date.strftime("%Y-%m-%d")}, :into => %w{_doc/toc.html})
-  
+  r.inject({ "[VERSION]" => release.scm.version, "[DATE]" => release.scm.date.strftime("%Y-%m-%d") }, into: %w(_doc/toc.html))
+
   # Inject Banners on everything matching the regexp in all .css files
   # The banner will be commented as CSS.
-  release.inject({ /\/\*\s*\[BANNER\]\s*\*\// => r.banner(:comment => :css)}, :into => %w{**/*.css})
-  
+  release.inject({ /\/\*\s*\[BANNER\]\s*\*\// => r.banner(comment: :css) }, into: %w(**/*.css))
+
   # Inject CHANGELOG
-  release.inject({"[CHANGELOG]" => {:file => "../CHANGELOG", :processor => 'md'}}, :into => %w{_doc/changelog.html})  
-  
+  release.inject({ "[CHANGELOG]" => { file: "../CHANGELOG", processor: "md" } }, into: %w(_doc/changelog.html))
+
   # Inject NOTES
-  release.inject({"[NOTES]" => {:file => "../NOTES.md", :processor => 'md'}}, :into => %w{_doc/notes.html})    
-  
+  release.inject({ "[NOTES]" => { file: "../NOTES.md", processor: "md" } }, into: %w(_doc/notes.html))
+
   # Cleanup on the build
-  release.cleanup "**/.DS_Store"  
-  
+  release.cleanup "**/.DS_Store"
+
   # Finalize the release
   # This is the default finalizer so not required
   # release.finalize :dir
-    
 end

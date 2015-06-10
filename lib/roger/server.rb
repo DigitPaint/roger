@@ -1,20 +1,19 @@
-require 'rack'
+require "rack"
 require File.dirname(__FILE__) + "/template"
 require File.dirname(__FILE__) + "/rack/roger"
 
-require 'webrick'
-require 'webrick/https'
+require "webrick"
+require "webrick/https"
 
 module Roger
   class Server
-
     attr_reader :server_options
 
     attr_reader :project
 
     attr_accessor :port, :handler, :host
 
-    def initialize(project, options={})
+    def initialize(project, options = {})
       @stack = initialize_rack_builder
 
       @project = project
@@ -32,9 +31,9 @@ module Roger
     # Sets the options, this is a separate method as we want to override certain
     # things set in the mockupfile from the commandline
     def set_options(options)
-      self.port = options[:port] if options.has_key?(:port)
-      self.handler = options[:handler] if options.has_key?(:handler)
-      self.host = options[:host] if options.has_key?(:host)
+      self.port = options[:port] if options.key?(:port)
+      self.handler = options[:handler] if options.key?(:handler)
+      self.host = options[:host] if options.key?(:host)
     end
 
     # Use the specified Rack middleware
@@ -53,7 +52,7 @@ module Roger
 
     def run!
       project.mode = :server
-      self.handler.run self.application, self.server_options do |server|
+      handler.run application, server_options do |server|
         trap(:INT) do
           ## Use thins' hard #stop! if available, otherwise just #stop
           server.respond_to?(:stop!) ? server.stop! : server.stop
@@ -63,21 +62,21 @@ module Roger
     ensure
       project.mode = nil
     end
-    alias :run :run!
+    alias_method :run, :run!
 
     def port=(p)
-      @port = self.server_options[:Port] = p
+      @port = server_options[:Port] = p
     end
 
     def host=(h)
-      @host = self.server_options[:Host] = h
+      @host = server_options[:Host] = h
     end
 
     def handler=(h)
       if h.respond_to?(:run)
         @handler = h
       else
-        @handler = self.get_handler(h)
+        @handler = get_handler(h)
       end
     end
 
@@ -87,7 +86,7 @@ module Roger
     def application
       return @app if @app
 
-      @stack.run Rack::Roger.new(self.project)
+      @stack.run Rack::Roger.new(project)
 
       @app = @stack
     end
@@ -108,11 +107,11 @@ module Roger
     # Get the actual handler for use in the server
     # Will always return a handler, it will try to use the fallbacks
     def get_handler(preferred_handler_name = nil)
-      servers = %w[puma mongrel thin webrick]
+      servers = %w(puma mongrel thin webrick)
       servers.unshift(preferred_handler_name) if preferred_handler_name
 
       handler = nil
-      while((server_name = servers.shift) && handler === nil) do
+      while (server_name = servers.shift) && handler.nil?
         begin
           handler = ::Rack::Handler.get(server_name)
         rescue LoadError
@@ -125,6 +124,5 @@ module Roger
       end
       handler
     end
-
   end
 end

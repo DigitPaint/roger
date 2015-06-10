@@ -4,13 +4,11 @@ module Roger
       true
     end
 
-    default_task :all    
+    default_task :all
 
     desc "all", "Run all tests defined in Mockupfile. (this is the default action)"
     def all
-      unless Cli::Base.project.test.run!
-        raise Thor::Error, "Test failed"
-      end
+      raise(Thor::Error, "Test failed") unless Cli::Base.project.test.run!
     end
   end
 end

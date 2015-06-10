@@ -7,16 +7,14 @@ require File.dirname(__FILE__) + "/../../helpers/cli"
 
 module CustomGens
   module Generators
-
     class MockedGenerator < Roger::Generators::Base
-
       desc "@mocked description"
-      argument :path, :type => :string, :required => false, :desc => "Path to generate mockup into"
-      argument :another_arg, :type => :string, :required => false, :desc => "Mocked or what?!"
+      argument :path, type: :string, required: false, desc: "Path to generate mockup into"
+      argument :another_arg, type: :string, required: false, desc: "Mocked or what?!"
 
       def test
         # Somewhat ugly way of checking
-        raise NotImplementedError
+        fail NotImplementedError
       end
     end
 
@@ -38,11 +36,10 @@ module Roger
     end
 
     def test_help_shows_available_generators
-      out, err = run_command %w{help generate}
+      out, err = run_command %w(help generate)
 
       assert_includes out, "generate new"
       assert_includes out, "generate mock"
     end
-
   end
 end
