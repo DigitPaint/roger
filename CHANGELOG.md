@@ -1,5 +1,8 @@
 # Changelog
 
+## Version 1.1.3
+* Add `--version` flag so we can ask what version of Roger we're running.
+
 ## Version 1.1.2
 
 * Fix issue where nested `content_for` statements or partials with blocks within a `content_for` block would yield multiple times.
