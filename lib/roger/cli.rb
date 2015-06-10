@@ -13,6 +13,7 @@ require 'pathname'
 require 'fileutils'
 include FileUtils
 
+require File.dirname(__FILE__) + "/version"
 require File.dirname(__FILE__) + "/template"
 require File.dirname(__FILE__) + "/project"
 
@@ -67,6 +68,8 @@ module Roger
       :default => false,
       :type => :boolean
 
+    map %w{--version} => :version
+
     desc "test [COMMAND]", "Run one or more tests. Test can be 'all' for all defined tests or a specific test name"
     subcommand "test", Cli::Test
 
@@ -78,6 +81,11 @@ module Roger
 
     register Cli::Release, "release", "release #{Cli::Release.arguments.map{ |arg| arg.banner }.join(" ")}", Cli::Release.desc
     self.tasks["release"].options = Cli::Release.class_options
+
+    desc "version", "Get the current Roger version"
+    def version
+      shell.say "Roger #{Roger::VERSION}"
+    end
 
     protected
 

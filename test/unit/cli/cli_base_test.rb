@@ -20,5 +20,9 @@ module Roger
       assert_includes Cli::Base.tasks.keys, "generate"
     end
 
+    def test_has_version_command
+      assert_includes Cli::Base.tasks.keys, "version"
+    end
+
   end
 end
