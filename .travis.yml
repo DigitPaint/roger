@@ -3,13 +3,9 @@ rvm:
   - 1.9.3
   - 2.0.0
   - 2.1.1
-  - rbx-2
-  - jruby
+  - 2.2.2
 before_script:
   - git config --global user.email "travis-ci@digitpaint.nl"
   - git config --global user.name "Travis-CI"
 matrix:
-  allow_failures:
-    - rvm: rbx-2
-    - rvm: jruby
   fast_finish: true
