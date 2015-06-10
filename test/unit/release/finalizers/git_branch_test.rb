@@ -3,6 +3,7 @@ require "test/unit"
 require "mocha/test_unit"
 require "tmpdir"
 
+# Test for Roger GitBranchFinalizer
 class GitBranchTest < Test::Unit::TestCase
   def setup
     # Mock git repo
@@ -43,7 +44,7 @@ class GitBranchTest < Test::Unit::TestCase
 
     Dir.chdir(output_dir + "clone") do
       commit_msg = `git log --pretty=oneline --abbrev-commit`
-      assert_match /Release 0.1.999/, commit_msg
+      assert_match(/Release 0.1.999/, commit_msg)
     end
 
     FileUtils.rm_rf(output_dir)

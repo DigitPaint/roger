@@ -29,39 +29,56 @@ module Roger::Release::Finalizers
       # Validate options
       validate_options!(release, options)
 
-      if !options[:ask] || (prompt("Do you wish to upload to #{options[:host]}? [y/N]: ")) =~ /\Ay(es)?\Z/
-        begin
-          `#{@options[:rsync]} --version`
-        rescue Errno::ENOENT
-          raise "Could not find rsync in #{@options[:rsync].inspect}"
-        end
+      return unless prompt_for_upload(options)
 
-        local_path = release.build_path.to_s
-        remote_path = options[:remote_path]
+      check_rsync_command(options[:rsync])
 
-        local_path += "/" unless local_path =~ /\/\Z/
-        remote_path += "/" unless remote_path =~ /\/\Z/
+      local_path = release.build_path.to_s
+      remote_path = options[:remote_path]
 
-        release.log(self, "Starting upload of #{(release.build_path + '*')} to #{options[:host]}")
+      local_path += "/" unless local_path =~ %r{/\Z}
+      remote_path += "/" unless remote_path =~ %r{/\Z}
 
-        command = "#{options[:rsync]} -az #{Shellwords.escape(local_path)} #{Shellwords.escape(options[:username])}@#{Shellwords.escape(options[:host])}:#{Shellwords.escape(remote_path)}"
-
-        # Run r.js optimizer
-        output = `#{command}`
-
-        # Check if r.js succeeded
-        fail "Rsync failed.\noutput:\n #{output}" unless $CHILD_STATUS.success?
-      end
+      release.log(self, "Starting upload of #{(release.build_path + '*')} to #{options[:host]}")
+      rsync(options[:rsync], local_path, remote_path, options)
     end
 
     protected
 
+    def check_rsync_command(command)
+      `#{command} --version`
+    rescue Errno::ENOENT
+      raise "Could not find rsync in #{command.inspect}"
+    end
+
+    def rsync(command, local_path, remote_path, options = {})
+      target_path = "#{options[:username]}@#{options[:host]}:#{remote_path}"
+
+      command = [
+        options[:rsync],
+        "-az",
+        Shellwords.escape(local_path),
+        Shellwords.escape(target_path)
+      ]
+
+      # Run rsync
+      output = `#{command.join(" ")}`
+
+      # Check if rsync succeeded
+      fail "Rsync failed.\noutput:\n #{output}" unless $CHILD_STATUS.success?
+    end
+
+    def prompt_for_upload(options)
+      !options[:ask] ||
+        (prompt("Do you wish to upload to #{options[:host]}? [y/N]: ")) =~ /\Ay(es)?\Z/
+    end
+
     def validate_options!(release, options)
       must_have_keys = [:remote_path, :host, :username]
-      if (options.keys & must_have_keys).size != must_have_keys.size
-        release.log(self, "You must specify these options: #{(must_have_keys - options.keys).inspect}")
-        fail "Missing keys: #{(must_have_keys - options.keys).inspect}"
-      end
+      return if (options.keys & must_have_keys).size == must_have_keys.size
+
+      release.log(self, "Missing options: #{(must_have_keys - options.keys).inspect}")
+      fail "Missing keys: #{(must_have_keys - options.keys).inspect}"
     end
 
     def prompt(question = "Do you wish to continue?")
@@ -70,5 +87,4 @@ module Roger::Release::Finalizers
     end
   end
 end
-
 Roger::Release::Finalizers.register(:rsync, Roger::Release::Finalizers::Rsync)

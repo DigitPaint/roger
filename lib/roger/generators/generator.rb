@@ -1,3 +1,4 @@
+# The generator generator!
 class Roger::Generators::GeneratorGenerator < Roger::Generators::Base
   include Thor::Actions
 

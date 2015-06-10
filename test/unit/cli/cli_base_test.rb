@@ -2,6 +2,7 @@ require "./lib/roger/cli.rb"
 require "test/unit"
 
 module Roger
+  # Test for roger base commands
   class CliBaseTest < ::Test::Unit::TestCase
     def test_has_test_command
       assert_includes Cli::Base.tasks.keys, "test"

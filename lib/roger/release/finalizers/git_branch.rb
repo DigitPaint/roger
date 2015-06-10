@@ -23,48 +23,23 @@ module Roger::Release::Finalizers
     def call(release, options = {})
       @options = @options.dup.update(options)
       remote = find_git_remote
-
-      # 0. Get remote
-      fail "No remote found for origin" unless remote
-
-      e_remote = Shellwords.escape(remote)
-      e_branch = Shellwords.escape(@options[:branch])
+      branch = @options[:branch]
 
       tmp_dir = Pathname.new(::Dir.mktmpdir)
       clone_dir = tmp_dir + "clone"
 
       # Check if remote already has branch
-      if `git ls-remote --heads #{e_remote} refs/heads/#{e_branch}` == ""
-        release.log(self, "Creating empty branch")
-        # Branch does not exist yet
-        FileUtils.mkdir(clone_dir)
-        ::Dir.chdir(clone_dir) do
-          `git init`
-          `git remote add origin #{e_remote}`
-          `git checkout -b #{e_branch}`
-        end
-      else
+      if remote_has_branch?(remote, branch)
         release.log(self, "Cloning existing repo")
-        clone_options = "--branch #{e_branch} --single-branch #{clone_dir}"
-        # 1. Clone into different directory
-        `git clone #{e_remote} #{clone_options}`
+        clone_branch(clone_dir, remote, branch)
+      else
+        release.log(self, "Creating empty branch")
+        create_empty_branch(clone_dir, remote, branch)
       end
 
       release.log(self, "Working git magic in #{clone_dir}")
-      ::Dir.chdir(clone_dir) do
-        # 3. Copy changes
-        FileUtils.rm_rf("*")
-        FileUtils.cp_r release.build_path.to_s + "/.", clone_dir.to_s
 
-        # 4. Add all files
-        `git add .`
-
-        # 5. Commit
-        `git commit -a -m "Release #{release.scm.version}"`
-
-        # 6. Git push
-        `git push origin #{e_branch}` if @options[:push]
-      end
+      commit_and_push_release(clone_dir, release, @options)
 
       if @options[:cleanup]
         FileUtils.rm_rf(tmp_dir)
@@ -74,6 +49,67 @@ module Roger::Release::Finalizers
     end
 
     protected
+
+    def commit_and_push_release(clone_dir, release, options)
+      ::Dir.chdir(clone_dir) do
+        # 3. Copy changes
+        FileUtils.rm_rf("*")
+        FileUtils.cp_r release.build_path.to_s + "/.", clone_dir.to_s
+
+        commands = [
+          %w(git add .), # 4. Add all files
+          %w(git commit -a -m) << "Release #{release.scm.version}" # 5. Commit
+        ]
+
+        # 6. Git push if in options
+        commands << (%w(git push origin) << branch) if options[:push]
+
+        commands.each do |command|
+          `#{Shellwords.join(command)}`
+        end
+      end
+    end
+
+    # Check if remote already has branch
+    def remote_has_branch?(remote, branch)
+      command = Shellwords.join([
+        "git",
+        "ls-remote",
+        "--heads",
+        remote,
+        "refs/heads/#{branch}"
+      ])
+      `#{command}` != ""
+    end
+
+    def create_empty_branch(clone_dir, remote, branch)
+      commands = [
+        %w(git init),
+        %w(git remote add origin) << remote,
+        %w(git checkout -b) << branch
+      ]
+
+      # Branch does not exist yet
+      FileUtils.mkdir(clone_dir)
+      ::Dir.chdir(clone_dir) do
+        commands.each do |command|
+          `#{Shellwords.join(command)}`
+        end
+      end
+    end
+
+    def clone_branch(clone_dir, remote, branch)
+      command = Shellwords.join([
+        "git",
+        "clone",
+        remote,
+        "--branch",
+        branch,
+        "--single-branch",
+        clone_dir
+      ])
+      `#{command}`
+    end
 
     # Find the git dir
     # TODO: this is just a copy from release/scm/git.rb
@@ -91,9 +127,15 @@ module Roger::Release::Finalizers
     end
 
     def find_git_remote
-      (@options[:remote] ||
+      remote =
+        @options[:remote] ||
         `git --git-dir=#{find_git_dir} config --get remote.origin.url`
-      ).strip
+
+      remote.strip!
+
+      fail "No remote found for origin" if remote.nil? || remote.empty?
+
+      remote
     end
   end
 end

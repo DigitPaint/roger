@@ -4,6 +4,7 @@ require "test/unit"
 
 module CustomGens
   module Generators
+    # Simple Mock generator
     class MockedGenerator < Roger::Generators::Base
       desc "@mocked description"
       argument :path, type: :string, required: false, desc: "Path to generate mockup into"
@@ -15,6 +16,7 @@ module CustomGens
       end
     end
 
+    # Simple Mocku generator that has a project
     class MockedWithProjectGenerator < Roger::Generators::Base
       desc "Returns a project"
       def test
@@ -26,6 +28,7 @@ module CustomGens
 end
 
 module Roger
+  # Test Roger Generators
   class GeneratorTest < ::Test::Unit::TestCase
     def setup
       @cli = Cli::Base.new

@@ -27,12 +27,12 @@ module Roger
 
     # Actually load the mockupfile
     def load
-      if File.exist?(@path) && !self.loaded?
-        @source = File.read(@path)
-        context = Context.new(self)
-        eval @source, context.binding, @path.to_s, 1
-        @loaded = true
-      end
+      return unless File.exist?(@path) && !self.loaded?
+
+      @source = File.read(@path)
+      context = Context.new(self)
+      eval @source, context.binding, @path.to_s, 1 # rubocop:disable Lint/Eval
+      @loaded = true
     end
 
     # Wether or not the Mockupfile has been loaded

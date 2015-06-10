@@ -1,4 +1,5 @@
 module Roger
+  # Abstract base class for Roger commands
   class Cli::Command < Thor::Group
     def self.exit_on_failure?
       true

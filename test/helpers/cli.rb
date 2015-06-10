@@ -1,6 +1,7 @@
 require "stringio"
 
 module Roger
+  # Module with some helper functions for testing Roger CLI commands
   module TestCli
     # Capture stdout/stderr output
     def capture
@@ -26,7 +27,10 @@ module Roger
     end
 
     def run_command_with_mockupfile(args, &_block)
-      project = Project.new(@base_path || File.dirname(__FILE__) + "/../../project", mockupfile_path: false)
+      project = Project.new(
+        @base_path || File.dirname(__FILE__) + "/../../project",
+        mockupfile_path: false
+      )
 
       mockupfile = Roger::Mockupfile.new(project)
 

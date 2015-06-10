@@ -12,8 +12,10 @@ module Roger
     # @attr :partial_path [Pathname] The path for the partials for this mockup
     # @attr :mockupfile [Mockupfile] The Mockupfile for this project
     # @attr :mockupfile_path [Pathname] The path to the Mockupfile
-    # @attr :mode [nil, :test, :server, :release] The mode we're currently in. If nil, we aren't doing anything.
-    attr_accessor :path, :html_path, :partial_path, :layouts_path, :mockupfile, :mockupfile_path, :mode
+    # @attr :mode [nil, :test, :server, :release] The mode we're currently in.
+    #   If nil, we aren't doing anything.
+    attr_accessor :path, :html_path, :partial_path, :layouts_path,
+                  :mockupfile, :mockupfile_path, :mode
 
     attr_accessor :shell
 
@@ -35,18 +37,8 @@ module Roger
       # Clumsy string to symbol key conversion
       options.each { |k, v| @options[k.is_a?(String) ? k.to_sym : k] = v }
 
-      self.html_path = @options[:html_path]
-      self.partial_path = @options[:partials_path] || @options[:partial_path] || html_path + "../partials/"
-      self.layouts_path = @options[:layouts_path]
-      self.mockupfile_path = @options[:mockupfile_path]
-      self.shell = @options[:shell]
-
-      if mockupfile_path
-        @mockupfile = Mockupfile.new(self, mockupfile_path)
-        @mockupfile.load
-      else
-        @mockupfile = Mockupfile.new(self)
-      end
+      initialize_accessors
+      initialize_mockup
     end
 
     def shell
@@ -83,6 +75,24 @@ module Roger
     end
 
     protected
+
+    def initialize_accessors
+      self.html_path = @options[:html_path]
+      self.partial_path =
+        @options[:partials_path] || @options[:partial_path] || html_path + "../partials/"
+      self.layouts_path = @options[:layouts_path]
+      self.mockupfile_path = @options[:mockupfile_path]
+      self.shell = @options[:shell]
+    end
+
+    def initialize_mockup
+      if mockupfile_path
+        @mockupfile = Mockupfile.new(self, mockupfile_path)
+        @mockupfile.load
+      else
+        @mockupfile = Mockupfile.new(self)
+      end
+    end
 
     def single_or_multiple_paths(p)
       if p.is_a?(Array)

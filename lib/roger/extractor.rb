@@ -2,7 +2,8 @@ require "hpricot"
 require File.dirname(__FILE__) + "/resolver"
 
 module Roger
-  # @deprecated Don't use the extractor anymore, use release.use(:mockup, options) processor and release.use(:url_relativizer, options) processor
+  # @deprecated Don't use the extractor anymore, use release.use(:mockup, options) processor and
+  # release.use(:url_relativizer, options) processor
   class Extractor
     attr_reader :project, :target_path
 
@@ -34,7 +35,10 @@ module Roger
       source_path = project.html_path
 
       filter = "**/*.html"
-      fail ArgumentError, "Target #{target_path} already exists, please choose a new directory to extract into" if target_path.exist?
+      fail(
+        ArgumentError,
+        "Target #{target_path} already exists, please choose a new directory to extract into"
+      ) if target_path.exist?
 
       mkdir_p(target_path)
       target_path = target_path.realpath
@@ -56,7 +60,11 @@ module Roger
 
     # Runs the extractor on a single file and return processed source.
     def extract_source_from_file(file_path, env = {})
-      source = Roger::Template.open(file_path, partials_path: project.partial_path, layouts_path: project.layouts_path).render(env.dup)
+      source = Roger::Template.open(
+        file_path,
+        partials_path: project.partial_path,
+        layouts_path: project.layouts_path
+      ).render(env.dup)
 
       source = relativize_urls(source, file_path) if @options[:url_relativize]
 

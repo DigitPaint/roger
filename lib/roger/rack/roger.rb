@@ -6,6 +6,7 @@ require File.dirname(__FILE__) + "/../resolver"
 
 module Roger
   module Rack
+    # Roger middleware that processe roger templates
     class Roger
       attr_reader :project
 
@@ -23,26 +24,26 @@ module Roger
 
         if template_path = @resolver.url_to_path(url)
           env["rack.errors"].puts "Rendering template #{template_path.inspect} (#{url.inspect})"
-          # begin
-          templ = ::Roger::Template.open(template_path, partials_path: @project.partials_path, layouts_path: @project.layouts_path)
-          mime = ::Rack::Mime.mime_type(File.extname(template_path), "text/html")
-          resp = ::Rack::Response.new do |res|
-            res.headers["Content-Type"] = mime if mime
-            res.status = 200
-            res.write templ.render(env)
-          end
-          resp.finish
-          # rescue StandardError => e
-          #   env["rack.errors"].puts "#{e.message}\n #{e.backtrace.join("\n")}\n\n"
-          #   resp = ::Rack::Response.new do |res|
-          #     res.status = 500
-          #     res.write "An error occurred"
-          #   end
-          #   resp.finish
-          # end
+          build_response(template_path).finish
         else
           env["rack.errors"].puts "Invoking file handler for #{url.inspect}"
           @file_server.call(env)
+        end
+      end
+
+      protected
+
+      def build_response(template_path)
+        templ = ::Roger::Template.open(
+          template_path,
+          partials_path: @project.partials_path,
+          layouts_path: @project.layouts_path
+        )
+        mime = ::Rack::Mime.mime_type(File.extname(template_path), "text/html")
+        ::Rack::Response.new do |res|
+          res.headers["Content-Type"] = mime if mime
+          res.status = 200
+          res.write templ.render(env)
         end
       end
     end

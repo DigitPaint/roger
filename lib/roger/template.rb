@@ -7,6 +7,7 @@ require "ostruct"
 Encoding.default_external = "UTF-8"
 
 module Roger
+  # Roger template processing class
   class Template
     # The source
     attr_accessor :source
@@ -27,7 +28,8 @@ module Roger
       end
     end
 
-    # @option options [String,Pathname] :source_path The path to the source of the template being processed
+    # @option options [String,Pathname] :source_path The path to
+    #   the source of the template being processed
     # @option options [String,Pathname] :layouts_path The path to where all layouts reside
     # @option options [String,Pathname] :partials_path The path to where all partials reside
     def initialize(source, options = {})
@@ -37,9 +39,7 @@ module Roger
       self.data, self.source = extract_front_matter(source)
       self.template = Tilt.new(source_path.to_s) { self.source }
 
-      if data[:layout] && layout_template_path = find_template(data[:layout], :layouts_path)
-        @layout_template = Tilt.new(layout_template_path.to_s)
-      end
+      initialize_layout
     end
 
     def render(env = {})
@@ -61,7 +61,9 @@ module Roger
     end
 
     def find_template(name, path_type)
-      fail(ArgumentError, "path_type must be one of :partials_path or :layouts_path") unless [:partials_path, :layouts_path].include?(path_type)
+      unless [:partials_path, :layouts_path].include?(path_type)
+        fail(ArgumentError, "path_type must be one of :partials_path or :layouts_path")
+      end
 
       return nil unless @options[path_type]
 
@@ -99,23 +101,39 @@ module Roger
     # Try to figure out the mime type based on the Tilt class and if that doesn't
     # work we try to infer the type by looking at extensions (needed for .erb)
     def target_mime_type
-      mime = template.class.default_mime_type
-      return mime if mime
+      mime =
+        mime_type_from_template ||
+        mime_type_from_filename ||
+        mime_type_from_sub_extension
 
-      path = File.basename(source_path.to_s)
-      mime = MIME::Types.type_for(path).first
-      return mime.to_s if mime
-
-      parts = File.basename(path).split(".")
-      if parts.size > 2
-        mime = MIME::Types.type_for(parts[0..-2].join(".")).first
-        return mime.to_s if mime
-      else
-        nil
-      end
+      mime.to_s if mime
     end
 
     protected
+
+    def initialize_layout
+      return unless data[:layout]
+      layout_template_path = find_template(data[:layout], :layouts_path)
+
+      @layout_template = Tilt.new(layout_template_path.to_s) if layout_template_path
+    end
+
+    def mime_type_from_template
+      template.class.default_mime_type
+    end
+
+    def mime_type_from_filename
+      path = File.basename(source_path.to_s)
+      MIME::Types.type_for(path).first
+    end
+
+    # Will get mime_type from source_path extension
+    # but it will only look at the second extension so
+    # .html.erb will look at .html
+    def mime_type_from_sub_extension
+      parts = File.basename(source_path.to_s).split(".")
+      MIME::Types.type_for(parts[0..-2].join(".")).first if parts.size > 2
+    end
 
     # Get the front matter portion of the file and extract it.
     def extract_front_matter(source)
@@ -125,7 +143,10 @@ module Roger
         source = source.sub(fm_regex, "")
 
         begin
-          data = (YAML.load(match[1]) || {}).inject({}) { |memo, (k, v)| memo[k.to_sym] = v; memo }
+          data = (YAML.load(match[1]) || {}).inject({}) do |memo, (k, v)|
+            memo[k.to_sym] = v
+            memo
+          end
         rescue *YAML_ERRORS => e
           puts "YAML Exception: #{e.message}"
           return false
@@ -140,6 +161,7 @@ module Roger
     end
   end
 
+  # The context that is passed to all templates
   class TemplateContext
     attr_accessor :_content_for_blocks
 
@@ -183,8 +205,11 @@ module Roger
       @_content_for_blocks[block_name] = capture(&block)
     end
 
+    # rubocop:disable Lint/Eval
     def capture(&block)
-      fail ArgumentError, "content_for works only with ERB Templates" unless template.template.is_a?(Tilt::ERBTemplate)
+      unless template.template.is_a?(Tilt::ERBTemplate)
+        fail ArgumentError, "content_for works only with ERB Templates"
+      end
 
       @block_counter += 1
       counter = @block_counter
@@ -198,15 +223,9 @@ module Roger
     end
 
     def partial(name, options = {}, &block)
-      if template_path = template.find_template(name, :partials_path)
-        partial_template = Tilt.new(template_path.to_s)
-        if block_given?
-          block_content = capture(&block)
-        else
-          block_content = ""
-        end
-        out = partial_template.render(self, options[:locals] || {}) { block_content }
-
+      template_path = template.find_template(name, :partials_path)
+      if template_path
+        out = render_partial(template_path, options, &block)
         if block_given?
           eval "_erbout.concat(#{out.dump})", block.binding
         else
@@ -215,6 +234,20 @@ module Roger
       else
         fail ArgumentError, "No such partial #{name}, referenced from #{template.source_path}"
       end
+    end
+    # rubocop:enable Lint/Eval
+
+    protected
+
+    # Capture a block and render the partial
+    def render_partial(template_path, options, &block)
+      partial_template = Tilt.new(template_path.to_s)
+      if block_given?
+        block_content = capture(&block)
+      else
+        block_content = ""
+      end
+      partial_template.render(self, options[:locals] || {}) { block_content }
     end
   end
 end

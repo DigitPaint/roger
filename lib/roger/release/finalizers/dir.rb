@@ -8,21 +8,20 @@ module Roger::Release::Finalizers
   class Dir < Base
     # @option options :prefix Prefix to put before the version (default = "html")
     def call(release, options = {})
-      if options
-        options = @options.dup.update(options)
-      else
-        options = @options
-      end
+      options = {}.update(@options)
+      options.update(options) if options
 
       name = [(options[:prefix] || "html"), release.scm.version].join("-")
-      release.log(self, "Finalizing release to #{release.target_path + name}")
+      target_path = release.target_path + name
 
-      if File.exist?(release.target_path + name)
-        release.log(self, "Removing existing target #{release.target_path + name}")
-        FileUtils.rm_rf(release.target_path + name)
+      release.log(self, "Finalizing release to #{target_path}")
+
+      if File.exist?(target_path)
+        release.log(self, "Removing existing target #{target_path}")
+        FileUtils.rm_rf(target_path)
       end
 
-      FileUtils.cp_r release.build_path, release.target_path + name
+      FileUtils.cp_r release.build_path, target_path
     end
   end
 end

@@ -1,4 +1,7 @@
+# The Finalizers will finalize the release. Finalizers can be used to
+# copy the release, zip the release or upload the release
 module Roger::Release::Finalizers
+  # Abstract base finalizer
   class Base
     def initialize(options = {})
       @options = {}
@@ -11,7 +14,7 @@ module Roger::Release::Finalizers
   end
 
   def self.register(name, finalizer)
-    fail ArgumentError, "Another finalizer has already claimed the name #{name.inspect}" if map.key?(name)
+    fail ArgumentError, "Finalizer name '#{name.inspect}' already in use" if map.key?(name)
     fail ArgumentError, "Name must be a symbol" unless name.is_a?(Symbol)
     map[name] = finalizer
   end

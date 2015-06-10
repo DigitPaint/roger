@@ -1,6 +1,7 @@
 require File.dirname(__FILE__) + "/lib/test"
 require File.dirname(__FILE__) + "/lib/cli"
 
+# RogerNoopTest namespace
 module RogerNoopTest
 end
 

@@ -1,6 +1,9 @@
 require File.dirname(__FILE__) + "../../../resolver"
 
 module Roger::Release::Processors
+  # URL relativizer processor
+  # The relativizer can be used to rewrite absolute paths in attributes to relative paths
+  # during release.
   class UrlRelativizer < Base
     def initialize(options = {})
       @options = {
@@ -15,30 +18,55 @@ module Roger::Release::Processors
     def call(release, options = {})
       options = {}.update(@options).update(options)
 
-      release.log(self, "Relativizing all URLS in #{options[:match].inspect} files in attributes #{options[:url_attributes].inspect}, skipping #{options[:skip].any? ? options[:skip].inspect : 'none' }")
+      log_call(options)
 
       @resolver = Roger::Resolver.new(release.build_path)
-      release.get_files(options[:match], options[:skip]).each do |file_path|
+
+      relativize_attributes_in_files(
+        options[:url_attributes],
+        release.get_files(options[:match], options[:skip])
+      )
+    end
+
+    protected
+
+    def log_call(options)
+      log_message = "Relativizing all URLS in #{options[:match].inspect}"
+      log_message << "files in attributes #{options[:url_attributes].inspect},"
+      log_message << "skipping #{options[:skip].any? ? options[:skip].inspect : 'none' }"
+      release.log(self, log_message)
+    end
+
+    def relativize_attributes_in_files(attributes, files)
+      files.each do |file_path|
         release.debug(self, "Relativizing URLS in #{file_path}") do
-          orig_source = File.read(file_path)
-          File.open(file_path, "w") do |f|
-            doc = Hpricot(orig_source)
-            options[:url_attributes].each do |attribute|
-              (doc / "*[@#{attribute}]").each do |tag|
-                converted_url = @resolver.url_to_relative_url(tag[attribute], file_path)
-                release.debug(self, "Converting '#{tag[attribute]}' to '#{converted_url}'")
-                case converted_url
-                when String
-                  tag[attribute] = converted_url
-                when nil
-                  release.log(self, "Could not resolve link #{tag[attribute]} in #{file_path}")
-                end
-              end
-            end
-            f.write(doc.to_original_html)
+          relativize_attributes_in_file(attributes, file_path)
+        end
+      end
+    end
+
+    def relativize_attributes_in_file(attributes, file_path)
+      orig_source = File.read(file_path)
+      File.open(file_path, "w") do |f|
+        f.write(relativize_attributes_in_source(attributes, orig_source, file_path))
+      end
+    end
+
+    def relativize_attributes_in_source(attributes, source, file_path)
+      doc = Hpricot(source)
+      attributes.each do |attribute|
+        (doc / "*[@#{attribute}]").each do |tag|
+          converted_url = @resolver.url_to_relative_url(tag[attribute], file_path)
+          release.debug(self, "Converting '#{tag[attribute]}' to '#{converted_url}'")
+          case converted_url
+          when String
+            tag[attribute] = converted_url
+          when nil
+            release.log(self, "Could not resolve link #{tag[attribute]} in #{file_path}")
           end
         end
       end
+      doc.to_original_html
     end
   end
 end

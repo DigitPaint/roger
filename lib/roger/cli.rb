@@ -15,6 +15,7 @@ require File.dirname(__FILE__) + "/template"
 require File.dirname(__FILE__) + "/project"
 
 module Roger
+  # The CLI namespace
   module Cli; end
 end
 
@@ -28,6 +29,7 @@ require File.dirname(__FILE__) + "/generators"
 require File.dirname(__FILE__) + "/test"
 
 module Roger
+  # The Roger main entrypoint!
   class Cli::Base < Thor
     def initialize(*args)
       super
@@ -64,16 +66,27 @@ module Roger
 
     map %w(--version) => :version
 
-    desc "test [COMMAND]", "Run one or more tests. Test can be 'all' for all defined tests or a specific test name"
+    desc "test [COMMAND]", "Run one or more tests. Test can be 'all' for all
+                            defined tests or a specific test name"
     subcommand "test", Cli::Test
 
     desc "generate [COMMAND]", "Run a generator"
     subcommand "generate", Cli::Generate
 
-    register Cli::Serve, "serve", "serve #{Cli::Serve.arguments.map(&:banner).join(' ')}", Cli::Serve.desc
+    register(
+      Cli::Serve,
+      "serve",
+      "serve #{Cli::Serve.arguments.map(&:banner).join(' ')}",
+      Cli::Serve.desc
+    )
     tasks["serve"].options = Cli::Serve.class_options
 
-    register Cli::Release, "release", "release #{Cli::Release.arguments.map(&:banner).join(' ')}", Cli::Release.desc
+    register(
+      Cli::Release,
+      "release",
+      "release #{Cli::Release.arguments.map(&:banner).join(' ')}",
+      Cli::Release.desc
+    )
     tasks["release"].options = Cli::Release.class_options
 
     desc "version", "Get the current Roger version"

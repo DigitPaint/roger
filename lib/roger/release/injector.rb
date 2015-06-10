@@ -1,11 +1,12 @@
 require "tilt"
 module Roger
+  # The Injector can inject variables and files into other files based on regexps.
+  #
   # Inject VERSION / DATE (i.e. in TOC)
   # r.inject({"VERSION" => release.version, "DATE" => release.date}, :into => %w{_doc/toc.html})
-
+  #
   # Inject CHANGELOG
-  # r.inject({"CHANGELOG" => {:file => "", :filter => BlueCloth}}, :into => %w{_doc/changelog.html})
-
+  # r.inject({"CHANGELOG" => {file: "", filter: BlueCloth}}, :into => %w{_doc/changelog.html})
   class Release::Injector
     # @example Simple variable injection (replaces [VARIABLE] into all .css files)
     #     {"[VARIABLE]" => "replacement"}, :into => %w{**/*.css}
@@ -13,16 +14,21 @@ module Roger
     # @example Regex variable injection (replaces all matches into test.js files)
     #     {/\/\*\s*\[BANNER\]\s*\*\// => "replacement"}, :into => %w{javacripts/test.js}
     #
-    # @example Simple variable injection with filtering (replaces [VARIABLE] with :content run through the markdown processor into all .html files)
-    #     {"[VARIABLE]" => {:content => "# header one", :processor => "md"}, :into => %w{**/*.html}
+    # @example Simple variable injection with filtering (replaces [VARIABLE] with :content
+    #   run through the markdown processor into all .html files)
     #
-    # @example Full file injection (replaces all matches of [CHANGELOG] with the contents of "CHANGELOG.md" into _doc/changelog.html)
+    #     {"[VARIABLE]" => {content: "# header one", processor: "md"}, :into => %w{**/*.html}
     #
-    #     {"CHANGELOG" => {:file => "CHANGELOG.md"}}, :into => %w{_doc/changelog.html}
+    # @example Full file injection (replaces all matches of [CHANGELOG] with the contents
+    #   of "CHANGELOG.md" into _doc/changelog.html)
     #
-    # @example Full file injection with filtering (replaces all matches of [CHANGELOG] with the contents of "CHANGELOG" which ran through Markdown compresser into _doc/changelog.html)
+    #     {"CHANGELOG" => {file: "CHANGELOG.md"}}, :into => %w{_doc/changelog.html}
     #
-    #     {"CHANGELOG" => {:file => "CHANGELOG", :processor => "md"}}, :into => %w{_doc/changelog.html}
+    # @example Full file injection with filtering (replaces all matches of [CHANGELOG]
+    #   with the contents of "CHANGELOG" which ran through Markdown compresser
+    #   into _doc/changelog.html)
+    #
+    #     {"CHANGELOG" => {file: "CHANGELOG", processor: "md"}}, :into => %w{_doc/changelog.html}
     #
     # Processors are based on Tilt (https://github.com/rtomayko/tilt).
     # Currently supported/tested processors are:
@@ -50,7 +56,9 @@ module Roger
             injected_vars << variable
           end
         end
-        release.log(self, "Injected variables #{injected_vars.inspect} into #{f}") if injected_vars.size > 0
+        if injected_vars.size > 0
+          release.log(self, "Injected variables #{injected_vars.inspect} into #{f}")
+        end
         File.open(f, "w") { |fh| fh.write c }
       end
     end
@@ -71,11 +79,7 @@ module Roger
     end
 
     def get_complex_injection(injection, release)
-      if injection[:file]
-        content = File.read(release.source_path + injection[:file])
-      else
-        content = injection[:content]
-      end
+      content = injection_content(injection, release)
 
       fail ArgumentError, "No :content or :file specified" unless content
 
@@ -87,6 +91,14 @@ module Roger
         end
       else
         content
+      end
+    end
+
+    def injection_content(injection, release)
+      if injection[:file]
+        File.read(release.source_path + injection[:file])
+      else
+        injection[:content]
       end
     end
   end

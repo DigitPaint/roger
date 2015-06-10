@@ -25,7 +25,9 @@ Gem::Specification.new do |s|
 
   s.rdoc_options = ["--charset=UTF-8"]
 
-  s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
+  if s.respond_to? :required_rubygems_version=
+    s.required_rubygems_version = Gem::Requirement.new(">= 0")
+  end
 
   s.add_dependency("thor", ["~> 0.19.0"])
   s.add_dependency("rack", [">= 1.0.0"])

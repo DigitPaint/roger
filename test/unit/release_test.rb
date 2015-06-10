@@ -3,6 +3,7 @@ require "./lib/roger/release.rb"
 require "test/unit"
 
 module Roger
+  # Test Roger Release
   class ReleaseTest < ::Test::Unit::TestCase
     def setup
       @project = Project.new(File.dirname(__FILE__) + "/../project", mockupfile_path: false)
@@ -32,13 +33,13 @@ module Roger
     end
 
     def test_get_callable
-      p = lambda {}
+      p = -> {}
       assert_equal Release.get_callable(p, {}), p
       assert_raise(ArgumentError) { Release.get_callable(nil, {}) }
     end
 
     def test_get_callable_with_map
-      p = lambda {}
+      p = -> {}
       map = {
         lambda: p
       }
@@ -47,9 +48,12 @@ module Roger
       assert_raise(ArgumentError) { Release.get_callable(:huh, map) }
     end
 
+    # A Release class that is valid
     class Works
       def call; end
     end
+
+    # A Release class that is invalid
     class Breaks
     end
 

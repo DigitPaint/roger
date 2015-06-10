@@ -1,4 +1,5 @@
 module RogerSucceedTest
+  # A simple Roger test that will succeed
   class Test
     def initialize(options = {})
       @options = {}

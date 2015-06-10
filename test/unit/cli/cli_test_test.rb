@@ -7,9 +7,8 @@ require File.dirname(__FILE__) + "/../../project/lib/tests/fail/fail"
 require File.dirname(__FILE__) + "/../../project/lib/tests/succeed/succeed"
 require File.dirname(__FILE__) + "/../../project/lib/tests/noop/noop"
 
-# These tests ar for the roger test command
-
 module Roger
+  # These tests ar for the roger test command
   class CliTestTest < ::Test::Unit::TestCase
     include TestCli
 
@@ -36,13 +35,13 @@ module Roger
 
     # roger test all
     def test_subcommand_all_runs_all_tests
-      out, err = run_test_command %w(test all)
+      out, _err = run_test_command %w(test all)
       assert_includes out, "RogerNoopTest::Test"
       assert_includes out, "RogerSucceedTest::Test"
     end
 
     def test_subcommand_all_runs_all_tests_in_order_1
-      out, err = run_test_command %w(test all) do |t|
+      out, _err = run_test_command %w(test all) do |t|
         t.use :succeed
         t.use :noop
       end
@@ -50,7 +49,7 @@ module Roger
     end
 
     def test_subcommand_all_runs_all_tests_in_order_2
-      out, err = run_test_command %w(test all) do |t|
+      out, _err = run_test_command %w(test all) do |t|
         t.use :noop
         t.use :succeed
       end
@@ -59,7 +58,7 @@ module Roger
 
     # roger test
     def test_default_runs_all_tests
-      out, err = run_test_command %w(test)
+      out, _err = run_test_command %w(test)
       assert_includes out, "RogerNoopTest::Test"
       assert_includes out, "RogerSucceedTest::Test"
     end
@@ -82,7 +81,7 @@ module Roger
 
     # roger help test
     def test_help_shows_available_subcommands
-      out, err = run_test_command %w(help test)
+      out, _err = run_test_command %w(help test)
       assert_includes out, "test all"
       assert_includes out, "test succeed"
       assert_includes out, "test noop"
@@ -90,14 +89,14 @@ module Roger
 
     # roger test noop
     def test_subcommand_x_runs_only_test_x
-      out, err = run_test_command %w(test noop)
+      out, _err = run_test_command %w(test noop)
       assert_includes out, "RogerNoopTest::Test"
       assert_not_includes out, "RogerSucceedTest::Test"
     end
 
     def test_subcommand_x_has_exit_code_1_on_failure
       assert_raise(Thor::Error) do
-        out, err = run_test_command %w(test fail) do |t|
+        run_test_command %w(test fail) do |t|
           t.use :noop
           t.use :fail
         end
@@ -106,7 +105,7 @@ module Roger
 
     def test_subcommand_x_has_exit_code_0_on_success
       assert_nothing_raised do
-        out, err = run_test_command %w(test noop) do |t|
+        run_test_command %w(test noop) do |t|
           t.use :noop
           t.use :fail
         end
@@ -115,7 +114,7 @@ module Roger
 
     def test_subcommand_all_has_exit_code_1_on_failure
       assert_raise(Thor::Error) do
-        out, err = run_test_command %w(test) do |t|
+        run_test_command %w(test) do |t|
           t.use :noop
           t.use :fail
         end
@@ -124,7 +123,7 @@ module Roger
 
     def test_subcommand_all_has_exit_code_0_on_success
       assert_nothing_raised do
-        out, err = run_test_command %w(test) do |t|
+        run_test_command %w(test) do |t|
           t.use :noop
           t.use :succeed
         end

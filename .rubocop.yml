@@ -3,6 +3,24 @@ LineLength:
   Max: 100
   Enabled: true
 
+Metrics/ClassLength:
+  Enabled: false
+
+Metrics/ModuleLength:
+  Enabled: false
+
+Style/EachWithObject:
+  Enabled: false
+
+Style/AccessorMethodName:
+  Enabled: false
+
+Lint/AssignmentInCondition:
+  Enabled: false
+
+Style/SingleLineBlockParams:
+  Enabled: false
+
 StringLiterals:
   EnforcedStyle: double_quotes
   Enabled: true

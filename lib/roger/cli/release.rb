@@ -1,4 +1,5 @@
 module Roger
+  # The release command
   class Cli::Release < Cli::Command
     desc "Release the current project"
 

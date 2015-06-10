@@ -1,6 +1,7 @@
 require "./lib/roger/release.rb"
 require "test/unit"
 
+# Test Roger processors
 class ProcessorsTest < ::Test::Unit::TestCase
   def setup
     Roger::Release::Processors.map.clear

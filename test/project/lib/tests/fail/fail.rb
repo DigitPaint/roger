@@ -1,4 +1,5 @@
 module RogerFailTest
+  # A test that always fails
   class Test
     def initialize(options = {})
       @options = {}

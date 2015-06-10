@@ -1,4 +1,5 @@
 module Roger
+  # The serve command
   class Cli::Serve < Cli::Command
     desc "Serve the current project"
 
@@ -14,10 +15,12 @@ module Roger
         server_options[:server][k] = server_options.delete(k) if server_options.key?(k)
       end
 
-      server = @project.server
-      server.set_options(server_options[:server])
+      @project.server.set_options(server_options[:server])
+    end
 
-      puts "Running Roger with #{server.handler.inspect} on  #{server.host}:#{server.port}"
+    def show_banner
+      server  = @project.server
+      puts "Running Roger with #{server.handler.inspect} on #{server.host}:#{server.port}"
       puts project_banner(@project)
     end
 

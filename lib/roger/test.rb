@@ -3,7 +3,9 @@ require File.dirname(__FILE__) + "/helpers/get_callable"
 require File.dirname(__FILE__) + "/helpers/logging"
 
 module Roger
+  # The test class itself
   class Test
+    # The Test CLI Thor command
     class Cli < Thor
       def self.exit_on_failure?
         true
@@ -17,9 +19,8 @@ module Roger
 
       desc "test", "Run the test"
       def test
-        unless Roger::Cli::Base.project.test.run_test!(self.class.stack_index)
-          fail Thor::Error, "The test failed"
-        end
+        ok = Roger::Cli::Base.project.test.run_test!(self.class.stack_index)
+        fail(Thor::Error, "The test failed") unless ok
       end
     end
 
@@ -33,7 +34,10 @@ module Roger
       # Register a test method to Roger::Test so it can be used in the Mockupfile
 
       def register(name, test, cli = nil)
-        fail ArgumentError, "Another test has already claimed the name #{name.inspect}" if map.key?(name)
+        if map.key?(name)
+          fail ArgumentError, "Another test has already claimed the name #{name.inspect}"
+        end
+
         fail ArgumentError, "Name must be a symbol" unless name.is_a?(Symbol)
         map[name] = test
         cli_map[name] = cli if cli

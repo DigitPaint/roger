@@ -5,6 +5,7 @@ require File.dirname(__FILE__) + "/helpers/logging"
 require "shellwords"
 
 module Roger
+  # The release runner
   class Release
     include Roger::Helpers::Logging
 
@@ -27,9 +28,12 @@ module Roger
     # @option config [Symbol] :scm The SCM to use (default = :git)
     # @option config [String, Pathname] :target_path The path/directory to put the release into
     # @option config [String, Pathname]:build_path Temporary path used to build the release
-    # @option config [Boolean] :cleanup_build Wether or not to remove the build_path after we're done (default = true)
-    # @option config [Array,String, nil] :cp CP command to use; Array will be escaped with Shellwords. Pass nil to get native Ruby CP. (default = ["cp", "-RL"])
-    # @option config [Boolean] :blank Keeps the release clean, don't automatically add any processors or finalizers (default = false)
+    # @option config [Boolean] :cleanup_build Wether or not to remove the build_path after we're
+    #   done (default = true)
+    # @option config [Array,String, nil] :cp CP command to use; Array will be escaped with
+    #   Shellwords. Pass nil to get native Ruby CP. (default = ["cp", "-RL"])
+    # @option config [Boolean] :blank Keeps the release clean, don't automatically add any
+    #   processors or finalizers (default = false)
     def initialize(project, config = {})
       real_project_path = project.path.realpath
       defaults = {
@@ -88,8 +92,10 @@ module Roger
     # Inject variables into files with an optional filter
     #
     # @examples
-    #   release.inject({"VERSION" => release.version, "DATE" => release.date}, :into => %w{_doc/toc.html})
-    #   release.inject({"CHANGELOG" => {:file => "", :filter => BlueCloth}}, :into => %w{_doc/changelog.html})
+    #   release.inject({"VERSION" => release.version, "DATE" => release.date},
+    #     :into => %w{_doc/toc.html})
+    #   release.inject({"CHANGELOG" => {:file => "", :filter => BlueCloth}},
+    #     :into => %w{_doc/changelog.html})
     def inject(variables, options)
       @stack << Injector.new(variables, options)
     end
@@ -136,7 +142,8 @@ module Roger
     # =======================
     #
     #
-    # @option options [:css,:js,:html,false] :comment Wether or not to comment the output and in what style. (default=js)
+    # @option options [:css,:js,:html,false] :comment Wether or not to comment the output and in
+    #   what style. (default=js)
     def banner(options = {}, &_block)
       options = {
         comment: :js
@@ -145,16 +152,7 @@ module Roger
       if block_given?
         @_banner = yield.to_s
       elsif !@_banner
-        banner = []
-        banner << "Version : #{scm.version}"
-        banner << "Date  : #{scm.date.strftime('%Y-%m-%d')}"
-
-        size = banner.inject(0) { |mem, b| b.size > mem ? b.size : mem }
-        banner.map! { |b| "= #{b.ljust(size)} =" }
-        div = "=" * banner.first.size
-        banner.unshift(div)
-        banner << div
-        @_banner = banner.join("\n")
+        @_banner = default_banner.join("\n")
       end
 
       if options[:comment]
@@ -171,7 +169,8 @@ module Roger
     #
     # @deprecated Don't use the extractor anymore, use release.use(:mockup, options) processor
     def extract(options = {})
-      warn(self, "Don't use the extractor anymore, use release.use(:mockup, options) and release.use(:url_relativizer, options) processors")
+      warn(self, "Don't use the extractor anymore, use release.use(:mockup, options)
+        and release.use(:url_relativizer, options) processors")
       @extractor_options = options
     end
 
@@ -212,6 +211,23 @@ module Roger
 
     protected
 
+    def default_banner
+      banner = [
+        "Version : #{scm.version}",
+        "Date  : #{scm.date.strftime('%Y-%m-%d')}"
+      ]
+
+      # Find longest line
+      size = banner.map(&:size).max
+
+      # Pad all lines
+      banner.map! { |b| "= #{b.ljust(size)} =" }
+
+      div = "=" * banner.first.size
+      banner.unshift(div)
+      banner << div
+    end
+
     # ==============
     # = The runway =
     # ==============
@@ -224,7 +240,7 @@ module Roger
         rm_rf(build_path)
       end
 
-      unless target_path.exist?
+      unless target_path.exist? # rubocop:disable Style/GuardClause
         log self, "Creating target path \"#{target_path}\""
         mkdir target_path
       end
@@ -238,31 +254,40 @@ module Roger
 
       mockup_options = {}
       relativizer_options = {}
-      run_relativizer = true
+
       if @extractor_options
         mockup_options = { env: @extractor_options[:env] }
         relativizer_options = { url_attributes: @extractor_options[:url_attributes] }
-        run_relativizer = @extractor_options[:url_relativize]
       end
 
-      unless @stack.find { |(processor, _options)| processor.class == Roger::Release::Processors::Mockup }
+      unless find_in_stack(Roger::Release::Processors::Mockup)
         @stack.unshift([Roger::Release::Processors::Mockup.new, mockup_options])
       end
 
-      unless @stack.find { |(processor, _options)| processor.class == Roger::Release::Processors::UrlRelativizer }
+      # rubocop:disable Style/GuardClause
+      unless find_in_stack(Roger::Release::Processors::UrlRelativizer)
         @stack.push([Roger::Release::Processors::UrlRelativizer.new, relativizer_options])
       end
+    end
+
+    # Find a processor in the stack
+    def find_in_stack(klass)
+      @stack.find { |(processor, _options)| processor.class == klass }
     end
 
     def copy_source_path_to_build_path!
       mkdir(build_path)
 
       if config[:cp]
-        command = [config[:cp]].flatten
-        system(Shellwords.join(command + ["#{source_path}/", build_path.to_s]))
+        copy_source_path_to_build_path_using_system
       else
         cp_r(source_path.children, build_path)
       end
+    end
+
+    def copy_source_path_to_build_path_using_system
+      command = [config[:cp]].flatten
+      system(Shellwords.join(command + ["#{source_path}/", build_path.to_s]))
     end
 
     def run_stack!
@@ -298,7 +323,8 @@ module Roger
 
     # @param [String] string The string to comment
     #
-    # @option options [:html, :css, :js] :style The comment style to use (default=:js, which is the same as :css)
+    # @option options [:html, :css, :js] :style The comment style to use
+    #   (default=:js, which is the same as :css)
     # @option options [Boolean] :per_line Comment per line or make one block? (default=true)
     def comment(string, options = {})
       options = {

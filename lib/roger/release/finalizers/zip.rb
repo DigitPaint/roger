@@ -1,40 +1,47 @@
 module Roger::Release::Finalizers
+  # The zip finalizer
+  # The zip finalizer will
   class Zip < Base
     attr_reader :release
 
     # @option options :prefix Prefix to put before the version (default = "html")
     # @option options :zip The zip command
     def call(release, options = {})
-      if options
-        options = @options.dup.update(options)
-      else
-        options = @options
-      end
-
       options = {
         zip: "zip",
         prefix: "html"
-      }.update(options)
+      }.update(@options)
+
+      options.update(options) if options
 
       name = [options[:prefix], release.scm.version].join("-") + ".zip"
-      release.log(self, "Finalizing release to #{release.target_path + name}")
+      zip_path = release.target_path + name
 
-      if File.exist?(release.target_path + name)
-        release.log(self, "Removing existing target #{release.target_path + name}")
-        FileUtils.rm_rf(release.target_path + name)
-      end
+      release.log(self, "Finalizing release to #{zip_path}")
 
-      begin
-        `#{options[:zip]} -v`
-      rescue Errno::ENOENT
-        raise "Could not find zip in #{options[:zip].inspect}"
-      end
+      cleanup_existing_zip(zip_path)
+
+      check_zip_command(options[:zip])
 
       ::Dir.chdir(release.build_path) do
-        `#{options[:zip]} -r -9 "#{release.target_path + name}" ./*`
+        `#{options[:zip]} -r -9 "#{zip_path}" ./*`
       end
+    end
+
+    protected
+
+    def cleanup_existing_zip(path)
+      return unless File.exist?(path)
+
+      release.log(self, "Removing existing target #{path}")
+      FileUtils.rm_rf(path)
+    end
+
+    def check_zip_command(command)
+      `#{command} -v`
+    rescue Errno::ENOENT
+      raise "Could not find zip in #{command.inspect}"
     end
   end
 end
-
 Roger::Release::Finalizers.register(:zip, Roger::Release::Finalizers::Zip)

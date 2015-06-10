@@ -1,6 +1,7 @@
 module Roger
   module Rack
-    # Listens to the "sleep" parameter and sleeps the amount of seconds specified by the parameter. There is however a maximum of 5 seconds.
+    # Listens to the "sleep" parameter and sleeps the amount of seconds specified by the parameter.
+    # There is however a maximum of 5 seconds.
     class Sleep
       def initialize(app)
         @app = app

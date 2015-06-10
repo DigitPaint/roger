@@ -1,10 +1,10 @@
+# The <%= name.capitalize %> generator
 class <%= name.capitalize %>Generator < Roger::Generators::Base
-  
   include Thor::Actions
-  
+
   desc "<%= name.capitalize %> generator helps you doing ... and ..."
-  argument :path, :type => :string, :required => true, :desc => "Path to generate the new generator"
-  
+  argument :path, type: :string, required: true, desc: "Path to generate the new generator"
+
   def create_stuff
     # your stuff
   end

@@ -2,28 +2,38 @@ require "thor"
 require "thor/group"
 
 module Roger
+  # Generators namespace
   module Generators
+    # Base Generator class
     class Base < Cli::Command
     end
 
-    def self.register(name, sub = nil)
+    def self.register(name, klass = nil)
+      name, klass = generator_name(name, klass)
+
+      fail(
+        ArgumentError,
+        "Generator name '#{name.inspect}' already in use"
+      ) if Cli::Generate.tasks.key?(name)
+
+      usage = "#{name} #{klass.arguments.map(&:banner).join(' ')}"
+      long_desc =  klass.desc || "Run #{name} generator"
+
+      Cli::Generate.register klass, name, usage, long_desc
+      Cli::Generate.tasks[name].options = klass.class_options if klass.class_options
+    end
+
+    def self.generator_name(name, klass)
       # Hack to not break old tasks
+
       if name.is_a?(Class)
-        sub = name
-        name = sub.to_s.sub(/Generator$/, "").sub(/^.*Generators::/, "").downcase
+        klass = name
+        name = klass.to_s.sub(/Generator$/, "").sub(/^.*Generators::/, "").downcase
       else
         fail ArgumentError, "Name must be a symbol" unless name.is_a?(Symbol)
       end
 
-      name = name.to_s
-
-      fail ArgumentError, "Another generator has already claimed the name #{name.inspect}" if Cli::Generate.tasks.key?(name)
-
-      usage = "#{name} #{sub.arguments.map(&:banner).join(' ')}"
-      long_desc =  sub.desc || "Run #{name} generator"
-
-      Cli::Generate.register sub, name, usage, long_desc
-      Cli::Generate.tasks[name].options = sub.class_options if sub.class_options
+      [name.to_s, klass]
     end
   end
 end

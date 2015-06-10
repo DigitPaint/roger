@@ -4,6 +4,7 @@ require "mocha/test_unit"
 require "./lib/roger/test.rb"
 
 module Roger
+  # Testing the Roger Test fucntionality
   class TestTest < ::Test::Unit::TestCase
     def setup
       @files = ["html/javascripts/site.js",

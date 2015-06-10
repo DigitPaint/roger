@@ -1,4 +1,6 @@
 module RogerNoopTest
+  # Noop test. Doesn't do anything except log a normal line and log a debug line
+  # Will always pass
   class Test
     def initialize(options = {})
       @options = {}

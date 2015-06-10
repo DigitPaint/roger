@@ -6,6 +6,7 @@ require "webrick"
 require "webrick/https"
 
 module Roger
+  # The Roger webserver. Initializes a rack server.
   class Server
     attr_reader :server_options
 
@@ -40,14 +41,14 @@ module Roger
     #
     # @see ::Rack::Builder#use
     def use(*args, &block)
-      @stack.use *args, &block
+      @stack.use(*args, &block)
     end
 
     # Use the map handler to map endpoints to certain urls
     #
     # @see ::Rack::Builder#map
     def map(*args, &block)
-      @stack.map *args, &block
+      @stack.map(*args, &block)
     end
 
     def run!
@@ -110,19 +111,27 @@ module Roger
       servers = %w(puma mongrel thin webrick)
       servers.unshift(preferred_handler_name) if preferred_handler_name
 
-      handler = nil
-      while (server_name = servers.shift) && handler.nil?
-        begin
-          handler = ::Rack::Handler.get(server_name)
-        rescue LoadError
-        rescue NameError
-        end
-      end
+      handler, server_name = detect_valid_handler(servers)
 
       if preferred_handler_name && server_name != preferred_handler_name
         puts "Handler '#{preferred_handler_name}' not found, using fallback ('#{handler.inspect}')."
       end
       handler
+    end
+
+    # See what handlers work
+    def detect_valid_handler(servers)
+      handler = nil
+      while (server_name = servers.shift) && handler.nil?
+        begin
+          handler = ::Rack::Handler.get(server_name)
+          return [handler, server_name]
+        rescue LoadError
+          handler = nil
+        rescue NameError
+          handler = nil
+        end
+      end
     end
   end
 end
