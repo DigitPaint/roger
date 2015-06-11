@@ -1,19 +1,23 @@
 module Roger
   module Helpers
+    # Helper module for logging
     module Logging
+      GRAY = "\e[37m"
+      RED  = "\e[31m"
+
       # Write out a log message
-      def log(part, msg, verbose = false, &_block)
+      def log(part, msg, verbose = false, &block)
+        shell = project.shell
+
         if !verbose || verbose && project.options[:verbose]
-          project.shell.say "\033[37m#{part.class}\033[0m" + " : " + msg.to_s, nil, true
+          shell.say(
+            shell.set_color(part_string(part), GRAY) +
+            " : " +
+            msg
+          )
         end
-        if block_given?
-          begin
-            project.shell.padding = project.shell.padding + 1
-            yield
-          ensure
-            project.shell.padding = project.shell.padding - 1
-          end
-        end
+
+        log_block_indent(&block) if block_given?
       end
 
       def debug(part, msg, &block)
@@ -22,7 +26,26 @@ module Roger
 
       # Write out a warning message
       def warn(part, msg)
-        project.shell.say "\033[37m#{part.class}\033[0m" + " : " + "\033[31m#{msg}\033[0m", nil, true
+        shell = project.shell
+
+        shell.say(
+          shell.set_color(part_string(part), GRAY) +
+          " : " +
+          shell.set_color(msg, RED)
+        )
+      end
+
+      protected
+
+      def part_string(part)
+        part.is_a?(String) ? part : part.class.to_s
+      end
+
+      def log_block_indent(&_block)
+        project.shell.padding = project.shell.padding + 1
+        yield
+      ensure
+        project.shell.padding = project.shell.padding - 1
       end
     end
   end
