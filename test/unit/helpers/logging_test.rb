@@ -3,7 +3,7 @@ require "test/unit"
 require File.dirname(__FILE__) + "/../../helpers/cli"
 
 # Empty logging class
-class Logger
+class MyLogger
   include Roger::Helpers::Logging
 
   attr_accessor :project
@@ -14,7 +14,7 @@ class LoggingTest < ::Test::Unit::TestCase
   include Roger::TestCli
 
   def setup
-    @logger = Logger.new
+    @logger = MyLogger.new
     @logger.project = stub(
       options: {},
       shell: Thor::Shell::Color.new
@@ -23,7 +23,7 @@ class LoggingTest < ::Test::Unit::TestCase
 
   def test_log
     out, _err = capture { @logger.log(@logger, "log") }
-    assert out.include?("Logger")
+    assert out.include?("MyLogger")
     assert out.include?("log")
   end
 
@@ -40,9 +40,9 @@ class LoggingTest < ::Test::Unit::TestCase
       end
     end
 
-    assert out.include?("Logger")
+    assert out.include?("MyLogger")
     assert out.include?("log")
-    assert out.include?("  Logger : indent"), out
+    assert out.include?("  MyLogger : indent"), out
   end
 
   def test_debug
@@ -51,14 +51,14 @@ class LoggingTest < ::Test::Unit::TestCase
 
     @logger.project.options[:verbose] = true
     out, _err = capture { @logger.debug(@logger, "debug") }
-    assert out.include?("Logger")
+    assert out.include?("MyLogger")
     assert out.include?("debug")
   end
 
   # TODO: test if color is outputted as well.
   def test_warn
     out, _err = capture { @logger.warn(@logger, "warn") }
-    assert out.include?("Logger")
+    assert out.include?("MyLogger")
     assert out.include?("warn")
   end
 end
