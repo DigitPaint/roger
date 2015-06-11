@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 
-require_relative "lib/roger/version"
+require File.dirname(__FILE__) +  "/lib/roger/version"
 
 Gem::Specification.new do |s|
   s.name = "roger"
