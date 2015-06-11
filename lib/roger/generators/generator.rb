@@ -5,7 +5,6 @@ class Roger::Generators::GeneratorGenerator < Roger::Generators::Base
   desc "Create your own generator for roger"
   argument :name, type: :string, required: true, desc: "Name of the new generator"
   argument :path, type: :string, required: true, desc: "Path to generate the new generator"
-  # class_option :template, :type => :string, :aliases => ["-t"], :desc => "Template to use, can be a path or a git repository remote, uses built in minimal as default"
 
   def self.source_root
     File.dirname(__FILE__)
