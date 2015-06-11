@@ -3,6 +3,31 @@ LineLength:
   Max: 100
   Enabled: true
 
+StringLiterals:
+  EnforcedStyle: double_quotes
+  Enabled: true
+
+Style/DotPosition:
+  EnforcedStyle: trailing
+  Enabled: true
+
+Metrics/MethodLength:
+  CountComments: false  # count full line comments?
+  Max: 20
+
+Metrics/AbcSize:
+  Max: 20
+
+Style/ClassAndModuleChildren:
+  EnforcedStyle: compact
+  Enabled: false
+
+# By default, the rails cops are not run. Override in project or home
+# directory .rubocop.yml files, or by giving the -R/--rails option.
+AllCops:
+  RunRailsCops: false
+
+# Disabled cops
 Metrics/ClassLength:
   Enabled: false
 
@@ -20,20 +45,3 @@ Lint/AssignmentInCondition:
 
 Style/SingleLineBlockParams:
   Enabled: false
-
-StringLiterals:
-  EnforcedStyle: double_quotes
-  Enabled: true
-
-Style/DotPosition:
-  EnforcedStyle: trailing
-  Enabled: true
-
-Metrics/MethodLength:
-  CountComments: false  # count full line comments?
-  Max: 20
-
-# By default, the rails cops are not run. Override in project or home
-# directory .rubocop.yml files, or by giving the -R/--rails option.
-AllCops:
-  RunRailsCops: false
