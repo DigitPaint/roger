@@ -15,9 +15,9 @@ module Roger
     attr_accessor :port, :handler, :host
 
     def initialize(project, options = {})
-      @stack = initialize_rack_builder
-
       @project = project
+
+      @stack = initialize_rack_builder
 
       @server_options = {}
 
@@ -96,7 +96,25 @@ module Roger
     #
     # @return ::Rack::Builder instance
     def initialize_rack_builder
+      roger_env = Class.new do
+        class << self
+          attr_accessor :project
+        end
+
+        def initialize(app)
+          @app = app
+        end
+
+        def call(env)
+          env["roger.project"] = self.class.project
+          @app.call(env)
+        end
+      end
+
+      roger_env.project = project
+
       builder = ::Rack::Builder.new
+      builder.use roger_env
       builder.use ::Rack::ShowExceptions
       builder.use ::Rack::Lint
       builder.use ::Rack::ConditionalGet
