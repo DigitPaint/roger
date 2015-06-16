@@ -20,7 +20,7 @@ module Roger
 
       def call(env)
         url = env["PATH_INFO"]
-        env["MOCKUP_PROJECT"] = project
+        env["MOCKUP_PROJECT"] = env["roger.project"] || @project
 
         if template_path = @resolver.url_to_path(url)
           env["rack.errors"].puts "Rendering template #{template_path.inspect} (#{url.inspect})"

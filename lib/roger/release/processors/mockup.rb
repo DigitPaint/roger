@@ -80,7 +80,7 @@ module Roger::Release::Processors
 
     def update_call_options(options)
       {}.update(@options).update(options)
-      options[:env].update("MOCKUP_PROJECT" => project)
+      options[:env].update("roger.project" => project, "MOCKUP_PROJECT" => project)
       options
     end
 
