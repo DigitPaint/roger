@@ -86,3 +86,7 @@ In the partial these can be accessed as local variables. So for instance in you 
 ```erb
 <%= key %>
 ```
+
+## Access to Project 
+
+You can access the Roger project with all it's might and glory by accessing `env["roger.project"]`.
