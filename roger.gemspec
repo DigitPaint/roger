@@ -10,6 +10,7 @@ Gem::Specification.new do |s|
   s.email = ["info@digitpaint.nl", "flurin@digitpaint.nl"]
   s.homepage = "http://github.com/digitpaint/roger"
   s.summary = "Roger is a set of tools to create self-containing HTML mockups."
+  s.description = "See homepage for more information."
   s.licenses = ["MIT"]
 
   s.date = Time.now.strftime("%Y-%m-%d")
