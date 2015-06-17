@@ -24,7 +24,7 @@ module Roger
 
         if template_path = @resolver.url_to_path(url)
           env["rack.errors"].puts "Rendering template #{template_path.inspect} (#{url.inspect})"
-          build_response(template_path).finish
+          build_response(template_path, env).finish
         else
           env["rack.errors"].puts "Invoking file handler for #{url.inspect}"
           @file_server.call(env)
@@ -33,7 +33,7 @@ module Roger
 
       protected
 
-      def build_response(template_path)
+      def build_response(template_path, env)
         templ = ::Roger::Template.open(
           template_path,
           partials_path: @project.partials_path,
