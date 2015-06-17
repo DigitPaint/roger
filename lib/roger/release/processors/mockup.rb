@@ -28,7 +28,7 @@ module Roger::Release::Processors
 
       options = update_call_options(options)
 
-      log_call(options)
+      log_call(release, options)
 
       release.get_files(options[:match], options[:skip]).each do |file_path|
         release.log(self, "    Extract: #{file_path}", true)
@@ -79,12 +79,17 @@ module Roger::Release::Processors
     protected
 
     def update_call_options(options)
-      {}.update(@options).update(options)
-      options[:env].update("roger.project" => project, "MOCKUP_PROJECT" => project)
-      options
+      updated_options = {}
+      updated_options.update(@options)
+
+      updated_options.update(options) unless options
+
+      updated_options[:env].update("roger.project" => project, "MOCKUP_PROJECT" => project)
+
+      updated_options
     end
 
-    def log_call(options)
+    def log_call(release, options)
       release.log(self, "Processing mockup files")
 
       release.log(self, "  Matching: #{options[:match].inspect}", true)

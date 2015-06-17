@@ -1,10 +1,19 @@
 require "./lib/roger/release.rb"
+require "./lib/roger/release.rb"
 require "test/unit"
 
 # Test Roger Mockup
 class MockupTest < ::Test::Unit::TestCase
   def setup
     @base = File.dirname(__FILE__) + "/../../project"
+    @project = Roger::Project.new(@base)
+    @release = Roger::Release.new(@project)
+    @mockup = Roger::Release::Processors::Mockup.new
+  end
+
+  def test_empty_release_runs
+    files = @mockup.call(@release)
+    assert_equal 0, files.length
   end
 end
 
