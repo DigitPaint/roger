@@ -1,5 +1,8 @@
 # Changelog
 
+## Version 1.2.1
+* Fix missing env (https://github.com/DigitPaint/roger/issues/24) 
+
 ## Version 1.2.0
 * `roger.project` is now always in `env` when running as a project or as a release. Use this in favor of `env["MOCKUP_PROJECT"]`
 * All Roger code now is linted by Rubocop. More tests have been added and more documentation as well. Still not everything may have been covered by the tests. 
