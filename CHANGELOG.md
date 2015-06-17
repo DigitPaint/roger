@@ -1,5 +1,8 @@
 # Changelog
 
+## Version 1.2.2
+* Fix missing variables in release
+
 ## Version 1.2.1
 * Fix missing env (https://github.com/DigitPaint/roger/issues/24) 
 
