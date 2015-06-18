@@ -72,6 +72,9 @@ module Roger
       path = "./tmp"
       generators.invoke :generator, [name, path]
       assert File.exist? "#{path}/#{name}_generator.rb"
+
+      # Remove generated generator
+      File.unlink "#{path}/#{name}_generator.rb"
     end
 
     def test_invoke_mocked_generator
