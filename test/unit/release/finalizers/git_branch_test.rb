@@ -1,6 +1,5 @@
-require "./lib/roger/release/finalizers/git_branch.rb"
-require "test/unit"
-require "mocha/test_unit"
+require "test_helper"
+require "./lib/roger/release/finalizers/git_branch"
 require "tmpdir"
 
 # Test for Roger GitBranchFinalizer

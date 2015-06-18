@@ -1,11 +1,14 @@
 language: ruby
 rvm:
-  - 1.9.3
-  - 2.0.0
-  - 2.1.1
-  - 2.2.2
+- 1.9.3
+- 2.0.0
+- 2.1.1
+- 2.2.2
 before_script:
-  - git config --global user.email "travis-ci@digitpaint.nl"
-  - git config --global user.name "Travis-CI"
+- git config --global user.email "travis-ci@digitpaint.nl"
+- git config --global user.name "Travis-CI"
 matrix:
   fast_finish: true
+env:
+  global:
+    secure: eMPdp74VWvC6r7CSzN06FEMf5Wq9AfxqIgjfr4Z4AMxUsehApSJe1y/blaqN6XcpLK4TYw4bwzRUjAzUjOMMW5aJ4Kr1nrW2k6bJehbubhkkPfDxcc+NzYUZ+oxqbPMOZP6zQoSRRd5rhY2qd3xVkKecK1KZOxlA1/pce6y15YU=

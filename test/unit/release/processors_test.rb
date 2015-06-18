@@ -1,5 +1,5 @@
-require "./lib/roger/release.rb"
-require "test/unit"
+require "test_helper"
+require "./lib/roger/release"
 
 # Test Roger processors
 class ProcessorsTest < ::Test::Unit::TestCase
