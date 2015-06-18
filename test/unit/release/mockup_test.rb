@@ -1,6 +1,5 @@
-require "./lib/roger/release.rb"
-require "./lib/roger/release.rb"
-require "test/unit"
+require "test_helper"
+require "./lib/roger/release"
 
 # Test Roger Mockup
 class MockupTest < ::Test::Unit::TestCase

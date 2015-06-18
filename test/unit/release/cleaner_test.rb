@@ -1,6 +1,6 @@
-require "./lib/roger/release.rb"
-require "./lib/roger/release/cleaner.rb"
-require "test/unit"
+require "test_helper"
+require "./lib/roger/release"
+require "./lib/roger/release/cleaner"
 
 # Test Roger Cleaner
 class CleanerTest < ::Test::Unit::TestCase
