@@ -4,7 +4,7 @@ require "./lib/roger/release"
 # Test Roger Mockup
 class MockupTest < ::Test::Unit::TestCase
   def setup
-    @base = File.dirname(__FILE__) + "/../../project"
+    @base = File.dirname(__FILE__) + "/../../../project"
     @project = Roger::Project.new(@base)
     @release = Roger::Release.new(@project)
     @mockup = Roger::Release::Processors::Mockup.new
@@ -19,7 +19,7 @@ end
 # Test the target_path function of Mockup
 class MockupTargetPathTest < ::Test::Unit::TestCase
   def setup
-    @base = File.dirname(__FILE__) + "/../../project"
+    @base = File.dirname(__FILE__) + "/../../../project"
     @template = Roger::Template.open(@base + "/html/formats/erb.html.erb")
     @processor = Roger::Release::Processors::Mockup.new
   end
