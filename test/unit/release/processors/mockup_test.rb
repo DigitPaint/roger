@@ -1,14 +1,17 @@
 require "test_helper"
-require "./lib/roger/release"
+require "roger/testing/mock_release"
 
 module Roger
   # Test Roger Mockup
   class MockupTest < ::Test::Unit::TestCase
     def setup
-      @base = File.dirname(__FILE__) + "/../../../project"
-      @project = Roger::Project.new(@base)
-      @release = Roger::Release.new(@project)
+      @release = Testing::MockRelease.new
       @mockup = Roger::Release::Processors::Mockup.new
+    end
+
+    def teardown
+      @release.destroy
+      @release = nil
     end
 
     def test_empty_release_runs
