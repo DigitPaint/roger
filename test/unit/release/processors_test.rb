@@ -1,47 +1,55 @@
 require "test_helper"
 require "./lib/roger/release"
 
-# Test Roger processors
-class ProcessorsTest < ::Test::Unit::TestCase
-  def setup
-    Roger::Release::Processors.map.clear
-  end
-
-  def test_register_processor
-    processor = ->(_e) { fail "ProcessorName" }
-    assert Roger::Release::Processors.register(:name, processor)
-    assert_equal Roger::Release::Processors.map, name: processor
-  end
-
-  def test_register_processor_with_symbol_only_name
-    processor = ->(_e) { fail "ProcessorName" }
-
-    assert_raise(ArgumentError) do
-      Roger::Release::Processors.register("name", processor)
+module Roger
+  # Test Roger processors
+  class ProcessorsTest < ::Test::Unit::TestCase
+    def setup
+      @origmap = Roger::Release::Processors.map.dup
+      Roger::Release::Processors.map.clear
     end
 
-    assert_raise(ArgumentError) do
-      Roger::Release::Processors.register("name", processor)
+    def teardown
+      Roger::Release::Processors.map.clear
+      Roger::Release::Processors.map.update(@origmap)
     end
-  end
 
-  def test_register_processor_with_same_name
-    processor = ->(_e) { fail "ProcessorName" }
-    Roger::Release::Processors.register(:name, processor)
+    def test_register_processor
+      processor = ->(_e) { fail "ProcessorName" }
+      assert Roger::Release::Processors.register(:name, processor)
+      assert_equal Roger::Release::Processors.map, name: processor
+    end
 
-    assert_raise(ArgumentError) do
+    def test_register_processor_with_symbol_only_name
+      processor = ->(_e) { fail "ProcessorName" }
+
+      assert_raise(ArgumentError) do
+        Roger::Release::Processors.register("name", processor)
+      end
+
+      assert_raise(ArgumentError) do
+        Roger::Release::Processors.register("name", processor)
+      end
+    end
+
+    def test_register_processor_with_same_name
+      processor = ->(_e) { fail "ProcessorName" }
       Roger::Release::Processors.register(:name, processor)
-    end
-  end
 
-  def test_register_processor_with_same_contents
-    processor = ->(_e) { fail "ProcessorName" }
-    Roger::Release::Processors.register(:name, processor)
-
-    assert_nothing_raised do
-      Roger::Release::Processors.register(:name2, processor)
+      assert_raise(ArgumentError) do
+        Roger::Release::Processors.register(:name, processor)
+      end
     end
 
-    assert_equal Roger::Release::Processors.map, name: processor, name2: processor
+    def test_register_processor_with_same_contents
+      processor = ->(_e) { fail "ProcessorName" }
+      Roger::Release::Processors.register(:name, processor)
+
+      assert_nothing_raised do
+        Roger::Release::Processors.register(:name2, processor)
+      end
+
+      assert_equal Roger::Release::Processors.map, name: processor, name2: processor
+    end
   end
 end
