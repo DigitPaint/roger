@@ -17,14 +17,15 @@ module Roger::Release::Processors
 
     def call(release, options = {})
       options = {}.update(@options).update(options)
+      @release = release
 
       log_call(options)
 
-      @resolver = Roger::Resolver.new(release.build_path)
+      @resolver = Roger::Resolver.new(@release.build_path)
 
       relativize_attributes_in_files(
         options[:url_attributes],
-        release.get_files(options[:match], options[:skip])
+        @release.get_files(options[:match], options[:skip])
       )
     end
 
@@ -34,12 +35,12 @@ module Roger::Release::Processors
       log_message = "Relativizing all URLS in #{options[:match].inspect}"
       log_message << "files in attributes #{options[:url_attributes].inspect},"
       log_message << "skipping #{options[:skip].any? ? options[:skip].inspect : 'none' }"
-      release.log(self, log_message)
+      @release.log(self, log_message)
     end
 
     def relativize_attributes_in_files(attributes, files)
       files.each do |file_path|
-        release.debug(self, "Relativizing URLS in #{file_path}") do
+        @release.log(self, "Relativizing URLS in #{file_path}") do
           relativize_attributes_in_file(attributes, file_path)
         end
       end
@@ -57,12 +58,12 @@ module Roger::Release::Processors
       attributes.each do |attribute|
         (doc / "*[@#{attribute}]").each do |tag|
           converted_url = @resolver.url_to_relative_url(tag[attribute], file_path)
-          release.debug(self, "Converting '#{tag[attribute]}' to '#{converted_url}'")
+          @release.log(self, "Converting '#{tag[attribute]}' to '#{converted_url}'")
           case converted_url
           when String
             tag[attribute] = converted_url
           when nil
-            release.log(self, "Could not resolve link #{tag[attribute]} in #{file_path}")
+            @release.log(self, "Could not resolve link #{tag[attribute]} in #{file_path}")
           end
         end
       end
