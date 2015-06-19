@@ -1,7 +1,7 @@
 # encoding: UTF-8
 # Generators register themself on the CLI module
+require "test_helper"
 require "./lib/roger/template.rb"
-require "test/unit"
 
 module Roger
   # Roger template tests

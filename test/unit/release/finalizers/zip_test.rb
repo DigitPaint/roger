@@ -1,5 +1,5 @@
+require "test_helper"
 require "./lib/roger/release/finalizers/zip"
-require "test/unit"
 require "mocha/test_unit"
 require "tmpdir"
 
