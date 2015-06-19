@@ -1,6 +1,5 @@
+require "test_helper"
 require "./lib/roger/helpers/logging"
-require "test/unit"
-require File.dirname(__FILE__) + "/../../helpers/cli"
 
 # Empty logging class
 class MyLogger

@@ -1,5 +1,5 @@
-require "./lib/roger/cli.rb"
-require "test/unit"
+require "test_helper"
+require "./lib/roger/cli"
 
 module Roger
   # Test for roger base commands

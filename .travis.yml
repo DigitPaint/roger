@@ -9,3 +9,6 @@ before_script:
   - git config --global user.name "Travis-CI"
 matrix:
   fast_finish: true
+env:
+  global:
+    secure: eMPdp74VWvC6r7CSzN06FEMf5Wq9AfxqIgjfr4Z4AMxUsehApSJe1y/blaqN6XcpLK4TYw4bwzRUjAzUjOMMW5aJ4Kr1nrW2k6bJehbubhkkPfDxcc+NzYUZ+oxqbPMOZP6zQoSRRd5rhY2qd3xVkKecK1KZOxlA1/pce6y15YU=

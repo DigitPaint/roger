@@ -1,4 +1,4 @@
-require "test/unit"
+require "test_helper"
 require File.dirname(__FILE__) + "../../../lib/roger/rack/roger"
 
 module Roger
