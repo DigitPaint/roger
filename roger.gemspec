@@ -42,4 +42,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency("simplecov", "~> 0.10.0")
   s.add_development_dependency("puma", "~> 2.10.0")
   s.add_development_dependency("rubocop", "~> 0.31.0")
+  s.add_development_dependency("test_construct", "~> 2.0")
 end
