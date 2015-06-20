@@ -1,38 +1,33 @@
-require File.dirname(__FILE__) + "/../../../helpers/release_test_case"
-
+require "test/unit"
 require "mocha/test_unit"
+
+require "roger/testing/mock_release"
 
 module Roger
   # Test for Roger Zip finalizer
-  class ZipTest < ReleaseTestCase
-    self.use_blank_project = true
-
+  class ZipTest < ::Test::Unit::TestCase
     def setup
-      super
+      @release = Testing::MockRelease.new
 
-      Dir.chdir(project_path.to_s) do
-        `git init`
-      end
+      # Create a file to release in the build dir
+      @release.project.construct.file "build/index.html"
 
-      project_path.file "build/index.html"
-
-      # We're stubbing the scm so we always get the same version.
-      release.stubs(
-        scm: stub(version: "1.0.0")
-      )
+      # Set fixed version
+      @release.scm.version = "1.0.0"
     end
 
     # called after every single test
     def teardown
-      super
+      @release.destroy
+      @release = nil
     end
 
     def test_basic_functionality
       finalizer = Roger::Release::Finalizers::Zip.new
 
-      finalizer.call(release)
+      finalizer.call(@release)
 
-      assert File.exist?(release.target_path + "html-1.0.0.zip")
+      assert File.exist?(@release.target_path + "html-1.0.0.zip"), @release.target_path.inspect
     end
   end
 end
