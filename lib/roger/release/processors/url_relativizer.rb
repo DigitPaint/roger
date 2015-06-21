@@ -18,11 +18,12 @@ module Roger::Release::Processors
     def call(release, options = {})
       options = {}.update(@options).update(options)
 
-      log_call(options)
+      log_call(release, options)
 
       @resolver = Roger::Resolver.new(release.build_path)
 
       relativize_attributes_in_files(
+        release,
         options[:url_attributes],
         release.get_files(options[:match], options[:skip])
       )
@@ -30,29 +31,29 @@ module Roger::Release::Processors
 
     protected
 
-    def log_call(options)
+    def log_call(release, options)
       log_message = "Relativizing all URLS in #{options[:match].inspect}"
       log_message << "files in attributes #{options[:url_attributes].inspect},"
       log_message << "skipping #{options[:skip].any? ? options[:skip].inspect : 'none' }"
       release.log(self, log_message)
     end
 
-    def relativize_attributes_in_files(attributes, files)
+    def relativize_attributes_in_files(release, attributes, files)
       files.each do |file_path|
         release.debug(self, "Relativizing URLS in #{file_path}") do
-          relativize_attributes_in_file(attributes, file_path)
+          relativize_attributes_in_file(release, attributes, file_path)
         end
       end
     end
 
-    def relativize_attributes_in_file(attributes, file_path)
+    def relativize_attributes_in_file(release, attributes, file_path)
       orig_source = File.read(file_path)
       File.open(file_path, "w") do |f|
-        f.write(relativize_attributes_in_source(attributes, orig_source, file_path))
+        f.write(relativize_attributes_in_source(release, attributes, orig_source, file_path))
       end
     end
 
-    def relativize_attributes_in_source(attributes, source, file_path)
+    def relativize_attributes_in_source(release, attributes, source, file_path)
       doc = Hpricot(source)
       attributes.each do |attribute|
         (doc / "*[@#{attribute}]").each do |tag|
