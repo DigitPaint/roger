@@ -1,33 +1,29 @@
-require File.dirname(__FILE__) + "/../../../helpers/release_test_case"
-
-require "mocha/test_unit"
+require "test_helper"
+require "roger/testing/mock_release"
 
 module Roger
   # Test for Roger GitBranchFinalizer
-  class GitBranchTest < ReleaseTestCase
-    self.use_blank_project = true
-
+  class GitBranchTest < ::Test::Unit::TestCase
     def setup
-      super
+      @release = Testing::MockRelease.new
 
-      Dir.chdir(project_path.to_s) do
-        `git init`
-      end
+      # Create a file to release in the build dir
+      @release.project.construct.file "build/index.html"
 
-      # Creating a file in build so it will be finalized
-      project_path.file "build/index.html"
+      # Set fixed version
+      @release.scm.version = "1.0.0"
+    end
 
-      # We're stubbing the scm so we always get the same version.
-      release.stubs(
-        scm: stub(version: "1.0.0")
-      )
+    def teardown
+      @release.destroy
+      @release = nil
     end
 
     def test_basic_functionality
       git_branch_finalizers = Roger::Release::Finalizers::GitBranch.new
 
       output_dir = git_branch_finalizers.call(
-        release,
+        @release,
         remote: "http://we.aint.go/nna.push.git",
         push: false,
         cleanup: false

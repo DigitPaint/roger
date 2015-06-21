@@ -1,15 +1,21 @@
-require File.dirname(__FILE__) + "/../../../helpers/release_test_case"
+require "test_helper"
+require "roger/testing/mock_release"
 
 module Roger
   # Test Roger Mockup
-  class MockupTest < ReleaseTestCase
+  class MockupTest < ::Test::Unit::TestCase
     def setup
-      super
+      @release = Testing::MockRelease.new
       @mockup = Roger::Release::Processors::Mockup.new
     end
 
+    def teardown
+      @release.destroy
+      @release = nil
+    end
+
     def test_empty_release_runs
-      files = @mockup.call(release)
+      files = @mockup.call(@release)
       assert_equal 0, files.length
     end
   end
