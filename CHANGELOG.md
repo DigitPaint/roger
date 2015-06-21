@@ -1,5 +1,12 @@
 # Changelog
 
+## Version 1.3.0
+* Add fixed SCM for testing (you can set a fixed version number)
+* Fix for missing variable in UrlRelativizer
+* Add Mocks for Project and Release to use in testing (can also be used by external plugins)
+* Refactoring of tests
+* Add CodeClimate (https://codeclimate.com/github/DigitPaint/roger)
+
 ## Version 1.2.2
 * Fix missing variables in release
 
