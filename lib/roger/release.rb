@@ -25,7 +25,7 @@ module Roger
      end
     end
 
-    # @option config [Symbol] :scm The SCM to use (default = :git)
+    # @option config [:git, :fixed] :scm The SCM to use (default = :git)
     # @option config [String, Pathname] :target_path The path/directory to put the release into
     # @option config [String, Pathname]:build_path Temporary path used to build the release
     # @option config [Boolean] :cleanup_build Wether or not to remove the build_path after we're
@@ -84,6 +84,8 @@ module Roger
       case config[:scm]
       when :git
         @_scm = Release::Scm::Git.new(path: source_path)
+      when :fixed
+        @_scm = Release::Scm::Fixed.new
       else
         fail "Unknown SCM #{options[:scm].inspect}"
       end
