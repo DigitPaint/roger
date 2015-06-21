@@ -1,6 +1,4 @@
-require "test/unit"
-require "mocha/test_unit"
-
+require "test_helper"
 require "roger/testing/mock_release"
 
 module Roger
