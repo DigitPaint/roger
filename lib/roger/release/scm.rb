@@ -33,3 +33,4 @@ module Roger
 end
 
 require File.dirname(__FILE__) + "/scm/git"
+require File.dirname(__FILE__) + "/scm/fixed"
