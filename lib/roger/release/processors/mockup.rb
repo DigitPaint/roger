@@ -82,7 +82,7 @@ module Roger::Release::Processors
       updated_options = {}
       updated_options.update(@options)
 
-      updated_options.update(options) unless options
+      updated_options.update(options) if options
 
       updated_options[:env].update("roger.project" => project, "MOCKUP_PROJECT" => project)
 
