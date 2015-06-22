@@ -19,7 +19,7 @@ module Roger::Release::Finalizers
 
       release.log(self, "Finalizing release to #{zip_path}")
 
-      cleanup_existing_zip(zip_path)
+      cleanup_existing_zip(release, zip_path)
 
       check_zip_command(options[:zip])
 
@@ -30,7 +30,7 @@ module Roger::Release::Finalizers
 
     protected
 
-    def cleanup_existing_zip(path)
+    def cleanup_existing_zip(release, path)
       return unless File.exist?(path)
 
       release.log(self, "Removing existing target #{path}")
