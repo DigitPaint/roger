@@ -1,5 +1,12 @@
 # Changelog
 
+## Version 1.3.2
+* Fix for missing variable in zip finalizer
+* Fix passing options within Mockup
+
+## Version 1.3.1
+This is a dud. It's identical to 1.3.1. Don't use.
+
 ## Version 1.3.0
 * Add fixed SCM for testing (you can set a fixed version number)
 * Fix for missing variable in UrlRelativizer
