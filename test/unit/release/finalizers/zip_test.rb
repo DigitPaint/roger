@@ -27,5 +27,17 @@ module Roger
 
       assert File.exist?(@release.target_path + "html-1.0.0.zip"), @release.target_path.inspect
     end
+
+    def test_cleanup_existing_zip
+      finalizer = Roger::Release::Finalizers::Zip.new
+      zip = @release.project.construct.file("releases/html-1.0.0.zip")
+
+      # Get time of file that will be copied
+      original_ctime = File.ctime(zip)
+
+      finalizer.call(@release)
+
+      assert_not_same original_ctime, File.ctime(zip)
+    end
   end
 end
