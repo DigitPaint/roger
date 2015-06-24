@@ -13,7 +13,7 @@ module Roger
         path = Pathname.new(get_files_default_path)
         files = globs.map { |g| Dir.glob(path + g) }.flatten
         files.reject! { |file| excludes.detect { |e| file.match(e) } } if excludes.any?
-        files
+        files.select { |file| File.file?(file) }
       end
 
       protected
