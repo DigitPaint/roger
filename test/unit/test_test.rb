@@ -35,26 +35,5 @@ module Roger
       @project.test.run!
       assert_equal @project.mode, nil
     end
-
-    def test_get_files
-      test = Roger::Test.new(@project)
-      files = test.get_files(["html/**/*.js"])
-      assert_equal(clean_paths(files, @project.path), @files)
-    end
-
-    def test_get_files_excludes
-      test = Roger::Test.new(@project)
-      files = test.get_files(["html/**/*.js"], ["html\/vendor\/.+.js"])
-      assert_equal(clean_paths(files, @project.path), ["html/javascripts/site.js"])
-    end
-
-    protected
-
-    # Clean's path, chops of base
-    def clean_paths(paths, base)
-      paths.map do |file|
-        file.gsub(%r{\A#{base}/}, "")
-      end
-    end
   end
 end
