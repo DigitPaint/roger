@@ -17,8 +17,8 @@ module Roger::Release::Finalizers
       @options = {
         rsync: "rsync",
         remote_path: "",
-        host: "",
-        username: "",
+        host: nil,
+        username: nil,
         ask: true
       }.update(options)
     end
@@ -52,7 +52,9 @@ module Roger::Release::Finalizers
     end
 
     def rsync(command, local_path, remote_path, options = {})
-      target_path = "#{options[:username]}@#{options[:host]}:#{remote_path}"
+      target_path = remote_path
+      target_path = "#{options[:host]}:#{target_path}" if options[:host]
+      target_path = "#{options[:username]}@#{target_path}" if options[:username]
 
       command = [
         options[:rsync],
@@ -74,7 +76,7 @@ module Roger::Release::Finalizers
     end
 
     def validate_options!(release, options)
-      must_have_keys = [:remote_path, :host, :username]
+      must_have_keys = [:remote_path]
       return if (options.keys & must_have_keys).size == must_have_keys.size
 
       release.log(self, "Missing options: #{(must_have_keys - options.keys).inspect}")
