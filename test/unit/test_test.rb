@@ -1,6 +1,7 @@
 # encoding: UTF-8
 require "test_helper"
 require "./lib/roger/test.rb"
+require "roger/testing/mock_project"
 
 module Roger
   # Testing the Roger Test fucntionality
@@ -8,10 +9,18 @@ module Roger
     def setup
       @files = ["html/javascripts/site.js",
                 "html/vendor/underscore/underscore.js"]
-      @globs = stub(map: @files)
 
-      @project = Project.new(File.dirname(__FILE__) + "/../project", mockupfile_path: false)
+      @project = Testing::MockProject.new
+
+      @files.each do |file|
+        @project.construct.file file
+      end
+
       @mockupfile = Roger::Mockupfile.new(@project)
+    end
+
+    def teardown
+      @project.destroy
     end
 
     def test_test_run_should_set_project_mode
@@ -28,14 +37,24 @@ module Roger
     end
 
     def test_get_files
-      test = Roger::Test.new({})
-      assert_equal(test.get_files(@globs), @files)
+      test = Roger::Test.new(@project)
+      files = test.get_files(["html/**/*.js"])
+      assert_equal(clean_paths(files, @project.path), @files)
     end
 
     def test_get_files_excludes
-      test = Roger::Test.new({})
-      assert_equal(test.get_files(@globs, ["html\/vendor\/.+.js"]),
-                   ["html/javascripts/site.js"])
+      test = Roger::Test.new(@project)
+      files = test.get_files(["html/**/*.js"], ["html\/vendor\/.+.js"])
+      assert_equal(clean_paths(files, @project.path), ["html/javascripts/site.js"])
+    end
+
+    protected
+
+    # Clean's path, chops of base
+    def clean_paths(paths, base)
+      paths.map do |file|
+        file.gsub(%r{\A#{base}/}, "")
+      end
     end
   end
 end
