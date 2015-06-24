@@ -1,5 +1,10 @@
 # Changelog
 
+## Version 1.3.3
+* Add tests for rsync finalizer and get_files
+* Get files now only matches files, not directories
+* Rsync finalizer works with $CHILD_STATUS
+
 ## Version 1.3.2
 * Fix for missing variable in zip finalizer
 * Fix passing options within Mockup
