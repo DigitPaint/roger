@@ -1,5 +1,8 @@
 # Changelog
 
+## Version 1.3.4
+* Require the correct "English" module (with capital E) for $CHILD_STATUS
+
 ## Version 1.3.3
 * Add tests for rsync finalizer and get_files
 * Get files now only matches files, not directories
