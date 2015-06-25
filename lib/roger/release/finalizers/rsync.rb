@@ -1,5 +1,5 @@
 require "shellwords"
-require "english"
+require "English"
 
 module Roger::Release::Finalizers
   # Finalizes the release by uploading your mockup with rsync to a remote server

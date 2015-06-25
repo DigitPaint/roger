@@ -1,5 +1,5 @@
 require "pathname"
-require "english"
+require "English"
 
 module Roger
   class Release
