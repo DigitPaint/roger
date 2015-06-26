@@ -202,6 +202,33 @@ module Roger
       project.mode = nil
     end
 
+    # @param [String] string The string to comment
+    #
+    # @option options [:html, :css, :js] :style The comment style to use
+    #   (default=:js, which is the same as :css)
+    # @option options [Boolean] :per_line Comment per line or make one block? (default=true)
+    def comment(string, options = {})
+      options = {
+        style: :css,
+        per_line: true
+      }.update(options)
+
+      commenters = {
+        html: proc { |s| "<!-- #{s} -->" },
+        css: proc { |s| "/*! #{s} */" },
+        js: proc { |s| "/*! #{s} */" }
+      }
+
+      commenter = commenters[options[:style]] || commenters[:js]
+
+      if options[:per_line]
+        string = string.split(/\r?\n/)
+        string.map { |s| commenter.call(s) }.join("\n")
+      else
+        commenter.call(s)
+      end
+    end
+
     protected
 
     def get_files_default_path
@@ -316,33 +343,6 @@ module Roger
     def cleanup!
       log(self, "Cleaning up build path #{build_path}")
       rm_rf(build_path)
-    end
-
-    # @param [String] string The string to comment
-    #
-    # @option options [:html, :css, :js] :style The comment style to use
-    #   (default=:js, which is the same as :css)
-    # @option options [Boolean] :per_line Comment per line or make one block? (default=true)
-    def comment(string, options = {})
-      options = {
-        style: :css,
-        per_line: true
-      }.update(options)
-
-      commenters = {
-        html: proc { |s| "<!-- #{s} -->" },
-        css: proc { |s| "/*! #{s} */" },
-        js: proc { |s| "/*! #{s} */" }
-      }
-
-      commenter = commenters[options[:style]] || commenters[:js]
-
-      if options[:per_line]
-        string = string.split(/\r?\n/)
-        string.map { |s| commenter.call(s) }.join("\n")
-      else
-        commenter.call(s)
-      end
     end
   end
 end
