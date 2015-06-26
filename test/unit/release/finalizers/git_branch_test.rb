@@ -1,9 +1,12 @@
 require "test_helper"
 require "roger/testing/mock_release"
+require "shellwords"
 
 module Roger
   # Test for Roger GitBranchFinalizer
   class GitBranchTest < ::Test::Unit::TestCase
+    include TestConstruct::Helpers
+
     def setup
       @release = Testing::MockRelease.new
 
@@ -35,6 +38,29 @@ module Roger
       end
 
       FileUtils.rm_rf(output_dir)
+    end
+
+    def test_find_remote
+      finalizer = Roger::Release::Finalizers::GitBranch.new
+      remote_repo = setup_construct(chdir: false)
+
+      `git init`
+
+      Dir.chdir(remote_repo.to_s) do
+        `git init --bare`
+      end
+
+      `git remote add origin #{Shellwords.escape(remote_repo.to_s)}`
+
+      assert_nothing_raised do
+        finalizer.call(
+          @release,
+          push: false,
+          cleanup: false
+        )
+      end
+    ensure
+      teardown_construct(remote_repo)
     end
   end
 end
