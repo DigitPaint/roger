@@ -225,7 +225,7 @@ module Roger
         string = string.split(/\r?\n/)
         string.map { |s| commenter.call(s) }.join("\n")
       else
-        commenter.call(s)
+        commenter.call(string)
       end
     end
 
