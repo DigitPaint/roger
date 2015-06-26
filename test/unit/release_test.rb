@@ -32,6 +32,54 @@ module Roger
       assert @project.release.finalizers.empty?
     end
 
+    def test_comment_per_line
+      release = @mockupfile.release
+
+      options = {
+        style: :css,
+        per_line: true
+      }
+
+      assert_equal "/* a */", release.comment("a", options)
+      assert_equal "/* a */\n/* b */", release.comment("a\nb", options)
+    end
+
+    def test_comment_html
+      release = @mockupfile.release
+
+      options = {
+        style: :html,
+        per_line: false
+      }
+
+      assert_equal "<!-- a -->", release.comment("a", options)
+      assert_equal "<!-- a\nb -->", release.comment("a\nb", options)
+    end
+
+    def test_comment_css
+      release = @mockupfile.release
+
+      options = {
+        style: :css,
+        per_line: false
+      }
+
+      assert_equal "/* a */", release.comment("a", options)
+      assert_equal "/* a\nb */", release.comment("a\nb", options)
+    end
+
+    def test_comment_js
+      release = @mockupfile.release
+
+      options = {
+        style: :js,
+        per_line: false
+      }
+
+      assert_equal "/* a */", release.comment("a", options)
+      assert_equal "/* a\nb */", release.comment("a\nb", options)
+    end
+
     def test_get_callable
       p = -> {}
       assert_equal Release.get_callable(p, {}), p
