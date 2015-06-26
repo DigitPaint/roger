@@ -1,12 +1,12 @@
 # Generators register themself on the CLI module
 require "test_helper"
-require "./lib/roger/release.rb"
+require "roger/testing/mock_project"
 
 module Roger
   # Test Roger Release
   class ReleaseTest < ::Test::Unit::TestCase
     def setup
-      @project = Project.new(File.dirname(__FILE__) + "/../project", mockupfile_path: false)
+      @project = Testing::MockProject.new
       @mockupfile = Roger::Mockupfile.new(@project)
     end
 
