@@ -32,6 +32,48 @@ module Roger
       assert @project.release.finalizers.empty?
     end
 
+    def test_release_should_add_mockup_processor_as_first_by_default
+      release = @mockupfile.release
+      release.run!
+
+      assert release.stack.length > 0
+      assert_equal Roger::Release::Processors::Mockup, release.stack.first.first.class
+    end
+
+    def test_release_should_add_url_relativizer_by_default
+      release = @mockupfile.release
+      release.run!
+
+      assert release.stack.length > 0
+      assert_equal Roger::Release::Processors::UrlRelativizer, release.stack.last.first.class
+    end
+
+    def test_default_banner
+      release = @mockupfile.release(scm: :fixed)
+
+      # Set fixed version
+      date = Time.now
+      release.scm.version = "1.0.0"
+      release.scm.date = date
+
+      lines = release.banner.split("\n")
+
+      assert_equal "/* ====================== */", lines[0]
+      assert_equal "/* = Version : 1.0.0    = */", lines[1]
+      assert_equal "/* = Date  : #{date.strftime('%Y-%m-%d')} = */", lines[2]
+      assert_equal "/* ====================== */", lines[3]
+    end
+
+    def test_banner
+      release = @mockupfile.release(scm: :fixed)
+
+      banner = release.banner do
+        "BANNER"
+      end
+
+      assert_equal "/* BANNER */", banner
+    end
+
     def test_comment_per_line
       release = @mockupfile.release
 
