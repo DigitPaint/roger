@@ -22,7 +22,7 @@ module Roger::Release::Finalizers
 
     def call(release, options = {})
       @options = @options.dup.update(options)
-      remote = find_git_remote
+      remote = find_git_remote(release.project.path)
       branch = @options[:branch]
 
       tmp_dir = Pathname.new(::Dir.mktmpdir)
@@ -126,10 +126,10 @@ module Roger::Release::Finalizers
       path
     end
 
-    def find_git_remote
+    def find_git_remote(path)
       remote =
         @options[:remote] ||
-        `git --git-dir=#{find_git_dir} config --get remote.origin.url`
+        `git --git-dir=#{Shellwords.escape(find_git_dir(path).to_s)} config --get remote.origin.url`
 
       remote.strip!
 
