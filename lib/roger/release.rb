@@ -215,8 +215,8 @@ module Roger
 
       commenters = {
         html: proc { |s| "<!-- #{s} -->" },
-        css: proc { |s| "/*! #{s} */" },
-        js: proc { |s| "/*! #{s} */" }
+        css: proc { |s| "/* #{s} */" },
+        js: proc { |s| "/* #{s} */" }
       }
 
       commenter = commenters[options[:style]] || commenters[:js]
