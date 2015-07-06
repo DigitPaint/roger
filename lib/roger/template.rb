@@ -28,6 +28,17 @@ module Roger
         fail "Unknown file #{path}" unless File.exist?(path)
         new(File.read(path), options.update(source_path: path))
       end
+
+      # Register a helper module that should be included in
+      # every template context.
+      def helper(mod)
+        @helpers ||= []
+        @helpers << mod
+      end
+
+      def helpers
+        @helpers || []
+      end
     end
 
     # @option options [String,Pathname] :source_path The path to
@@ -45,7 +56,7 @@ module Roger
     end
 
     def render(env = {})
-      context = TemplateContext.new(self, env)
+      context = prepare_context(env)
 
       if @layout_template
         content_for_layout = template.render(context, {}) # yields
@@ -112,6 +123,17 @@ module Roger
     end
 
     protected
+
+    def prepare_context(env)
+      context = TemplateContext.new(self, env)
+
+      # Extend context with all helpers
+      self.class.helpers.each do |mod|
+        context.extend(mod)
+      end
+
+      context
+    end
 
     def initialize_layout
       return unless data[:layout]
