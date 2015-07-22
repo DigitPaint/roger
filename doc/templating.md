@@ -44,10 +44,9 @@ these values in the templates (layouts and partials included) by using `document
 
 ## Layouts
 
-Layouts are basically "wrap" templates. The layout will wrap around the rendered template. In the template front-matter you define what layout it should use by setting the `layout` key.
+Layouts are basically "wrap" templates. The layout will wrap around the rendered template. In the template front-matter you define what layout it should use by setting the `layout` key. See the example below.
 
-### An example
-
+### Basic layout example
 
 #### html/template.html.erb
 ```erb
@@ -73,6 +72,45 @@ Template
 Layout (after)
 ```
 
+### Advanced layouts
+
+#### Using `content_for`
+
+You can have multiple regions in your layout. That way you can yield multiple times for each region. See the example below for usage on `content_for :name do ... end` and `yield :name`.
+
+##### `content_for` example
+
+###### html/template.html.erb
+```erb
+---
+layout: default
+---
+
+<% content_for :sidebar %>
+  Sidebar
+<% end %>
+
+The is the rest of the content
+```
+
+###### layouts/default.html.erb
+```erb
+<% yield %>
+
+<div class="sidebar">
+  <% yield :sidebar %>
+</div>
+```
+
+###### Result
+```
+The is the rest of the content 
+
+<div class="sidebar">
+  Sidebar
+</div>
+```
+
 ## Partials
 
 Partials are little pieces of template that can be easily reused. You can access the partials throught the `partial("partialpath")` method. You can optionall pass variables to the partial by passing a ruby hash of options as a second parameter. This works like this:
@@ -85,6 +123,24 @@ In the partial these can be accessed as local variables. So for instance in you 
 
 ```erb
 <%= key %>
+```
+
+### Blocks
+
+Just like `content_for` partials also accept block syntax. This way you can pass a block of HTML to the partial. It works like this:
+
+```erb
+<% partial "my-partial" do %>
+  Pass it to the partial
+<% end %>
+```
+
+Within your partial file you can then use the content by yielding it:
+
+```erb
+<div class="my-partial">
+    <% yield %>
+</div>
 ```
 
 ## Access to Project 
