@@ -50,7 +50,7 @@ Read more documentation:
 
 * [**Templating** Learn the power of Roger built in templating](doc/templating.md)
 * [**CLI** Learn about the different `roger` commands](doc/cli.md)
-* [**Mockupfile** Learn how to configure and extend your Project](doc/mockupfile.md)
+* [**Rogerfile** Learn how to configure and extend your Project](doc/rogerfile.md)
 
 ## Why?
 

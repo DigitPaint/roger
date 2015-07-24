@@ -1,6 +1,6 @@
-# Mockupfile
+# Rogerfile
 
-The mockupfile is where all the project configuration for releasing, serving etc. happens.
+The rogerfile is where all the project configuration for releasing, serving etc. happens.
 
 ## Example
 
@@ -12,23 +12,23 @@ Sass::Plugin.options[:template_location] = "./html/stylesheets"
 Sass::Plugin.options[:css_location] = "./html/stylesheets"
 
 # Set verbosity to true (you can also pass --verbose to roger)
-# mockup.project.options[:verbose] = true
+# roger.project.options[:verbose] = true
 
 # These are defaults, but can be set here
-# mockup.project.html_path = mockup.project.path + "html"
-# mockup.project.partial_path = mockup.project.path + "partials"
+# roger.project.html_path = roger.project.path + "html"
+# roger.project.partial_path = roger.project.path + "partials"
 
 # Server is a regular Rack interface.
-mockup.serve do |server|
+roger.serve do |server|
   server.use :sass
 end
 
 # Define tests
-mockup.test do |t|
+roger.test do |t|
   t.use :jshint
 end
 
-mockup.release do |release|
+roger.release do |release|
   
   # The variables below can be used anywhere in this section
   release.target_path # The target path where releases are put
@@ -40,8 +40,8 @@ mockup.release do |release|
   release.scm.version # Get the git version
   release.scm.date # Get the git date
 
-  # Extract mockup (this is optional)
-  # release.mockup
+  # Extract project (this is optional)
+  # release.use :mockup
 
   # Create custom banner
   #
