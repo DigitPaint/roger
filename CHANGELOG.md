@@ -1,5 +1,13 @@
 # Changelog
 
+## Version 1.4.0
+* Rename Mockupfile to Rogerfile
+* Remove the deprecated `Roger::Extractor` (use `Roger::Template` instead)
+* Add support for template helpers through `Roger::Template.register MyHelpersModule`
+* Add more documentation on templating
+* Comment method from Rogerfile will no longer add ! to js/css comments
+* Heavily increase test coverage
+
 ## Version 1.3.4
 * Require the correct "English" module (with capital E) for $CHILD_STATUS
 
