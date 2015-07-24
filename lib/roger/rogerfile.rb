@@ -2,14 +2,21 @@ module Roger
   # Loader for rogerfile
   class Rogerfile
     # This is the context for the rogerfile evaluation. It should be empty except for the
-    # #mockup method.
+    # #roger method (and deprecated #mockup method).
     class Context
       def initialize(rogerfile)
         @_rogerfile = rogerfile
       end
 
-      def mockup
+      def roger
         @_rogerfile
+      end
+
+      # @deprecated Please use roger method instead.
+      def mockup
+        warn("The use of mockup has been deprecated; please use roger instead")
+        warn("  on #{caller.first}")
+        roger
       end
 
       def binding
