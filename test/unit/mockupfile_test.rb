@@ -2,7 +2,7 @@
 require "test_helper"
 require "roger/testing/mock_project"
 
-class MockupFileLoadedError < StandardError
+class RogerfileLoadedError < StandardError
 end
 
 module Roger
@@ -16,23 +16,23 @@ module Roger
       @project.destroy
     end
 
-    def test_load_mockupfile
-      @project.construct.file "Mockupfile", "raise MockupFileLoadedError"
+    def test_load_rogerfile
+      @project.construct.file "Rogerfile", "raise RogerfileLoadedError"
 
-      mockupfile = Roger::Mockupfile.new(@project)
+      rogerfile = Roger::Rogerfile.new(@project)
 
-      assert_raise(MockupFileLoadedError) do
-        mockupfile.load
+      assert_raise(RogerfileLoadedError) do
+        rogerfile.load
       end
     end
 
-    def test_loaded_mockupfile
-      @project.construct.file "Mockupfile", ""
+    def test_loaded_rogerfile
+      @project.construct.file "Rogerfile", ""
 
-      mockupfile = Roger::Mockupfile.new(@project)
-      mockupfile.load
+      rogerfile = Roger::Rogerfile.new(@project)
+      rogerfile.load
 
-      assert mockupfile.loaded?
+      assert rogerfile.loaded?
     end
   end
 end

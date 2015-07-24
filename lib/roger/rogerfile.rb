@@ -1,15 +1,15 @@
 module Roger
-  # Loader for mockupfile
-  class Mockupfile
-    # This is the context for the mockupfile evaluation. It should be empty except for the
+  # Loader for rogerfile
+  class Rogerfile
+    # This is the context for the rogerfile evaluation. It should be empty except for the
     # #mockup method.
     class Context
-      def initialize(mockupfile)
-        @_mockupfile = mockupfile
+      def initialize(rogerfile)
+        @_rogerfile = rogerfile
       end
 
       def mockup
-        @_mockupfile
+        @_rogerfile
       end
 
       def binding
@@ -17,15 +17,15 @@ module Roger
       end
     end
 
-    # @attr :path [Pathname] The path of the Mockupfile for this project
+    # @attr :path [Pathname] The path of the rogerfile for this project
     attr_accessor :path, :project
 
     def initialize(project, path = nil)
       @project = project
-      @path = (path && Pathname.new(path)) || Pathname.new(project.path + "Mockupfile")
+      @path = (path && Pathname.new(path)) || Pathname.new(project.path + "Rogerfile")
     end
 
-    # Actually load the mockupfile
+    # Actually load the rogerfile
     def load
       return unless File.exist?(@path) && !self.loaded?
 
@@ -35,7 +35,7 @@ module Roger
       @loaded = true
     end
 
-    # Wether or not the Mockupfile has been loaded
+    # Wether or not the rogerfile has been loaded
     def loaded?
       @loaded
     end

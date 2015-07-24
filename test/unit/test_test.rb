@@ -16,7 +16,7 @@ module Roger
         @project.construct.file file
       end
 
-      @mockupfile = Roger::Mockupfile.new(@project)
+      @rogerfile = Roger::Rogerfile.new(@project)
     end
 
     def teardown
@@ -26,7 +26,7 @@ module Roger
     def test_test_run_should_set_project_mode
       assert_equal @project.mode, nil
 
-      @mockupfile.test do |t|
+      @rogerfile.test do |t|
         t.use proc{|test|
           assert_equal test.project.mode, :test
         }

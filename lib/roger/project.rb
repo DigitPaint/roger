@@ -2,20 +2,20 @@ require File.dirname(__FILE__) + "/release"
 require File.dirname(__FILE__) + "/server"
 require File.dirname(__FILE__) + "/test"
 
-require File.dirname(__FILE__) + "/mockupfile"
+require File.dirname(__FILE__) + "/rogerfile"
 
 module Roger
-  # Loader for mockupfile and project dependencies
+  # Loader for rogerfile and project dependencies
   class Project
     # @attr :path [Pathname] The project path
     # @attr :html_path [Pathname] The path of the HTML mockup
     # @attr :partial_path [Pathname] The path for the partials for this mockup
-    # @attr :mockupfile [Mockupfile] The Mockupfile for this project
-    # @attr :mockupfile_path [Pathname] The path to the Mockupfile
+    # @attr :rogerfile [Rogerfile] The Rogerfile for this project
+    # @attr :rogerfile_path [Pathname] The path to the Rogerfile
     # @attr :mode [nil, :test, :server, :release] The mode we're currently in.
     #   If nil, we aren't doing anything.
     attr_accessor :path, :html_path, :partial_path, :layouts_path,
-                  :mockupfile, :mockupfile_path, :mode
+                  :rogerfile, :rogerfile_path, :mode
 
     attr_accessor :shell
 
@@ -28,7 +28,7 @@ module Roger
         html_path: @path + "html",
         partial_path: @path + "partials",
         layouts_path: @path + "layouts",
-        mockupfile_path: @path + "Mockupfile",
+        rogerfile_path: @path + "Rogerfile",
         server: {},
         release: {},
         test: {}
@@ -81,16 +81,16 @@ module Roger
       self.partial_path =
         @options[:partials_path] || @options[:partial_path] || html_path + "../partials/"
       self.layouts_path = @options[:layouts_path]
-      self.mockupfile_path = @options[:mockupfile_path]
+      self.rogerfile_path = @options[:rogerfile_path]
       self.shell = @options[:shell]
     end
 
     def initialize_mockup
-      if mockupfile_path
-        @mockupfile = Mockupfile.new(self, mockupfile_path)
-        @mockupfile.load
+      if rogerfile_path
+        @rogerfile = Rogerfile.new(self, rogerfile_path)
+        @rogerfile.load
       else
-        @mockupfile = Mockupfile.new(self)
+        @rogerfile = Rogerfile.new(self)
       end
     end
 

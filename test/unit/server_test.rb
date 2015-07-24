@@ -5,7 +5,7 @@ module Roger
   # Test Roger Server test
   class ServerTest < ::Test::Unit::TestCase
     def setup
-      @project = Project.new(File.dirname(__FILE__) + "/../../project", mockupfile_path: false)
+      @project = Project.new(File.dirname(__FILE__) + "/../../project", rogerfile_path: false)
       @server = Server.new(@project)
     end
 
