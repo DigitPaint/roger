@@ -166,18 +166,6 @@ module Roger
       end
     end
 
-    # Extract the mockup, this will happen anyway, and will always happen first
-    # This method gives you a way to pass options to the extractor.
-    #
-    # @param Hash options Options hash passed to extractor
-    #
-    # @deprecated Don't use the extractor anymore, use release.use(:mockup, options) processor
-    def extract(options = {})
-      warn(self, "Don't use the extractor anymore, use release.use(:mockup, options)
-        and release.use(:url_relativizer, options) processors")
-      @extractor_options = options
-    end
-
     # Actually perform the release
     def run!
       project.mode = :release
@@ -270,7 +258,6 @@ module Roger
       end
     end
 
-    # Checks if deprecated extractor options have been set
     # Checks if the mockup will be runned
     # If config[:blank] is true it will automatically add UrlRelativizer or Mockup processor
     def validate_stack!
@@ -278,11 +265,6 @@ module Roger
 
       mockup_options = {}
       relativizer_options = {}
-
-      if @extractor_options
-        mockup_options = { env: @extractor_options[:env] }
-        relativizer_options = { url_attributes: @extractor_options[:url_attributes] }
-      end
 
       unless find_in_stack(Roger::Release::Processors::Mockup)
         @stack.unshift([Roger::Release::Processors::Mockup.new, mockup_options])
@@ -347,7 +329,6 @@ module Roger
   end
 end
 
-require File.dirname(__FILE__) + "/extractor"
 require File.dirname(__FILE__) + "/release/scm"
 require File.dirname(__FILE__) + "/release/injector"
 require File.dirname(__FILE__) + "/release/cleaner"
