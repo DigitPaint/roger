@@ -13,7 +13,7 @@ class Roger::Generators::GeneratorGenerator < Roger::Generators::Base
   def create_lib_file
     destination = "#{path}/#{name}_generator.rb"
     template("templates/generator.tt", destination)
-    say "Add `require #{destination}` to your mockup file and run mockup generate #{name}."
+    say "Add `require #{destination}` to your Rogerfile and run roger generate #{name}."
   end
 end
 

@@ -8,8 +8,8 @@ module Roger
   # Loader for rogerfile and project dependencies
   class Project
     # @attr :path [Pathname] The project path
-    # @attr :html_path [Pathname] The path of the HTML mockup
-    # @attr :partial_path [Pathname] The path for the partials for this mockup
+    # @attr :html_path [Pathname] The path of the HTML of this project
+    # @attr :partial_path [Pathname] The path for the partials for this project
     # @attr :rogerfile [Rogerfile] The Rogerfile for this project
     # @attr :rogerfile_path [Pathname] The path to the Rogerfile
     # @attr :mode [nil, :test, :server, :release] The mode we're currently in.

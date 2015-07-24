@@ -1,12 +1,12 @@
 require "shellwords"
 
-# Generator to create a new HTML mockup based on an existing skeleton
+# Generator to create a new HTML project based on an existing skeleton
 class Roger::Generators::NewGenerator < Thor::Group
   include Thor::Actions
 
-  desc "Create a new HTML mockup based on an existing skeleton"
+  desc "Create a new HTML roger project based on an existing skeleton"
 
-  argument :path, type: :string, required: true, desc: "Path to generate mockup into"
+  argument :path, type: :string, required: true, desc: "Path to generate project into"
 
   class_option(
     :template,
@@ -29,7 +29,7 @@ class Roger::Generators::NewGenerator < Thor::Group
   def validate_path_is_empty
     return unless File.directory?(destination_root)
 
-    say "Directory #{destination_root} already exists, please only use this to create new mockups"
+    say "Directory #{destination_root} already exists, please only use this to create new projects"
     exit(1)
   end
 
