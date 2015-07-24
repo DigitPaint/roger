@@ -2,7 +2,7 @@ require "test_helper"
 require "roger/testing/mock_release"
 
 module Roger
-  # Test Roger Mockup
+  # Test UrlRelativizer
   class UrlRelativizerTest < ::Test::Unit::TestCase
     def setup
       @release = Testing::MockRelease.new

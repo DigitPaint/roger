@@ -74,7 +74,7 @@ module Roger
     # Accessor for source_path
     # The source path is the root of the mockup
     #
-    # @return Pathanem the source_path
+    # @return Pathname the source_path
     def source_path
       Pathname.new(config[:source_path])
     end
