@@ -38,6 +38,7 @@ module Roger
       options.each { |k, v| @options[k.is_a?(String) ? k.to_sym : k] = v }
 
       initialize_accessors
+      intialize_rogerfile_path
       initialize_roger
     end
 
@@ -76,12 +77,31 @@ module Roger
 
     protected
 
+    def intialize_rogerfile_path
+      # We stop immediately if rogerfile is not a Pathname
+      unless @options[:rogerfile_path].is_a? Pathname
+        self.rogerfile_path = @options[:rogerfile_path]
+        return
+      end
+
+      # If roger file exist we're good to go
+      if @options[:rogerfile_path].exist?
+        self.rogerfile_path = @options[:rogerfile_path]
+      else
+        # If the rogerfile does not exist we check for deprecated Mockupfile
+        mockupfile_path = path + "Mockupfile"
+        if mockupfile_path.exist?
+          warn("Mockupfile has been deprecated! Please rename Mockupfile to Rogerfile")
+          self.rogerfile_path = mockupfile_path
+        end
+      end
+    end
+
     def initialize_accessors
       self.html_path = @options[:html_path]
       self.partial_path =
         @options[:partials_path] || @options[:partial_path] || html_path + "../partials/"
       self.layouts_path = @options[:layouts_path]
-      self.rogerfile_path = @options[:rogerfile_path]
       self.shell = @options[:shell]
     end
 
