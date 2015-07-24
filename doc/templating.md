@@ -25,9 +25,9 @@ Only the html-path has to exist. The others are not required.
 
 ## HTML
 
-The html-path is actually the root for all you front-end code. This is what will be served as the document-root with `mockup serve` and will be the base for a release when using `mockup release`.
+The html-path is actually the root for all you front-end code. This is what will be served as the document-root with `roger serve` and will be the base for a release when using `roger release`.
 
-In the html-path you can put static files (images, documents, etc.) but also templates. Anything that the [Tilt Engine](https://github.com/rtomayko/tilt) can handle is ok. The only thing Mockup adds is handling for front-matter, layouts and partials. 
+In the html-path you can put static files (images, documents, etc.) but also templates. Anything that the [Tilt Engine](https://github.com/rtomayko/tilt) can handle is ok. The only thing Roger adds is handling for front-matter, layouts and partials. 
 
 ## Front-matter
 

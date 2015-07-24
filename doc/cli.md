@@ -3,25 +3,25 @@
 The easiest way to get help is through the commandline by running
 
 ```shell
-mockup help
+roger help
 ```
 
 or to get help on a specific subcommand
 
 ```shell
-mockup help [subcommand]
+roger help [subcommand]
 ```
 
 ## Generate
 
 ```shell
-mockup generate [generator] [options]
+roger generate [generator] [options]
 ```
 
 ## Serve
 
 ```shell
-mockup serve [options]
+roger serve [options]
 ```
 
 Starts a webserver (port 9000 by default)
@@ -30,7 +30,7 @@ Starts a webserver (port 9000 by default)
 ## Release
 
 ```shell
-mockup release [options]
+roger release [options]
 ```
 
 Releases the project
@@ -38,7 +38,7 @@ Releases the project
 ## Test
 
 ```shell
-mockup test [options]
+roger test [options]
 ```
 
 Tests the project

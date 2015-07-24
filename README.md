@@ -25,7 +25,7 @@ We assume you have a working Ruby 1.9.x or higher running.
 1. Create a new project
 
     ```shell
-    mockup generate new PROJECT_DIR
+    roger generate new PROJECT_DIR
     ```
 
     Replace `PROJECT_DIR` with your project name
@@ -33,7 +33,7 @@ We assume you have a working Ruby 1.9.x or higher running.
 1. Start the development server
 
     ```shell
-    mockup serve
+    roger serve
     ```
 
     Open your webbrowser and go to `http://localhost:9000/`
@@ -41,7 +41,7 @@ We assume you have a working Ruby 1.9.x or higher running.
 1. Release your project
 
     ```shell
-    mockup release
+    roger release
     ```
 
 ## Where to go from here?
@@ -49,7 +49,7 @@ We assume you have a working Ruby 1.9.x or higher running.
 Read more documentation:
 
 * [**Templating** Learn the power of Roger built in templating](doc/templating.md)
-* [**CLI** Learn about the different `mockup` commands](doc/cli.md)
+* [**CLI** Learn about the different `roger` commands](doc/cli.md)
 * [**Mockupfile** Learn how to configure and extend your Project](doc/mockupfile.md)
 
 ## Why?
