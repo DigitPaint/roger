@@ -143,6 +143,20 @@ Within your partial file you can then use the content by yielding it:
 </div>
 ```
 
+## Helpers
+Template helpers allow you to have custom functions in your templates. These functions will be executed in the same context as the template is in. This means they will have access to all other template features like the `document` and `env` variables.
+
+A helper is nothing more than a plain old Ruby module containing a bunch of functions.
+
+### Registering helpers
+Registering helpers can best be done in the Mockupfile. For every helper you want to register you need to call:
+
+```ruby
+Roger::Template.register MyHelperModule
+```
+
+After registration the helpers are available for use in all templates, partials, layouts, etc.
+
 ## Access to Project 
 
 You can access the Roger project with all it's might and glory by accessing `env["roger.project"]`.
