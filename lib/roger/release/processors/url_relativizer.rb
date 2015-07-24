@@ -1,3 +1,4 @@
+require "hpricot"
 require File.dirname(__FILE__) + "../../../resolver"
 
 module Roger::Release::Processors

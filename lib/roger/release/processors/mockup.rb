@@ -52,7 +52,7 @@ module Roger::Release::Processors
       end
     end
 
-    # Runs the extractor on a single file and return processed source.
+    # Runs the template on a single file and return processed source.
     def extract_source_from_file(file_path, env = {})
       Roger::Template.open(
         file_path,
