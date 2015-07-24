@@ -17,11 +17,11 @@ module Roger
     end
 
     def run_test_command(args, &block)
-      run_command_with_mockupfile(args) do |mockupfile|
+      run_command_with_rogerfile(args) do |rogerfile|
         if block_given?
-          mockupfile.test(&block)
+          rogerfile.test(&block)
         else
-          mockupfile.test do |t|
+          rogerfile.test do |t|
             t.use :succeed
             t.use :noop
           end
@@ -68,7 +68,7 @@ module Roger
       # A somewhat a-typical test,
       # just to make it work
       cli = ::Roger::Cli::Base.new [], %w(--verbose)
-      cli.class.project.mockupfile.test do |t|
+      cli.class.project.rogerfile.test do |t|
         t.use :noop
       end
 

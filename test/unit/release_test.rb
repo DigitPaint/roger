@@ -7,14 +7,14 @@ module Roger
   class ReleaseTest < ::Test::Unit::TestCase
     def setup
       @project = Testing::MockProject.new
-      @mockupfile = Roger::Mockupfile.new(@project)
+      @rogerfile = Roger::Rogerfile.new(@project)
     end
 
     def test_run_should_set_project_mode
       assert_equal @project.mode, nil
 
       # Running a blank release
-      @mockupfile.release(blank: true) do |r|
+      @rogerfile.release(blank: true) do |r|
         r.use proc{|release|
           assert_equal release.project.mode, :release
         }
@@ -25,7 +25,7 @@ module Roger
     end
 
     def test_blank_release_should_have_no_processors_and_finalizers
-      @mockupfile.release(blank: true)
+      @rogerfile.release(blank: true)
       @project.release.run!
 
       assert @project.release.stack.empty?
@@ -33,7 +33,7 @@ module Roger
     end
 
     def test_release_should_add_mockup_processor_as_first_by_default
-      release = @mockupfile.release
+      release = @rogerfile.release
       release.run!
 
       assert release.stack.length > 0
@@ -41,7 +41,7 @@ module Roger
     end
 
     def test_release_should_add_url_relativizer_by_default
-      release = @mockupfile.release
+      release = @rogerfile.release
       release.run!
 
       assert release.stack.length > 0
@@ -49,7 +49,7 @@ module Roger
     end
 
     def test_default_banner
-      release = @mockupfile.release(scm: :fixed)
+      release = @rogerfile.release(scm: :fixed)
 
       # Set fixed version
       date = Time.now
@@ -65,7 +65,7 @@ module Roger
     end
 
     def test_banner
-      release = @mockupfile.release(scm: :fixed)
+      release = @rogerfile.release(scm: :fixed)
 
       banner = release.banner do
         "BANNER"
@@ -75,7 +75,7 @@ module Roger
     end
 
     def test_comment_per_line
-      release = @mockupfile.release
+      release = @rogerfile.release
 
       options = {
         style: :css,
@@ -87,7 +87,7 @@ module Roger
     end
 
     def test_comment_html
-      release = @mockupfile.release
+      release = @rogerfile.release
 
       options = {
         style: :html,
@@ -99,7 +99,7 @@ module Roger
     end
 
     def test_comment_css
-      release = @mockupfile.release
+      release = @rogerfile.release
 
       options = {
         style: :css,
@@ -111,7 +111,7 @@ module Roger
     end
 
     def test_comment_js
-      release = @mockupfile.release
+      release = @rogerfile.release
 
       options = {
         style: :js,

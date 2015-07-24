@@ -7,7 +7,7 @@ module CustomGens
     # Simple Mock generator
     class MockedGenerator < Roger::Generators::Base
       desc "@mocked description"
-      argument :path, type: :string, required: false, desc: "Path to generate mockup into"
+      argument :path, type: :string, required: false, desc: "Path to generate project into"
       argument :another_arg, type: :string, required: false, desc: "Mocked or what?!"
 
       def test

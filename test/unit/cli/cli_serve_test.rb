@@ -67,12 +67,12 @@ module Roger
     end
   end
 
-  # These tests ar for the roger serve command with a mockupfile config
-  class CliServeWithMockupfileTest < ::Test::Unit::TestCase
+  # These tests ar for the roger serve command with a rogerfile config
+  class CliServeWithRogerfileTest < ::Test::Unit::TestCase
     include TestCli
 
-    def test_serve_with_port_in_mockupfile
-      out, _err = run_command_with_mockupfile(%w(serve)) do |m|
+    def test_serve_with_port_in_rogerfile
+      out, _err = run_command_with_rogerfile(%w(serve)) do |m|
         m.serve do |s|
           s.port = 9001
         end
@@ -83,8 +83,8 @@ module Roger
       assert_includes out, "Puma"
     end
 
-    def test_serve_with_host_in_mockupfile
-      out, _err = run_command_with_mockupfile(%w(serve)) do |m|
+    def test_serve_with_host_in_rogerfile
+      out, _err = run_command_with_rogerfile(%w(serve)) do |m|
         m.serve do |s|
           s.host = "127.0.0.1"
         end
@@ -95,8 +95,8 @@ module Roger
       assert_includes out, "Puma"
     end
 
-    def test_serve_with_handler_in_mockupfile
-      out, _err = run_command_with_mockupfile(%w(serve)) do |m|
+    def test_serve_with_handler_in_rogerfile
+      out, _err = run_command_with_rogerfile(%w(serve)) do |m|
         m.serve do |s|
           s.handler = "webrick"
         end
@@ -107,8 +107,8 @@ module Roger
       assert_includes out, "WEBrick"
     end
 
-    def test_serve_with_custom_port_should_override_mockupfile
-      out, _err = run_command_with_mockupfile(%w(serve --port=9002)) do |m|
+    def test_serve_with_custom_port_should_override_rogerfile
+      out, _err = run_command_with_rogerfile(%w(serve --port=9002)) do |m|
         m.serve do |s|
           s.port = 9001
         end
@@ -119,8 +119,8 @@ module Roger
       assert_includes out, "Puma"
     end
 
-    def test_serve_with_custom_host_should_override_mockupfile
-      out, _err = run_command_with_mockupfile(%w(serve --host=localhost)) do |m|
+    def test_serve_with_custom_host_should_override_rogerfile
+      out, _err = run_command_with_rogerfile(%w(serve --host=localhost)) do |m|
         m.serve do |s|
           s.host = "127.0.0.1"
         end
@@ -131,8 +131,8 @@ module Roger
       assert_includes out, "Puma"
     end
 
-    def test_serve_with_custom_handler_should_override_mockupfile
-      out, _err = run_command_with_mockupfile(%w(serve --handler=webrick)) do |m|
+    def test_serve_with_custom_handler_should_override_rogerfile
+      out, _err = run_command_with_rogerfile(%w(serve --handler=webrick)) do |m|
         m.serve do |s|
           s.handler = "puma"
         end

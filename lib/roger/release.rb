@@ -72,7 +72,7 @@ module Roger
     end
 
     # Accessor for source_path
-    # The source path is the root of the mockup
+    # The source path is the root of the project
     #
     # @return Pathname the source_path
     def source_path
@@ -258,7 +258,7 @@ module Roger
       end
     end
 
-    # Checks if the mockup will be runned
+    # Checks if the project will be runned
     # If config[:blank] is true it will automatically add UrlRelativizer or Mockup processor
     def validate_stack!
       return if config[:blank]

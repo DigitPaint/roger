@@ -7,7 +7,7 @@ module Roger
 
     default_task :all
 
-    desc "all", "Run all tests defined in Mockupfile. (this is the default action)"
+    desc "all", "Run all tests defined in Rogerfile. (this is the default action)"
     def all
       # If we use fail here the test breaks; no idea why
       # rubocop:disable Style/SignalException:

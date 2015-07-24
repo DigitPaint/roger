@@ -26,17 +26,17 @@ module Roger
       [out, err]
     end
 
-    def run_command_with_mockupfile(args, &_block)
+    def run_command_with_rogerfile(args, &_block)
       project = Project.new(
         @base_path || File.dirname(__FILE__) + "/../../project",
-        mockupfile_path: false
+        rogerfile_path: false
       )
 
-      mockupfile = Roger::Mockupfile.new(project)
+      rogerfile = Roger::Rogerfile.new(project)
 
-      yield(mockupfile) if block_given?
+      yield(rogerfile) if block_given?
 
-      project.mockupfile = mockupfile
+      project.rogerfile = rogerfile
 
       Cli::Base.project = project
 

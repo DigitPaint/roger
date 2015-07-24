@@ -30,7 +30,7 @@ module Roger
     end
 
     # Sets the options, this is a separate method as we want to override certain
-    # things set in the mockupfile from the commandline
+    # things set in the rogerfile from the commandline
     def set_options(options)
       self.port = options[:port] if options.key?(:port)
       self.handler = options[:handler] if options.key?(:handler)

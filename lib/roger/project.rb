@@ -2,20 +2,20 @@ require File.dirname(__FILE__) + "/release"
 require File.dirname(__FILE__) + "/server"
 require File.dirname(__FILE__) + "/test"
 
-require File.dirname(__FILE__) + "/mockupfile"
+require File.dirname(__FILE__) + "/rogerfile"
 
 module Roger
-  # Loader for mockupfile and project dependencies
+  # Loader for rogerfile and project dependencies
   class Project
     # @attr :path [Pathname] The project path
-    # @attr :html_path [Pathname] The path of the HTML mockup
-    # @attr :partial_path [Pathname] The path for the partials for this mockup
-    # @attr :mockupfile [Mockupfile] The Mockupfile for this project
-    # @attr :mockupfile_path [Pathname] The path to the Mockupfile
+    # @attr :html_path [Pathname] The path of the HTML of this project
+    # @attr :partial_path [Pathname] The path for the partials for this project
+    # @attr :rogerfile [Rogerfile] The Rogerfile for this project
+    # @attr :rogerfile_path [Pathname] The path to the Rogerfile
     # @attr :mode [nil, :test, :server, :release] The mode we're currently in.
     #   If nil, we aren't doing anything.
     attr_accessor :path, :html_path, :partial_path, :layouts_path,
-                  :mockupfile, :mockupfile_path, :mode
+                  :rogerfile, :rogerfile_path, :mode
 
     attr_accessor :shell
 
@@ -28,7 +28,7 @@ module Roger
         html_path: @path + "html",
         partial_path: @path + "partials",
         layouts_path: @path + "layouts",
-        mockupfile_path: @path + "Mockupfile",
+        rogerfile_path: @path + "Rogerfile",
         server: {},
         release: {},
         test: {}
@@ -38,7 +38,8 @@ module Roger
       options.each { |k, v| @options[k.is_a?(String) ? k.to_sym : k] = v }
 
       initialize_accessors
-      initialize_mockup
+      intialize_rogerfile_path
+      initialize_roger
     end
 
     def shell
@@ -76,21 +77,40 @@ module Roger
 
     protected
 
+    def intialize_rogerfile_path
+      # We stop immediately if rogerfile is not a Pathname
+      unless @options[:rogerfile_path].is_a? Pathname
+        self.rogerfile_path = @options[:rogerfile_path]
+        return
+      end
+
+      # If roger file exist we're good to go
+      if @options[:rogerfile_path].exist?
+        self.rogerfile_path = @options[:rogerfile_path]
+      else
+        # If the rogerfile does not exist we check for deprecated Mockupfile
+        mockupfile_path = path + "Mockupfile"
+        if mockupfile_path.exist?
+          warn("Mockupfile has been deprecated! Please rename Mockupfile to Rogerfile")
+          self.rogerfile_path = mockupfile_path
+        end
+      end
+    end
+
     def initialize_accessors
       self.html_path = @options[:html_path]
       self.partial_path =
         @options[:partials_path] || @options[:partial_path] || html_path + "../partials/"
       self.layouts_path = @options[:layouts_path]
-      self.mockupfile_path = @options[:mockupfile_path]
       self.shell = @options[:shell]
     end
 
-    def initialize_mockup
-      if mockupfile_path
-        @mockupfile = Mockupfile.new(self, mockupfile_path)
-        @mockupfile.load
+    def initialize_roger
+      if rogerfile_path
+        @rogerfile = Rogerfile.new(self, rogerfile_path)
+        @rogerfile.load
       else
-        @mockupfile = Mockupfile.new(self)
+        @rogerfile = Rogerfile.new(self)
       end
     end
 

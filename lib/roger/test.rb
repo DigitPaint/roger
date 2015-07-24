@@ -33,7 +33,7 @@ module Roger
     class << self
       include Roger::Helpers::GetCallable
 
-      # Register a test method to Roger::Test so it can be used in the Mockupfile
+      # Register a test method to Roger::Test so it can be used in the Rogerfile
 
       def register(name, test, cli = nil)
         if map.key?(name)
