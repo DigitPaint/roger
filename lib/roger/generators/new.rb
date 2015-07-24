@@ -48,7 +48,7 @@ class Roger::Generators::NewGenerator < Thor::Group
     puts e.backtrace.join("\n")
   end
 
-  def create_mockup
+  def create_project
     directory(".", ".")
   end
 
@@ -71,7 +71,7 @@ class Roger::Generators::NewGenerator < Thor::Group
 
   def temp_directory
     # Hack to create temp directory
-    t = Tempfile.new("htmlmockup-generate-new")
+    t = Tempfile.new("roger-generate-new")
     tmp_dir = Pathname.new(t.path)
     t.close
     t.unlink

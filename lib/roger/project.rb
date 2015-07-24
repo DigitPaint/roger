@@ -38,7 +38,7 @@ module Roger
       options.each { |k, v| @options[k.is_a?(String) ? k.to_sym : k] = v }
 
       initialize_accessors
-      initialize_mockup
+      initialize_roger
     end
 
     def shell
@@ -85,7 +85,7 @@ module Roger
       self.shell = @options[:shell]
     end
 
-    def initialize_mockup
+    def initialize_roger
       if rogerfile_path
         @rogerfile = Rogerfile.new(self, rogerfile_path)
         @rogerfile.load
