@@ -52,6 +52,34 @@ module Roger
       assert_equal Roger::Release::Processors::UrlRelativizer, release.stack.last.first.class
     end
 
+    #  =============================
+    #  = Copy source to build test =
+    #  =============================
+
+    def test_copy_using_cp
+      @rogerfile.release(blank: true, cleanup_build: false)
+      @project.construct.file "html/test.txt"
+      @project.release.run!
+
+      build_path = @project.release.build_path
+
+      assert build_path.exist?
+      assert_equal 1, build_path.children.size
+      assert_equal build_path + "test.txt", build_path.children.first
+    end
+
+    def test_copy_using_fileutils
+      @rogerfile.release(cp: nil, blank: true, cleanup_build: false)
+      @project.construct.file "html/test.txt"
+      @project.release.run!
+
+      build_path = @project.release.build_path
+
+      assert build_path.exist?
+      assert_equal 1, build_path.children.size
+      assert_equal build_path + "test.txt", build_path.children.first
+    end
+
     #  ============================
     #  = Banner and comment tests =
     #  ============================
