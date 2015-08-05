@@ -273,11 +273,10 @@ module Roger
     end
 
     def copy_source_path_to_build_path!
-      mkdir(build_path)
-
       if config[:cp]
         copy_source_path_to_build_path_using_system
       else
+        mkdir(build_path)
         cp_r(source_path.children, build_path)
       end
     end
