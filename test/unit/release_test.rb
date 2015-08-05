@@ -10,6 +10,10 @@ module Roger
       @rogerfile = Roger::Rogerfile.new(@project)
     end
 
+    def teardown
+      @project.destroy
+    end
+
     def test_run_should_set_project_mode
       assert_equal @project.mode, nil
 
