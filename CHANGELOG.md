@@ -1,5 +1,8 @@
 # Changelog
 
+## Version 1.4.1
+* Minor fix for release on Linux when using the default `cp -RL` to copy html to build.
+
 ## Version 1.4.0
 * Rename Mockupfile to Rogerfile
 * Remove the deprecated `Roger::Extractor` (use `Roger::Template` instead)
