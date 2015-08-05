@@ -1,5 +1,8 @@
 # Changelog
 
+## Version 1.3.5
+* Backmerge fix for `cp -RL` on linux
+
 ## Version 1.3.4
 * Require the correct "English" module (with capital E) for $CHILD_STATUS
 
