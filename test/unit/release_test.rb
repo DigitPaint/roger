@@ -48,6 +48,10 @@ module Roger
       assert_equal Roger::Release::Processors::UrlRelativizer, release.stack.last.first.class
     end
 
+    #  ============================
+    #  = Banner and comment tests =
+    #  ============================
+
     def test_default_banner
       release = @rogerfile.release(scm: :fixed)
 
@@ -121,6 +125,10 @@ module Roger
       assert_equal "/* a */", release.comment("a", options)
       assert_equal "/* a\nb */", release.comment("a\nb", options)
     end
+
+    #  ======================
+    #  = Get callable tests =
+    #  ======================
 
     def test_get_callable
       p = -> {}
