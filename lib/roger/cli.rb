@@ -64,6 +64,11 @@ module Roger
                  default: false,
                  type: :boolean
 
+    class_option :yes,
+                 desc: "Supress all questions and answer them with yes",
+                 default: false,
+                 type: :boolean
+
     map %w(--version) => :version
 
     desc "test [COMMAND]", "Run one or more tests. Test can be 'all' for all
