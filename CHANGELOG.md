@@ -1,5 +1,8 @@
 # Changelog
 
+## Version 1.4.4
+* Let MockProject require Project so it always works
+
 ## Version 1.4.3
 * "test_construct" is now a regular dependency so you can use the MockProject / MockRelease in your own tests.
 
