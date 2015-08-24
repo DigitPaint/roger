@@ -1,5 +1,9 @@
 # Changelog
 
+## Version 1.4.6
+* Allow setting target_path in dir finalizer
+* Always create target_paths if they don't exist
+
 ## Version 1.4.5
 * Allow setting target_path in zip finalizer
 
