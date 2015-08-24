@@ -1,5 +1,8 @@
 # Changelog
 
+## Version 1.4.5
+* Allow setting target_path in zip finalizer
+
 ## Version 1.4.4
 * Let MockProject require Project so it always works
 
