@@ -39,5 +39,23 @@ module Roger
 
       assert_not_same original_ctime, File.ctime(zip)
     end
+
+    def test_target_path
+      finalizer = Roger::Release::Finalizers::Zip.new
+      dir = @release.project.construct.directory("downloads")
+
+      finalizer.call(@release, target_path: dir)
+
+      assert File.exist?(dir + "html-1.0.0.zip")
+    end
+
+    def test_target_path_with_string
+      finalizer = Roger::Release::Finalizers::Zip.new
+      dir = @release.project.construct.directory("downloads")
+
+      finalizer.call(@release, target_path: dir.to_s)
+
+      assert File.exist?(dir + "html-1.0.0.zip")
+    end
   end
 end

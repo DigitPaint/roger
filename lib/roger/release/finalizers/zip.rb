@@ -4,18 +4,20 @@ module Roger::Release::Finalizers
   class Zip < Base
     attr_reader :release
 
-    # @option options :prefix Prefix to put before the version (default = "html")
-    # @option options :zip The zip command
-    def call(release, options = {})
+    # @option options [String] :prefix Prefix to put before the version (default = "html")
+    # @option options [String] :zip The zip command
+    # @option options [String, Pathname] :target_path (release.target_path) The path to zip to
+    def call(release, call_options = {})
       options = {
         zip: "zip",
-        prefix: "html"
+        prefix: "html",
+        target_path: release.target_path
       }.update(@options)
 
-      options.update(options) if options
+      options.update(call_options) if call_options
 
       name = [options[:prefix], release.scm.version].join("-") + ".zip"
-      zip_path = release.target_path + name
+      zip_path = Pathname.new(options[:target_path]) + name
 
       release.log(self, "Finalizing release to #{zip_path}")
 
