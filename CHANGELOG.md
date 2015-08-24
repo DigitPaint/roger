@@ -1,5 +1,8 @@
 # Changelog
 
+## Version 1.4.2
+* Fix where release required CLI and in turn bundler would get triggered. CLI is the entrypoint and should never be required in a deeper level.
+
 ## Version 1.4.1
 * Minor fix for release on Linux when using the default `cp -RL` to copy html to build.
 
