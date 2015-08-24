@@ -1,4 +1,3 @@
-require File.dirname(__FILE__) + "/cli"
 require File.dirname(__FILE__) + "/helpers/get_callable"
 require File.dirname(__FILE__) + "/helpers/get_files"
 require File.dirname(__FILE__) + "/helpers/logging"
