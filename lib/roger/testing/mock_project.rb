@@ -1,3 +1,4 @@
+require File.dirname(__FILE__) + "/../project"
 require "test_construct"
 
 module Roger
