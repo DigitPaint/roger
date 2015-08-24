@@ -1,5 +1,8 @@
 # Changelog
 
+## Version 1.4.3
+* "test_construct" is now a regular dependency so you can use the MockProject / MockRelease in your own tests.
+
 ## Version 1.4.2
 * Fix where release required CLI and in turn bundler would get triggered. CLI is the entrypoint and should never be required in a deeper level.
 
