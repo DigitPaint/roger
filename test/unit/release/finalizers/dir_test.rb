@@ -39,5 +39,32 @@ module Roger
 
       assert_not_same original_ctime, File.ctime(dir)
     end
+
+    def test_target_path
+      finalizer = Roger::Release::Finalizers::Dir.new
+      dir = @release.project.construct.directory("rel")
+
+      finalizer.call(@release, target_path: dir)
+
+      assert File.exist?(dir + "html-1.0.0")
+    end
+
+    def test_target_path_with_string
+      finalizer = Roger::Release::Finalizers::Dir.new
+      dir = @release.project.construct.directory("rel")
+
+      finalizer.call(@release, target_path: dir.to_s)
+
+      assert File.exist?(dir + "html-1.0.0")
+    end
+
+    def test_target_path_will_be_created_if_nonexistent
+      finalizer = Roger::Release::Finalizers::Dir.new
+      dir = @release.target_path + "rel"
+
+      finalizer.call(@release, target_path: dir)
+
+      assert File.exist?(dir + "html-1.0.0")
+    end
   end
 end

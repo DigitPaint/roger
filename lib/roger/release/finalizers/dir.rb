@@ -7,12 +7,19 @@ module Roger::Release::Finalizers
   #
   class Dir < Base
     # @option options :prefix Prefix to put before the version (default = "html")
-    def call(release, options = {})
-      options = {}.update(@options)
-      options.update(options) if options
+    def call(release, call_options = {})
+      options = {
+        prefix: "html",
+        target_path: release.target_path
+      }.update(@options)
+      options.update(call_options) if call_options
 
-      name = [(options[:prefix] || "html"), release.scm.version].join("-")
-      target_path = release.target_path + name
+      name = [options[:prefix], release.scm.version].join("-")
+
+      target_dir = Pathname.new(options[:target_path])
+      FileUtils.mkdir_p(target_dir) unless target_dir.exist?
+
+      target_path = target_dir + name
 
       release.log(self, "Finalizing release to #{target_path}")
 
