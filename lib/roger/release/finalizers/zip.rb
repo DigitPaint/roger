@@ -16,8 +16,10 @@ module Roger::Release::Finalizers
 
       options.update(call_options) if call_options
 
+      target_path = ensure_target_path(options[:target_path])
+
       name = [options[:prefix], release.scm.version].join("-") + ".zip"
-      zip_path = Pathname.new(options[:target_path]) + name
+      zip_path = target_path + name
 
       release.log(self, "Finalizing release to #{zip_path}")
 
@@ -31,6 +33,12 @@ module Roger::Release::Finalizers
     end
 
     protected
+
+    def ensure_target_path(path)
+      target_path = Pathname.new(path)
+      FileUtils.mkdir_p(target_path) unless target_path.exist?
+      target_path
+    end
 
     def cleanup_existing_zip(release, path)
       return unless File.exist?(path)

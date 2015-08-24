@@ -57,5 +57,14 @@ module Roger
 
       assert File.exist?(dir + "html-1.0.0.zip")
     end
+
+    def test_target_path_will_be_created_if_nonexistent
+      finalizer = Roger::Release::Finalizers::Zip.new
+      dir = @release.build_path + "downloads"
+
+      finalizer.call(@release, target_path: dir)
+
+      assert File.exist?(dir + "html-1.0.0.zip")
+    end
   end
 end
