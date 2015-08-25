@@ -29,6 +29,18 @@ roger.test do |t|
 end
 
 roger.release do |release|
+
+  # You can add global guards these wele stop the release process immediately
+  # if they are not fullfilled.
+  #
+  # required: parameter is optional and is true by default. If it's not true
+  # the guard is not required. Checks will still run. This is mostly useful in 
+  # situations where the guard output is needed in a block.
+  release.guard :tests, required: true
+
+  # Some more guards
+  release.guard :bower_dependencies
+  release.guard :npm_dependencies
   
   # The variables below can be used anywhere in this section
   release.target_path # The target path where releases are put
@@ -96,5 +108,23 @@ roger.release do |release|
   # Finalize the release
   # This is the default finalizer so not required
   # release.finalize :dir
+
+  # Let's add a more complicated guard with a block
+  # This type of guard will only guard the block not the whole
+  # release process.
+
+  # The guard below will check if the commandline flag `--skip-upload` is set
+  # the block will run (the guard is satisfied) if the `--skip-upload` flag is NOT present
+  release.guard :commandline_flag, flag: "skip-upload", satisfy_if: false do
+    release.finalize :rsync, :host => "mywebhost", :username => "myuser", :remote_path => "www"
+  end
+
+  # This guard will check for the `--always-upload` flag. It will run the
+  # inner block regardless of it's outcome. We can however use the guard to pass
+  # info from the guard to the block.I 
+  r.guard :commandline_flag, flag: "always-upload", required: false do |guard|
+    release.finalize :rsync, :host => "mywebhost", :username => "myuser", :remote_path => "www", :ask => !guard.flag
+  end 
+
 end
 ```
