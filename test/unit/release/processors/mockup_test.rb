@@ -18,6 +18,19 @@ module Roger
       files = @mockup.call(@release)
       assert_equal 0, files.length
     end
+
+    def test_run_on_file
+      @release.project.construct.directory "build" do |dir|
+        dir.file "test.html.erb", "<%= 'test' %>"
+      end
+
+      @mockup.call(@release)
+
+      file = @release.build_path + "test.html"
+
+      assert file.exist?
+      assert_equal "test", File.read(file.to_s)
+    end
   end
 
   # Test the target_path function of Mockup
