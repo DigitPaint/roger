@@ -1,3 +1,5 @@
+require File.dirname(__FILE__) + "/../../renderer"
+
 module Roger::Release::Processors
   # The Mockup processor that will process all templates
   class Mockup < Base
@@ -37,43 +39,50 @@ module Roger::Release::Processors
     end
 
     def run_on_file!(file_path, env = {})
-      template = Roger::Template.open(
-        file_path,
-        partials_path: project.partial_path,
-        layouts_path: project.layouts_path
-      )
+      output = run_on_file(file_path, env)
 
       # Clean up source file
       FileUtils.rm(file_path)
 
       # Write out new file
-      File.open(target_path(file_path, template).to_s, "w") do |f|
-        f.write(template.render(env.dup))
+      File.open(target_path(file_path).to_s, "w") do |f|
+        f.write(output)
       end
     end
 
     # Runs the template on a single file and return processed source.
-    def extract_source_from_file(file_path, env = {})
-      Roger::Template.open(
-        file_path,
+    def run_on_file(file_path, env = {})
+      renderer = Roger::Renderer.new(
+        env.dup,
         partials_path: project.partial_path,
         layouts_path: project.layouts_path
-      ).render(env.dup)
+      )
+      renderer.render(file_path)
     end
 
     # Determines the output path for a mockup path with a certain template
     #
     # @return [Pathname]
-    def target_path(path, template)
-      parts, dir = split_path(path)
+    def target_path(path)
+      parts = File.basename(path.to_s).split(".")
+      path = path.to_s
 
       # Always return .html directly as it will cause too much trouble otherwise
       return Pathname.new(path) if parts.last == "html"
 
-      # Strip last extension if we have a double extension
-      return dir + parts[0..-2].join(".") if parts.size > 2
+      target_ext = Roger::Renderer.target_extension_for(path)
+      source_ext = Roger::Renderer.source_extension_for(path)
 
-      dir + extension_based_on_mime_type(parts, template.template.class.default_mime_type)
+      # If there is no target extension
+      return Pathname.new(path) if target_ext.empty?
+
+      # If we have at least one extension
+      if parts.size > 1
+        source_ext_regexp = /#{Regexp.escape(source_ext)}\Z/
+        Pathname.new(path.gsub(source_ext_regexp, target_ext))
+      else
+        Pathname.new(path + "." + target_ext)
+      end
     end
 
     protected
@@ -96,32 +105,6 @@ module Roger::Release::Processors
       release.log(self, "  Skiping : #{options[:skip].inspect}", true)
       release.log(self, "  Env     : #{options[:env].inspect}", true)
       release.log(self, "  Files   :", true)
-    end
-
-    # Split the path into two parts:
-    # 1. Filename, in an array, split by .
-    # 2. Pathname of directory
-    def split_path(path)
-      [
-        File.basename(path.to_s).split("."),
-        Pathname.new(File.dirname(path.to_s))
-      ]
-    end
-
-    def extension_based_on_mime_type(parts, mime_type)
-      # 2. Try to figure out the extension based on the template's mime-type
-      extension = MIME_TYPES_TO_EXTENSION[mime_type]
-
-      # No matching extension, let's return path
-      return parts.join(".") if extension.nil?
-
-      if parts.size > 1
-        # Strip extension and replace with extension
-        (parts[0..-2] << extension).join(".")
-      else
-        # Let's just add the extension
-        (parts << extension).join(".")
-      end
     end
   end
 end
