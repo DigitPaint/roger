@@ -1,11 +1,11 @@
 # encoding: UTF-8
 # Generators register themself on the CLI module
 require "test_helper"
-require "./lib/roger/template.rb"
+require "./lib/roger/renderer.rb"
 
 module Roger
   # A simple template helper to use for testing
-  module TemplateHelper
+  module RendererHelper
     def a
       "a"
     end
@@ -16,35 +16,39 @@ module Roger
   end
 
   # Roger template tests
-  class TemplateTest < ::Test::Unit::TestCase
+  class RendererHelperTest < ::Test::Unit::TestCase
     def setup
       @base = Pathname.new(File.dirname(__FILE__) + "/../../project")
       @config = {
         partials_path: @base + "partials",
-        layouts_path: @base + "layouts",
-        source_path: @base + "html/test.html.erb"
+        layouts_path: @base + "layouts"
       }
       @template_path = @base + "html"
+
+      @source_path = @base + "html/test.html.erb"
+
+      @renderer = Renderer.new({}, @config)
     end
 
     def test_register_helper
-      Roger::Template.helper TemplateHelper
+      Roger::Renderer.helper RendererHelper
 
-      assert Roger::Template.helpers.include?(TemplateHelper)
+      assert Roger::Renderer.helpers.include?(RendererHelper)
     end
 
     def test_helper_works
-      Roger::Template.helper TemplateHelper
+      Roger::Renderer.helper RendererHelper
 
-      template = Roger::Template.new("<%= a %>", @config)
-      assert_equal template.render, "a"
+      result = @renderer.render(@source_path) { "<%= a %>" }
+      assert_equal "a", result
     end
 
     def test_helper_has_access_to_env
-      Roger::Template.helper TemplateHelper
+      Roger::Renderer.helper RendererHelper
 
-      template = Roger::Template.new("<%= from_env(:test) %>", @config)
-      assert_equal template.render(test: "test"), "test"
+      renderer = Renderer.new({ test: "test" }, @config)
+      result = renderer.render(@source_path) { "<%= from_env(:test) %>" }
+      assert_equal result, "test"
     end
   end
 end

@@ -5,7 +5,7 @@ require "./lib/roger/template.rb"
 
 module Roger
   # Roger template tests
-  class TemplateTest < ::Test::Unit::TestCase
+  class RendererPartialTest < ::Test::Unit::TestCase
     def setup
       @base = Pathname.new(File.dirname(__FILE__) + "/../../project")
       @config = {
@@ -14,52 +14,53 @@ module Roger
         source_path: @base + "html/test.html.erb"
       }
       @template_path = @base + "html"
+
+      @renderer = Renderer.new({}, @config)
     end
 
     # Partials
 
     def test_partial
-      template = Template.new("<%= partial 'test/simple' %>", @config)
-      assert_equal template.render, "ERB"
+      result = render_erb_template "<%= partial 'test/simple' %>"
+      assert_equal result, "ERB"
 
-      template = Template.new(
-        "<%= partial 'test/simple.html' %>",
-        @config.update(source_path: @base + "html/test.erb")
-      )
-      assert_equal template.render, "ERB"
+      result = render_erb_template "<%= partial 'test/simple.html' %>"
+      assert_equal result, "ERB"
     end
 
     def test_partial_with_double_template_extensions
-      template = Template.new(
-        "<%= partial 'test/json.json' %>",
-        @config.update(source_path: @base + "html/test.erb")
-      )
-      assert_equal template.render, "{ key: value }"
+      result = render_erb_template "<%= partial 'test/json.json' %>"
+      assert_equal result, "{ key: value }"
     end
 
     def test_partial_with_preferred_extension
-      template = Template.new("<%= partial 'test/json' %>", @config)
       assert_raise(ArgumentError) do
-        template.render
+        render_erb_template "<%= partial 'test/json' %>"
       end
-      template = Template.new(
-        "<%= partial 'test/json' %>",
-        @config.update(source_path: @base + "html/test.json.erb")
-      )
-      assert_equal template.render, "{ key: value }"
+      result = @renderer.render(@base + "html/test.json.erb") { "<%= partial 'test/json' %>" }
+      assert_equal result, "{ key: value }"
     end
 
     def test_partial_with_block
-      template = Template.new("<% partial 'test/yield' do %>CONTENT<% end %>", @config)
-      assert_equal template.render, "B-CONTENT-A"
+      result = render_erb_template "<% partial 'test/yield' do %>CONTENT<% end %>"
+      assert_equal result, "B-CONTENT-A"
 
-      template = Template.new("<% partial 'test/yield' do %><%= 'CONTENT' %><% end %>", @config)
-      assert_equal template.render, "B-CONTENT-A"
+      result = render_erb_template "<% partial 'test/yield' do %><%= 'CONTENT' %><% end %>"
+      assert_equal result, "B-CONTENT-A"
     end
 
     def test_partial_with_block_without_yield
-      template = Template.new("<% partial 'test/simple' do %>CONTENT<% end %>", @config)
-      assert_equal template.render, "ERB"
+      result = render_erb_template "<% partial 'test/simple' do %>CONTENT<% end %>"
+      assert_equal result, "ERB"
+    end
+
+    def test_front_matter_partial_access
+      result = render_erb_template "---\ntest: yay!\n---\n<%= partial 'test/front_matter' %>"
+      assert_equal result, "yay!"
+    end
+
+    def render_erb_template(template)
+      @renderer.render("test.html.erb") { template }
     end
   end
 end

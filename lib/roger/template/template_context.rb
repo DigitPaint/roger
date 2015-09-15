@@ -8,19 +8,23 @@ module Roger
       include Helpers::Capture
       include Helpers::Partial
 
-      def initialize(template, env = {})
-        @_template = template
+      def initialize(renderer, env = {})
+        @_renderer = renderer
         @_env = env
+      end
+
+      def renderer
+        @_renderer
       end
 
       # The current Roger::Template in use
       def template
-        @_template
+        @_renderer.current_template
       end
 
       # Access to the front-matter of the document (if any)
       def document
-        @_data ||= OpenStruct.new(template.data)
+        @_data ||= OpenStruct.new(@_renderer.data)
       end
 
       # The current environment variables.

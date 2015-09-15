@@ -5,7 +5,8 @@ module Roger
       module Partial
         # rubocop:disable Lint/Eval
         def partial(name, options = {}, &block)
-          template_path = template.find_template(name, :partials_path)
+          ext = renderer.class.target_extension_for(template.source_path)
+          template_path = renderer.find_template(name, :partials_path, ext)
           if template_path
             out = render_partial(template_path, options, &block)
             if block_given?
