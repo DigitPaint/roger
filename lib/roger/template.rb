@@ -7,8 +7,17 @@ require "ostruct"
 Encoding.default_external = "UTF-8"
 
 module Roger
+  # Blank template is an empty template
+  #
+  # This is usefull for wrapping other templates
+  class BlankTemplate
+    def render(_locals = {}, &_block)
+      yield if block_given?
+    end
+  end
+
   # Roger template processing class
-  class Template
+  class Template < BlankTemplate
     # The source
     attr_accessor :source
 
