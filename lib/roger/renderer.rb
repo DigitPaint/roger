@@ -179,9 +179,15 @@ module Roger
         if template_path && File.exist?(template_path)
           Template.open(template_path, @context)
         else
-          fail ArgumentError, "No such #{type} #{path}"
+          template_not_found!(type, path)
         end
       end
+    end
+
+    def template_not_found!(type, path)
+      err = "No such #{type} #{path}"
+      err += " in #{@current_template.source_path}" if @current_template
+      fail ArgumentError, err
     end
 
     # Find a partial
