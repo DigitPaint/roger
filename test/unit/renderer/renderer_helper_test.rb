@@ -39,7 +39,7 @@ module Roger
     def test_helper_works
       Roger::Renderer.helper RendererHelper
 
-      result = @renderer.render(@source_path) { "<%= a %>" }
+      result = @renderer.render(@source_path, source: "<%= a %>")
       assert_equal "a", result
     end
 
@@ -47,7 +47,7 @@ module Roger
       Roger::Renderer.helper RendererHelper
 
       renderer = Renderer.new({ test: "test" }, @config)
-      result = renderer.render(@source_path) { "<%= from_env(:test) %>" }
+      result = renderer.render(@source_path, source: "<%= from_env(:test) %>")
       assert_equal result, "test"
     end
   end

@@ -19,19 +19,19 @@ module Roger
     end
 
     def test_render
-      result = @renderer.render("test.html.erb") { "<%= 'yes' %>" }
+      result = @renderer.render("test.html.erb", source: "<%= 'yes' %>")
       assert_equal "yes", result
     end
 
     # Formats
 
     def test_render_md
-      result = @renderer.render("test.md") { "# h1" }
+      result = @renderer.render("test.md", source: "# h1")
       assert_equal "<h1>h1</h1>\n", result
     end
 
     def test_render_md_erb
-      result = @renderer.render("test.md.erb") { "<%= '# h1' %>" }
+      result = @renderer.render("test.md.erb", source: "<%= '# h1' %>")
       assert_equal "<h1>h1</h1>\n", result
     end
 
@@ -39,7 +39,7 @@ module Roger
 
     def test_template_env
       renderer = Renderer.new({ test: "test" }, @config)
-      result = renderer.render("test.erb") { "<%= env[:test] %>" }
+      result = renderer.render("test.erb", source: "<%= env[:test] %>")
       assert_equal "test", result
     end
 

@@ -37,7 +37,7 @@ module Roger
       assert_raise(ArgumentError) do
         render_erb_template "<%= partial 'test/json' %>"
       end
-      result = @renderer.render(@base + "html/test.json.erb") { "<%= partial 'test/json' %>" }
+      result = @renderer.render(@base + "html/test.json.erb", source: "<%= partial 'test/json' %>")
       assert_equal result, "{ key: value }"
     end
 
@@ -60,7 +60,7 @@ module Roger
     end
 
     def render_erb_template(template)
-      @renderer.render("test.html.erb") { template }
+      @renderer.render("test.html.erb", source: template)
     end
   end
 end

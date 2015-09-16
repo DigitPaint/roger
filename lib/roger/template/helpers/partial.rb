@@ -3,35 +3,23 @@ module Roger
     module Helpers
       # The partial helper
       module Partial
-        # rubocop:disable Lint/Eval
         def partial(name, options = {}, &block)
-          ext = renderer.class.target_extension_for(template.source_path)
-          template_path = renderer.find_template(name, :partials_path, ext)
-          if template_path
-            out = render_partial(template_path, options, &block)
-            if block_given?
-              eval "_erbout.concat(#{out.dump})", block.binding
-            else
-              out
-            end
+          if block_given?
+            partial_with_block(name, options, &block)
           else
-            fail ArgumentError, "No such partial #{name}, referenced from #{template.source_path}"
+            renderer.render(name, options)
           end
         end
-        # rubocop:enable Lint/Eval
 
         protected
 
-        # Capture a block and render the partial
-        def render_partial(template_path, options, &block)
-          partial_template = Tilt.new(template_path.to_s)
-          if block_given?
-            block_content = capture(&block)
-          else
-            block_content = ""
-          end
-          partial_template.render(self, options[:locals] || {}) { block_content }
+        # rubocop:disable Lint/Eval
+        def partial_with_block(name, options, &block)
+          block_content = capture(&block)
+          result = renderer.render(name, options) { block_content }
+          eval "_erbout.concat(#{result.dump})", block.binding
         end
+        # rubocop:enable Lint/Eval
       end
     end
   end

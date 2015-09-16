@@ -76,73 +76,144 @@ module Roger
       end
     end
 
-    attr_accessor :data, :current_template
+    attr_accessor :data
+    attr_reader :template_nesting
 
     def initialize(env = {}, options = {})
       @options = options
       @context = prepare_context(env)
 
+      @paths = {
+        partials: [@options[:partials_path]].flatten,
+        layouts: [@options[:layouts_path]].flatten
+      }
+
       # State data. Whenever we render a new template
       # we need to update:
       #
       # - data from front matter
+      # - template_nesting
       # - current_template
       @data = {}
-      @current_template = nil
+      @template_nesting = []
     end
 
+    # The render function
+    #
+    # The render function will take care of rendering the right thing
+    # in the right context. It will:
+    #
+    # - Wrap templates with layouts if it's defined in the frontmatter and
+    #   load them from the right layout path.
+    # - Render only partials if called from within an existing template
+    #
+    # If you just want to render an arbitrary file, use #render_file instead
+    #
+    # @option options [Hash] :locals
+    # @option options [String] :source
     def render(path, options = {}, &block)
-      prev_template = @current_template
-      @current_template = template(path, &block)
+      template, layout = template_and_layout_for_render(path, options)
 
-      @data = {}.update(@data).update(@current_template.data)
+      # Set new current template
+      template_nesting.push(template)
 
-      locals = options[:locals] || {}
+      # Copy data to our data store. A bit clunky; as this should be inherited
+      @data = {}.update(@data).update(template.data)
 
-      layout_path = find_template(
-        @current_template.data[:layout],
-        :layouts_path, self.class.target_extension_for(path)
-      )
+      # Render the template first so we have access to
+      # it's data in the layout.
+      render_result = template.render(options[:locals] || {}, &block)
 
-      render_result = @current_template.render(locals)
-
-      if layout_path
-        layout_template = Template.open(layout_path, @context)
-        layout_template.render do
-          render_result
-        end
-      else
+      # Wrap it in a layout
+      layout.render do
         render_result
       end
     ensure
-      @current_template = prev_template
+      template_nesting.pop
     end
 
-    def template(path, &_block)
-      if block_given?
-        source = yield
-        Template.new(source, @context, source_path: path)
-      else
-        Template.open(path, @context)
-      end
+    # The current template being rendered
+    def current_template
+      template_nesting.last
     end
 
-    def find_template(name, path_type, extension = nil)
-      unless [:partials_path, :layouts_path].include?(path_type)
-        fail(ArgumentError, "path_type must be one of :partials_path or :layouts_path")
-      end
-
-      return nil unless @options[path_type]
-
-      @resolvers ||= {}
-      @resolvers[path_type] ||= Resolver.new(@options[path_type])
-
-      @resolvers[path_type].find_template(name, preferred_extension: extension)
+    # The parent template in the nesting.
+    def parent_template
+      template_nesting[-2]
     end
 
     protected
 
-    # Will set up a new  template context
+    def template_and_layout_for_render(path, options = {})
+      # A previous template has been set so it's a partial
+      # If no previous template is set, we're
+      # at the top level and this means we get to do layouts!
+      template_type = current_template ? :partial : :template
+      template = template(path, options[:source], template_type)
+
+      # Only attempt to load layout for toplevel
+      if !current_template && template.data[:layout]
+        layout = template(template.data[:layout], nil, :layout)
+      else
+        layout = BlankTemplate.new
+      end
+
+      [template, layout]
+    end
+
+    # Will instantiate a Template or throw an ArgumentError
+    # if it could not find the template
+    def template(path, source, type = :template)
+      if source
+        Template.new(source, @context, source_path: path)
+      else
+        case type
+        when :partial
+          template_path = find_partial(path)
+        when :layout
+          template_path = find_layout(path)
+        else
+          template_path = path
+        end
+
+        if template_path && File.exist?(template_path)
+          Template.open(template_path, @context)
+        else
+          fail ArgumentError, "No such #{type} #{path}"
+        end
+      end
+    end
+
+    # Find a partial
+    def find_partial(name)
+      _, current_ext = current_template_path_and_extension
+
+      # Try to look for templates
+      resolver = Resolver.new(@paths[:partials])
+      resolver.find_template(name, preferred_extension: current_ext)
+    end
+
+    def find_layout(name)
+      _, current_ext = current_template_path_and_extension
+
+      resolver = Resolver.new(@paths[:layouts])
+      resolver.find_template(name, preferred_extension: current_ext)
+    end
+
+    def current_template_path_and_extension
+      path = nil
+      extension = nil
+
+      # We want the preferred extension to be the same as ours
+      if current_template
+        path = current_template.source_path
+        extension = self.class.target_extension_for(path)
+      end
+
+      [path, extension]
+    end
+
+    # Will set up a new  template context for this renderer
     def prepare_context(env)
       context = Roger::Template::TemplateContext.new(self, env)
 
