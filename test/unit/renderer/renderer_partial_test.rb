@@ -33,6 +33,16 @@ module Roger
       assert_equal result, "{ key: value }"
     end
 
+    def test_partial_with_underscored_name
+      result = render_erb_template "<%= partial 'test/underscored' %>"
+      assert_equal result, "underscored"
+    end
+
+    def test_local_partial
+      result = render_erb_template "<%= partial 'local' %>"
+      assert_equal result, "local"
+    end
+
     def test_partial_with_preferred_extension
       assert_raise(ArgumentError) do
         render_erb_template "<%= partial 'test/json' %>"
@@ -60,7 +70,7 @@ module Roger
     end
 
     def render_erb_template(template)
-      @renderer.render("test.html.erb", source: template)
+      @renderer.render(@base + "html/partials/test.html.erb", source: template)
     end
   end
 end

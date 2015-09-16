@@ -186,9 +186,17 @@ module Roger
 
     # Find a partial
     def find_partial(name)
-      _, current_ext = current_template_path_and_extension
+      current_path, current_ext = current_template_path_and_extension
 
-      # Try to look for templates
+      # Try to find _ named partials first.
+      # This will alaso search for partials relative to the current path
+      local_name = [File.dirname(name), "_" + File.basename(name)].join("/")
+      resolver = Resolver.new([File.dirname(current_path)] + @paths[:partials])
+      result = resolver.find_template(local_name, preferred_extension: current_ext)
+
+      return result if result
+
+      # Try to look for templates the old way
       resolver = Resolver.new(@paths[:partials])
       resolver.find_template(name, preferred_extension: current_ext)
     end
