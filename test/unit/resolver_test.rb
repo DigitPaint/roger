@@ -10,11 +10,6 @@ module Roger
       @resolver = Roger::Resolver.new(@base)
     end
 
-    def test_find_template_path
-      assert_equal @resolver.find_template("formats/index.html"), @base + "formats/index.html"
-
-      # This should not be found on it's own as it will be processed
-      assert_equal @resolver.find_template("formats/markdown.md"), nil
     def assert_find(exp, search)
       exp = @base + exp unless exp.nil?
       assert_equal exp, @resolver.find_template(search)
@@ -38,6 +33,9 @@ module Roger
       assert_equal @base + "formats/erb.html.erb", @resolver.find_template("formats/erb.html")
 
       assert_equal @base + "formats/json.json.erb", @resolver.find_template("formats/json.json")
+    def test_find_template_exact_match
+      assert_find "formats/index.html", "formats/index.html"
+      assert_find "formats/erb.html.erb", "formats/erb.html.erb"
     end
 
     def test_find_template_with_preferred_extension
