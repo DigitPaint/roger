@@ -1,6 +1,31 @@
 module Roger
   # The resolver is here to resolve urls to paths and sometimes vice-versa
   class Resolver
+    # Maps output extensions to template extensions to find
+    # source files.
+    EXTENSION_MAP = {
+      "html" => %w(
+        rhtml
+        markdown
+        mkd
+        md
+        ad
+        adoc
+        asciidoc
+        rdoc
+        textile
+      ),
+      "csv" => %w(
+        rcsv
+      ),
+      # These are generic template languages
+      nil => %w(
+        erb
+        erubis
+        str
+      )
+    }
+
     attr_reader :load_paths
 
     def initialize(paths)
@@ -13,15 +38,12 @@ module Roger
     # @param [String] url The url to resolve to a path
     # @param [Hash] options Options
     #
-    # @option options [true,false] :exact_match Wether or not to match exact paths,
-    #   this is mainly used in the path_to_url method to match .js, .css, etc files.
-    # @option options [String] :preferred_extension The part to chop off
-    #   and re-add to search for more complex double-extensions. (Makes it possible to have context
-    #   aware partials)
+    # @option options [String] :prefer The preferred template extension. When searching for
+    #  templates, the preferred template extension defines what file type we're requesting
+    #  when we ask for a file without an extension
     def find_template(url, options = {})
       options = {
-        exact_match: false,
-        preferred_extension: "html"
+        prefer: "html"
       }.update(options)
 
       orig_path, _qs, _anch = strip_query_string_and_anchor(url.to_s)
@@ -30,13 +52,7 @@ module Roger
 
       load_paths.find do |load_path|
         path = File.join(load_path, orig_path)
-
-        # If it's an exact match we're done
-        if options[:exact_match] && File.exist?(path)
-          output = Pathname.new(path)
-        else
-          output = find_file_with_extension(path, options[:preferred_extension])
-        end
+        output = find_template_path(path, options)
       end
 
       output
@@ -97,37 +113,102 @@ module Roger
 
     protected
 
-    # Tries all extensions on path to see what file exists
-    # @return [Pathname,nil] returns a pathname of the full file path if found. nil otherwise
-    def find_file_with_extension(path, preferred_extension)
-      output = nil
+    # Finds the template path for "name"
+    def find_template_path(name, options = {})
+      options = {
+        prefer: "html", # Prefer a template with extension
+      }.update(options)
 
-      file_path = path
+      path = sanitize_name(name, options[:prefer])
 
-      # If it's a directory, add "/index"
-      file_path = File.join(file_path, "index") if File.directory?(file_path)
+      # Exact match
+      return Pathname.new(path) if File.exist?(path)
 
-      # Strip of extension
-      if path =~ /\.#{preferred_extension}\Z/
-        file_path.sub!(/\.#{preferred_extension}\Z/, "")
-      end
+      # Split extension and path
+      path_extension, path_without_extension = split_path(path)
 
-      possible_extensions(preferred_extension).find do |ext|
-        path_with_extension = file_path + "." + ext
-        if File.exist?(path_with_extension)
-          output = Pathname.new(path_with_extension)
-        end
-      end
-      output
+      # Get possible output extensions for path_extension
+      template_extensions = template_extensions_for_output(path_extension, options[:prefer])
+
+      # Let's look at the disk to see what files we've got
+      files = Dir.glob(path_without_extension + ".*")
+
+      results = filter_files(files, path, path_without_extension, template_extensions)
+
+      # Our result if any
+      results[0] && Pathname.new(results[0])
     end
 
-    # Makes a list of all Tilt extensions
-    # Also adds a list of double extensions. Example:
-    # tilt_extensions = %w(erb md); second_extension = "html"
-    # return %w(erb md html.erb html.md)
-    def possible_extensions(second_extension)
-      extensions = Tilt.default_mapping.template_map.keys + Tilt.default_mapping.lazy_map.keys
-      extensions + extensions.map { |ext| "#{second_extension}.#{ext}" }
+    # Filter a list of files to see wether or not we can process them.
+    # Will take into account that the longest match with path will
+    # be the first result.
+    def filter_files(files, path, path_without_extension, template_extensions)
+      results = []
+
+      files.each do |file|
+        if file.start_with?(path)
+          match = path
+        else
+          match = path_without_extension
+        end
+
+        processable_extensions = file[(match.length + 1)..-1].split(".")
+
+        # All processable_extensions must be processable
+        # by a template_extension
+        next unless (processable_extensions - template_extensions).length == 0
+
+        if file.start_with?(path)
+          # The whole path is found in the filename, not just
+          # the path without the extension.
+          # it must have priority over all else
+          results.unshift(file)
+        else
+          results.push(file)
+        end
+      end
+      results
+    end
+
+    # Check if the name is a directory and append index
+    # Append preferred extension or html if it doesn't have one yet
+    def sanitize_name(name, prefer = nil)
+      path = name.to_s
+
+      # If it's a directory append "index"
+      path = File.join(path, "index") if File.directory?(name)
+
+      # Check if we haven't got an extension
+      # we'll assume you're looking for prefer or "html" otherwise
+      path += ".#{prefer || 'html'}" unless File.basename(path).include?(".")
+
+      path
+    end
+
+    # Split path in to extension an path without extension
+    def split_path(path)
+      path = path.to_s
+      extension = File.extname(path)[1..-1]
+      path_without_extension = path.sub(/\.#{Regexp.escape(extension)}\Z/, "")
+      [extension, path_without_extension]
+    end
+
+    def template_extensions_for_output(ext, prefer = nil)
+      template_extensions = []
+
+      # The preferred template_extension is first
+      template_extensions += prefer.to_s.split(".") if prefer
+
+      # Any exact template matches for extension
+      template_extensions += EXTENSION_MAP[ext] if EXTENSION_MAP[ext]
+
+      # Any generic templates
+      template_extensions += EXTENSION_MAP[nil]
+
+      # Myself to pass extension matching later on
+      template_extensions += [ext]
+
+      template_extensions
     end
 
     def relative_path_to_url(path, relative_to, base)
