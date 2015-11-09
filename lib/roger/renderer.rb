@@ -198,20 +198,20 @@ module Roger
       # This will alaso search for partials relative to the current path
       local_name = [File.dirname(name), "_" + File.basename(name)].join("/")
       resolver = Resolver.new([File.dirname(current_path)] + @paths[:partials])
-      result = resolver.find_template(local_name, preferred_extension: current_ext)
+      result = resolver.find_template(local_name, prefer: current_ext)
 
       return result if result
 
       # Try to look for templates the old way
       resolver = Resolver.new(@paths[:partials])
-      resolver.find_template(name, preferred_extension: current_ext)
+      resolver.find_template(name, prefer: current_ext)
     end
 
     def find_layout(name)
       _, current_ext = current_template_path_and_extension
 
       resolver = Resolver.new(@paths[:layouts])
-      resolver.find_template(name, preferred_extension: current_ext)
+      resolver.find_template(name, prefer: current_ext)
     end
 
     def current_template_path_and_extension
