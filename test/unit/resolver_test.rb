@@ -55,13 +55,14 @@ module Roger
 
     def test_find_template_with_preferred_extension
       assert_equal(
-        @resolver.find_template("formats/json", preferred_extension: "json"),
-        @base + "formats/json.json.erb"
+        @resolver.find_template("formats/preferred", prefer: "html"),
+        @base + "formats/preferred.html.erb"
       )
-    end
 
-    def test_find_template_exact_match
-      # TODO
+      assert_equal(
+        @resolver.find_template("formats/preferred", prefer: "json"),
+        @base + "formats/preferred.json.erb"
+      )
     end
 
     def test_path_to_url
