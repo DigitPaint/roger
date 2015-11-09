@@ -29,10 +29,25 @@ module Roger
     end
 
     def test_find_template_with_double_extensions
-      assert_equal @base + "formats/erb.html.erb", @resolver.find_template("formats/erb")
-      assert_equal @base + "formats/erb.html.erb", @resolver.find_template("formats/erb.html")
+      assert_find "formats/erb.html.erb", "formats/erb"
+      assert_find "formats/erb.html.erb", "formats/erb.html"
+      assert_find "formats/erb.html.erb", "formats/erb.html.erb"
 
-      assert_equal @base + "formats/json.json.erb", @resolver.find_template("formats/json.json")
+      assert_find "formats/markdown-erb.md.erb", "formats/markdown-erb"
+      assert_find "formats/markdown-erb.md.erb", "formats/markdown-erb.md"
+      assert_find "formats/markdown-erb.md.erb", "formats/markdown-erb.md.erb"
+    end
+
+    def test_not_find_template_with_non_matching_double_extension
+      assert_find "formats/json.json.erb", "formats/json.json"
+      assert_find nil, "formats/json.html"
+    end
+
+    def test_find_template_with_aliassed_extension
+      assert_find "formats/markdown-erb.md.erb", "formats/markdown-erb.html"
+      assert_find "formats/markdown.md", "formats/markdown.html"
+    end
+
     def test_find_template_exact_match
       assert_find "formats/index.html", "formats/index.html"
       assert_find "formats/erb.html.erb", "formats/erb.html.erb"
