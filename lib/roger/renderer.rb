@@ -161,11 +161,30 @@ module Roger
       [template, layout]
     end
 
+    # Will check the template nesting if we haven't already
+    # rendered this path before. If it has we'll throw an argumenteerror
+    def prevent_recursion!(template)
+      # If this template is not a real file it cannot ever conflict.
+      return unless template.real_source_path
+
+      caller_template = template_nesting.detect do |t|
+        t.real_source_path == template.real_source_path
+      end
+
+      # We're good, no recursion!
+      return unless caller_template
+
+      err = "Recursive render detected for '#{template.source_path}'"
+      err += " in '#{current_template.source_path}'"
+
+      fail ArgumentError, err
+    end
+
     # Will instantiate a Template or throw an ArgumentError
     # if it could not find the template
     def template(path, source, type = :template)
       if source
-        Template.new(source, @context, source_path: path)
+        template = Template.new(source, @context, source_path: path)
       else
         case type
         when :partial
@@ -177,11 +196,15 @@ module Roger
         end
 
         if template_path && File.exist?(template_path)
-          Template.open(template_path, @context)
+          template = Template.open(template_path, @context)
         else
           template_not_found!(type, path)
         end
       end
+
+      prevent_recursion!(template)
+
+      template
     end
 
     def template_not_found!(type, path)

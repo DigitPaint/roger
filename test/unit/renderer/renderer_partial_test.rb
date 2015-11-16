@@ -69,6 +69,18 @@ module Roger
       assert_equal result, "yay!"
     end
 
+    def test_partial_prevent_recursive
+      assert_raise(ArgumentError) do
+        render_erb_template "<% partial 'test/recursive' %>"
+      end
+    end
+
+    def test_partial_prevent_deep_recursive
+      assert_raise(ArgumentError) do
+        render_erb_template "<% partial 'test/deep_recursive' %>"
+      end
+    end
+
     def render_erb_template(template)
       @renderer.render(@base + "html/partials/test.html.erb", source: template)
     end

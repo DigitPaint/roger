@@ -53,6 +53,19 @@ module Roger
       end
     end
 
+    # Actual path on disk, nil if it doesn't exist
+    # The nil case is mostly used with inline rendering.
+    def real_source_path
+      return @_real_source_path if @_real_source_path_cached
+
+      @_real_source_path_cached = true
+      if File.exist?(source_path)
+        @_real_source_path = Pathname.new(source_path).realpath
+      else
+        @_real_source_path = nil
+      end
+    end
+
     protected
 
     # Render source with a specific tilt template class
