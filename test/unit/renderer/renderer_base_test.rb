@@ -23,6 +23,25 @@ module Roger
       assert_equal "yes", result
     end
 
+    def test_render_file_absolute
+      result = @renderer.render_file(@base + "html/renderer/file.html.erb")
+      assert_equal "file", result
+    end
+
+    def test_render_file_relative
+      result = @renderer.render(
+        @base + "html/dir1/test.html.erb",
+        source: "<%= renderer.render_file('../renderer/file.html.erb') %>"
+      )
+      assert_equal "file", result
+    end
+
+    def test_render_file_prevent_recursive
+      assert_raise(ArgumentError) do
+        @renderer.render(@base + "html/renderer/recursive.html.erb")
+      end
+    end
+
     # Formats
 
     def test_render_md

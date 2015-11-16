@@ -132,6 +132,35 @@ module Roger
       template_nesting.pop
     end
 
+    # Render any file on disk. No magic. Just rendering.
+    #
+    # A couple of things to keep in mind:
+    # - The file will be rendered in this rendering context
+    # - Does not have layouts or block style
+    # - When you pass a relative path and we are within another template
+    #   it will be relative to that template.
+    #
+    # @options options [Hash] :locals
+    def render_file(path, options = {})
+      pn = Pathname.new(path)
+
+      if pn.relative?
+        # We're explicitly checking for source_path instead of real_source_path
+        # as you could also just have an inline template.
+        if current_template && current_template.source_path
+          pn = (Pathname.new(current_template.source_path).dirname + pn).realpath
+        else
+          err = "Only within another template you can use relative paths"
+          fail ArgumentError, err
+        end
+      else
+        pn = pn.realpath
+      end
+
+      template = template(pn.to_s, nil)
+      template.render(options[:locals] || {})
+    end
+
     # The current template being rendered
     def current_template
       template_nesting.last

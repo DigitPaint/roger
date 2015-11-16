@@ -1,5 +1,6 @@
 require File.dirname(__FILE__) + "/helpers/capture"
 require File.dirname(__FILE__) + "/helpers/partial"
+require File.dirname(__FILE__) + "/helpers/rendering"
 
 module Roger
   class Template
@@ -7,6 +8,7 @@ module Roger
     class TemplateContext
       include Helpers::Capture
       include Helpers::Partial
+      include Helpers::Rendering
 
       def initialize(renderer, env = {})
         @_renderer = renderer
