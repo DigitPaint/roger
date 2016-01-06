@@ -1,5 +1,13 @@
 # Changelog
 
+## Version 1.next
+
+* The way we render templates has been revamped. It is now possible to have multi-pass templates so you can do `.md.erb` which will first be processed by `erb` and then by the `md` tilt template handler. 
+* The way templates are searched has changed to be more predictable. You may notice the change when you have the same filenames with different extensions.
+* You can now use local partials by just using an underscore as prefix. So `<%= partial('bla') %>` will look for `_bla.*` relative to the current template first and `bla.*` in the partials directory second (current behaviour).
+* Template recursion will be detected and prevented instead of giving a stack overflow.
+* Add `render_file` method to renderer and as helper so you can render any template on disk.
+
 ## Version 1.4.6
 * Allow setting target_path in dir finalizer
 * Always create target_paths if they don't exist
