@@ -2,6 +2,7 @@
 
 ## Version 1.next
 
+* Roger won't be tested on Ruby 1.9.x anymore
 * The way we render templates has been revamped. It is now possible to have multi-pass templates so you can do `.md.erb` which will first be processed by `erb` and then by the `md` tilt template handler. 
 * The way templates are searched has changed to be more predictable. You may notice the change when you have the same filenames with different extensions.
 * You can now use local partials by just using an underscore as prefix. So `<%= partial('bla') %>` will look for `_bla.*` relative to the current template first and `bla.*` in the partials directory second (current behaviour).
