@@ -3,160 +3,89 @@ require "mime/types"
 require "yaml"
 require "ostruct"
 
-require File.dirname(__FILE__) + "/template/template_context"
-
 # We're enforcing Encoding to UTF-8
 Encoding.default_external = "UTF-8"
 
 module Roger
+  # Blank template is an empty template
+  #
+  # This is usefull for wrapping other templates
+  class BlankTemplate
+    def render(_locals = {}, &_block)
+      yield if block_given?
+    end
+  end
+
   # Roger template processing class
-  class Template
+  class Template < BlankTemplate
     # The source
     attr_accessor :source
 
     # Store the frontmatter
     attr_accessor :data
 
-    # The actual Tilt template
-    attr_accessor :template
-
     # The path to the source file for this template
     attr_accessor :source_path
 
+    # The current tilt template being used
+    attr_reader :current_tilt_template
+
     class << self
-      def open(path, options = {})
-        fail "Unknown file #{path}" unless File.exist?(path)
-        new(File.read(path), options.update(source_path: path))
-      end
-
-      # Register a helper module that should be included in
-      # every template context.
-      def helper(mod)
-        @helpers ||= []
-        @helpers << mod
-      end
-
-      def helpers
-        @helpers || []
+      def open(path, context = nil, options = {})
+        new(File.read(path), context, options.update(source_path: path))
       end
     end
 
     # @option options [String,Pathname] :source_path The path to
     #   the source of the template being processed
-    # @option options [String,Pathname] :layouts_path The path to where all layouts reside
-    # @option options [String,Pathname] :partials_path The path to where all partials reside
-    def initialize(source, options = {})
-      @options = options
+    def initialize(source, context = nil, options = {})
+      @context = context
 
       self.source_path = options[:source_path]
       self.data, self.source = extract_front_matter(source)
-      self.template = Tilt.new(source_path.to_s) { self.source }
 
-      initialize_layout
+      @templates = Tilt.templates_for(source_path)
     end
 
-    def render(env = {})
-      context = prepare_context(env)
+    def render(locals = {}, &block)
+      @templates.inject(source) do |src, template|
+        render_with_tilt_template(template, src, locals, &block)
+      end
+    end
 
-      if @layout_template
-        content_for_layout = template.render(context, {}) # yields
+    # Actual path on disk, nil if it doesn't exist
+    # The nil case is mostly used with inline rendering.
+    def real_source_path
+      return @_real_source_path if @_real_source_path_cached
 
-        @layout_template.render(context, {}) do |content_for|
-          if content_for
-            context._content_for_blocks[content_for]
-          else
-            content_for_layout
-          end
-        end
+      @_real_source_path_cached = true
+      if File.exist?(source_path)
+        @_real_source_path = Pathname.new(source_path).realpath
       else
-        template.render(context, {})
+        @_real_source_path = nil
       end
-    end
-
-    def find_template(name, path_type)
-      unless [:partials_path, :layouts_path].include?(path_type)
-        fail(ArgumentError, "path_type must be one of :partials_path or :layouts_path")
-      end
-
-      return nil unless @options[path_type]
-
-      @resolvers ||= {}
-      @resolvers[path_type] ||= Resolver.new(@options[path_type])
-
-      @resolvers[path_type].find_template(name, preferred_extension: target_extension)
-    end
-
-    # Try to infer the final extension of the output file.
-    def target_extension
-      return @target_extension if @target_extension
-
-      if type = MIME::Types[target_mime_type].first
-        # Dirty little hack to enforce the use of .html instead of .htm
-        if type.sub_type == "html"
-          @target_extension = "html"
-        else
-          @target_extension = type.extensions.first
-        end
-      else
-        @target_extension = File.extname(source_path.to_s).sub(/^\./, "")
-      end
-    end
-
-    def source_extension
-      parts = File.basename(File.basename(source_path.to_s)).split(".")
-      if parts.size > 2
-        parts[-2..-1].join(".")
-      else
-        File.extname(source_path.to_s).sub(/^\./, "")
-      end
-    end
-
-    # Try to figure out the mime type based on the Tilt class and if that doesn't
-    # work we try to infer the type by looking at extensions (needed for .erb)
-    def target_mime_type
-      mime =
-        mime_type_from_template ||
-        mime_type_from_filename ||
-        mime_type_from_sub_extension
-
-      mime.to_s if mime
     end
 
     protected
 
-    def prepare_context(env)
-      context = TemplateContext.new(self, env)
+    # Render source with a specific tilt template class
+    def render_with_tilt_template(template_class, src, locals, &_block)
+      @current_tilt_template = template_class
+      template = template_class.new(source_path) { src }
 
-      # Extend context with all helpers
-      self.class.helpers.each do |mod|
-        context.extend(mod)
+      if block_given?
+        block_content = yield
+      else
+        block_content = ""
       end
 
-      context
-    end
-
-    def initialize_layout
-      return unless data[:layout]
-      layout_template_path = find_template(data[:layout], :layouts_path)
-
-      @layout_template = Tilt.new(layout_template_path.to_s) if layout_template_path
-    end
-
-    def mime_type_from_template
-      template.class.default_mime_type
-    end
-
-    def mime_type_from_filename
-      path = File.basename(source_path.to_s)
-      MIME::Types.type_for(path).first
-    end
-
-    # Will get mime_type from source_path extension
-    # but it will only look at the second extension so
-    # .html.erb will look at .html
-    def mime_type_from_sub_extension
-      parts = File.basename(source_path.to_s).split(".")
-      MIME::Types.type_for(parts[0..-2].join(".")).first if parts.size > 2
+      template.render(@context, locals) do |name|
+        if name
+          @context._content_for_blocks[name]
+        else
+          block_content
+        end
+      end
     end
 
     # Get the front matter portion of the file and extract it.

@@ -3,6 +3,7 @@ require "rack/response"
 require "rack/file"
 
 require File.dirname(__FILE__) + "/../resolver"
+require File.dirname(__FILE__) + "/../renderer"
 
 module Roger
   module Rack
@@ -34,8 +35,8 @@ module Roger
       protected
 
       def build_response(template_path, env)
-        templ = ::Roger::Template.open(
-          template_path,
+        renderer = ::Roger::Renderer.new(
+          env,
           partials_path: @project.partials_path,
           layouts_path: @project.layouts_path
         )
@@ -43,7 +44,7 @@ module Roger
         ::Rack::Response.new do |res|
           res.headers["Content-Type"] = mime if mime
           res.status = 200
-          res.write templ.render(env)
+          res.write renderer.render(template_path)
         end
       end
     end

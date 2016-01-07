@@ -113,7 +113,12 @@ The is the rest of the content
 
 ## Partials
 
-Partials are little pieces of template that can be easily reused. You can access the partials throught the `partial("partialpath")` method. You can optionall pass variables to the partial by passing a ruby hash of options as a second parameter. This works like this:
+Partials are little pieces of template that can be easily reused. You can access the partials throught the `partial("partialpath")` method. The renderer will search for partials:
+
+* relative to the template currently being rendered with `partialpath` being prefixed with and underscore (so: `_partialpath`).
+* relative to the partial path that has been set up.
+
+You can optionally pass variables to the partial by passing a ruby hash of options as a second parameter. This works like this:
 
 ```ruby
 partial("path/to/partial/relative/to/partials-path", {:key => "value"})
