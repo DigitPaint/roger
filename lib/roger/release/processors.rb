@@ -26,5 +26,7 @@ module Roger
     end
   end
 end
+
+require File.dirname(__FILE__) + "/processors/fingerprint"
 require File.dirname(__FILE__) + "/processors/mockup"
 require File.dirname(__FILE__) + "/processors/url_relativizer"
