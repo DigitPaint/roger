@@ -1,4 +1,5 @@
 require File.dirname(__FILE__) + "/../project"
+require File.dirname(__FILE__) + "/mock_shell"
 require "test_construct"
 
 module Roger
@@ -30,7 +31,6 @@ module Roger
             construct.directory dir
           end
         end
-
         # Call super to initialize
         super(path, config)
       end
@@ -38,6 +38,10 @@ module Roger
       # Destroy will remove all files/directories
       def destroy
         teardown_construct(construct) if construct
+      end
+
+      def shell
+        @shell ||= MockShell.new
       end
     end
   end

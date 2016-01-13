@@ -1,5 +1,8 @@
 # Changelog
 
+## Version 1.5.1
+* Add MockShell object to stub out shell interactions. MockShell is also used by MockProject. This means all tests are silent on STDOUT/STDERR now.
+
 ## Version 1.5.0
 * Roger won't be tested on Ruby 1.9.x anymore
 * The way we render templates has been revamped. It is now possible to have multi-pass templates so you can do `.md.erb` which will first be processed by `erb` and then by the `md` tilt template handler. 
