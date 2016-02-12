@@ -30,7 +30,8 @@ module Roger::Release::Finalizers
       # Validate options
       validate_options!(release, options)
 
-      return unless prompt_for_upload(options)
+      # Check if the user wants to upload this release
+      return unless prompt_for_upload(options, release)
 
       check_rsync_command(options[:rsync])
 
@@ -71,9 +72,14 @@ module Roger::Release::Finalizers
       fail "Rsync failed.\noutput:\n #{output}" unless $CHILD_STATUS.success?
     end
 
-    def prompt_for_upload(options)
+    # Before we actually start rsyncing, user input is required
+    # this avoids accidental uploads
+    # this prompt is skipped if
+    #   > the rsync processor is given false for options[:ask]
+    #   > the project option[:yes] is set to true
+    def prompt_for_upload(options, release)
       !options[:ask] ||
-        (prompt("Do you wish to upload to #{options[:host]}? [y/N]: ")) =~ /\Ay(es)?\Z/
+        release.prompt.yes?("Do you wish to upload to #{options[:host]}? [y/N]: ")
     end
 
     def validate_options!(release, options)
@@ -83,11 +89,7 @@ module Roger::Release::Finalizers
       release.log(self, "Missing options: #{(must_have_keys - options.keys).inspect}")
       fail "Missing keys: #{(must_have_keys - options.keys).inspect}"
     end
-
-    def prompt(question = "Do you wish to continue?")
-      print(question)
-      $stdin.gets.strip
-    end
   end
 end
+
 Roger::Release::Finalizers.register(:rsync, Roger::Release::Finalizers::Rsync)

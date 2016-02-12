@@ -1,6 +1,7 @@
 require File.dirname(__FILE__) + "/helpers/get_callable"
 require File.dirname(__FILE__) + "/helpers/get_files"
 require File.dirname(__FILE__) + "/helpers/logging"
+require File.dirname(__FILE__) + "/helpers/prompt"
 
 require "shellwords"
 
@@ -9,6 +10,7 @@ module Roger
   class Release
     include Roger::Helpers::Logging
     include Roger::Helpers::GetFiles
+    include Roger::Helpers::Prompt
 
     attr_reader :config, :project
 
