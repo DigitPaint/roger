@@ -39,7 +39,7 @@ module Roger::Release::Finalizers
 
       release.log(self, "Working git magic in #{clone_dir}")
 
-      commit_and_push_release(clone_dir, release, @options)
+      commit_and_push_release(clone_dir, release, branch, @options)
 
       if @options[:cleanup]
         FileUtils.rm_rf(tmp_dir)
@@ -50,7 +50,7 @@ module Roger::Release::Finalizers
 
     protected
 
-    def commit_and_push_release(clone_dir, release, options)
+    def commit_and_push_release(clone_dir, release, branch, options)
       ::Dir.chdir(clone_dir) do
         # 3. Copy changes
         FileUtils.rm_rf("*")
