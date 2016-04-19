@@ -25,6 +25,15 @@ module Roger
           @_content_for_blocks[block_name] = capture(&block)
         end
 
+        # Check if a block will yield content
+        #
+        # ```
+        #   <% if content_for? :name %> bla bla <% end %>
+        # ```
+        def content_for?(block_name)
+          (!_content_for_blocks[block_name].nil? && !_content_for_blocks[block_name].empty?)
+        end
+
         # rubocop:disable Lint/Eval
         def capture(&block)
           unless template.current_tilt_template == Tilt::ERBTemplate

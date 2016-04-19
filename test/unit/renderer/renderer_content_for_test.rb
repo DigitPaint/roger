@@ -46,5 +46,21 @@ module Roger
 
       assert_equal "BAB-CONTENT-A", @renderer.render(@source_path, source: template_string)
     end
+
+    def test_content_for_check
+      # Is false when undefined
+      template = 'B<% if content_for? :one %><%= "one" %><% end %>A'
+      assert_equal "BA", @renderer.render(@source_path, source: template)
+
+      # Is false when empty
+      template =  "<% content_for :one do %><% end %>"
+      template << 'B<% if content_for? :one %><%= "one" %><% end %>A'
+      assert_equal "BA", @renderer.render(@source_path, source: template)
+
+      # Is true when set
+      template =  "<% content_for :one do %>one<% end %>"
+      template << "B<% if content_for? :one %><%= yield(:one) %><% end %>A"
+      assert_equal "BoneA", @renderer.render(@source_path, source: template)
+    end
   end
 end
