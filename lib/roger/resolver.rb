@@ -190,7 +190,7 @@ module Roger
     # Split path in to extension an path without extension
     def split_path(path)
       path = path.to_s
-      extension = File.extname(path)[1..-1]
+      extension = File.extname(path)[1..-1] || ""
       path_without_extension = path.sub(/\.#{Regexp.escape(extension)}\Z/, "")
       [extension, path_without_extension]
     end
