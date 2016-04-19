@@ -3,6 +3,7 @@
 ## Version NEXT
 * Change the way template resolving works so if you have a file and directory with the same basename it will prefer to use the file instead of looking for name/index.xyz
 * Add `content_for?(:xyz)` helper so you can check if a `content_for` block exists in templates.
+* Fix bug with resolving of trailing slashes.
 
 ## Version 1.5.1
 * Add MockShell object to stub out shell interactions. MockShell is also used by MockProject. This means all tests are silent on STDOUT/STDERR now.
