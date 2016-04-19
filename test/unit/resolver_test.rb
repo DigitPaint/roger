@@ -85,6 +85,10 @@ module Roger
         "../formats/erb.html.erb"
       )
     end
+
+    def test_return_filepath_when_dirname_and_filename_are_same
+      assert_find "formats/same.html", "formats/same"
+    end
   end
 
   # Test resolver with multiple load paths

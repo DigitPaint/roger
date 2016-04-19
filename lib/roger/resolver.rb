@@ -135,8 +135,13 @@ module Roger
 
       results = filter_files(files, path, path_without_extension, template_extensions)
 
-      # Our result if any
-      results[0] && Pathname.new(results[0])
+      if !results[0]
+        # No results found, but maybe there is a directory
+        # with the same name and it contains an index.XYZ
+        find_template_path(File.join(name, "index")) if File.directory?(name)
+      else
+        Pathname.new(results[0])
+      end
     end
 
     # Filter a list of files to see wether or not we can process them.
@@ -174,9 +179,6 @@ module Roger
     # Append preferred extension or html if it doesn't have one yet
     def sanitize_name(name, prefer = nil)
       path = name.to_s
-
-      # If it's a directory append "index"
-      path = File.join(path, "index") if File.directory?(name)
 
       # Check if we haven't got an extension
       # we'll assume you're looking for prefer or "html" otherwise
