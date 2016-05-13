@@ -1,5 +1,8 @@
 # Changelog
 
+## Version 1.6.1
+* No longer process partials in project_base.
+
 ## Version 1.6.0
 * Change the way template resolving works so if you have a file and directory with the same basename it will prefer to use the file instead of looking for name/index.xyz
 * Add `content_for?(:xyz)` helper so you can check if a `content_for` block exists in templates.
