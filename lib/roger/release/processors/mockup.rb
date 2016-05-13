@@ -34,6 +34,11 @@ module Roger::Release::Processors
 
       release.get_files(options[:match], options[:skip]).each do |file_path|
         release.log(self, "    Extract: #{file_path}", true)
+
+        # Avoid rendering partials which can also be included
+        # in the roger.base_path
+        next if File.basename(file_path).start_with? "_"
+
         self.run_on_file!(file_path, options[:env])
       end
     end

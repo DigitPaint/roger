@@ -31,6 +31,18 @@ module Roger
       assert file.exist?
       assert_equal "test", File.read(file.to_s)
     end
+
+    def test_partials_should_be_skipped
+      @release.project.construct.directory "build" do |dir|
+        dir.file "test.html.erb", "<%= 'test' %>"
+        dir.file "_partial.html.erb", "<%= xyz %>"
+      end
+
+      # If it isnt skipped it will raise a NameError due to xyz being undefined
+      assert_nothing_raised NameError do
+        @mockup.call(@release)
+      end
+    end
   end
 
   # Test the target_path function of Mockup
