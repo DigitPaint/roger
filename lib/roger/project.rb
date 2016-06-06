@@ -38,7 +38,7 @@ module Roger
       options.each { |k, v| @options[k.is_a?(String) ? k.to_sym : k] = v }
 
       initialize_accessors
-      intialize_rogerfile_path
+      initialize_rogerfile_path
       initialize_roger
     end
 
@@ -77,7 +77,7 @@ module Roger
 
     protected
 
-    def intialize_rogerfile_path
+    def initialize_rogerfile_path
       # We stop immediately if rogerfile is not a Pathname
       unless @options[:rogerfile_path].is_a? Pathname
         self.rogerfile_path = @options[:rogerfile_path]
