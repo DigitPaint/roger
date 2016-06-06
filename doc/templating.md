@@ -157,10 +157,10 @@ A helper is nothing more than a plain old Ruby module containing a bunch of func
 Registering helpers can best be done in the Rogerfile. Register this module as following:
 
 ```ruby
-Roger::Template.register MyHelperModule
+Roger::Renderer.helper MyHelperModule
 ```
 
-After registration the helpers are available for use in all templates, partials, layouts, etc. See the [template helpers tests](../test/unit/template/template_helper_test.rb) for example usage.
+After registration the helpers are available for use in all templates, partials, layouts, etc. See the [template helpers tests](../test/unit/renderer/renderer_helper_test.rb) for example usage.
 
 ## Access to Project 
 
