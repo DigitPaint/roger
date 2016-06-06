@@ -96,14 +96,76 @@ module Roger
 
     protected
 
-    # TODO: handle options
     def initialize_project
       if (Pathname.new(options[:path]) + "../partials").exist?
         puts "[ERROR]: Don't use the \"html\" path, use the project base path instead"
         exit(1)
       end
 
-      Project.new(options[:path], { shell: shell }.update(options))
+      project_options = { shell: shell }
+      project_options.update(parse_generic_options(args)[0])
+      project_options.update(options)
+
+      Project.new(options[:path], project_options)
+    end
+
+    # Very simplified method to parse CLI options
+    # only works with options starting with --
+    # Will also make nested options by using ":" so
+    # --a:b:c=yes will become {a: {b: {c: "yes"}}}
+    def parse_generic_options(args)
+      a = args.dup
+      arguments = []
+      options = {}
+
+      until a.empty?
+        arg = a.shift
+        case arg
+        when /\A--.+=/
+          _, option, value = arg.match(/\A--(.+)=(.+)\Z/).to_a
+          update_options(option, value, options)
+        when /\A--.+/
+          if a[0].nil? || a[0].to_s.start_with?("--")
+            # Current option is a boolean
+            update_options(arg, true, options)
+          else
+            # Take value from next
+            update_options(arg, a.shift, options)
+          end
+        else
+          arguments << arg
+        end
+      end
+
+      [options, arguments]
+    end
+
+    # Will update the passed options array by splitting
+    # the composite_key by ":" and applying the keys nested
+    def update_options(composite_key, value, options)
+      nesting = options
+      keys = composite_key.sub(/\A--/, "").split(":")
+      keys.each_with_index do |key, i|
+        key = key.to_sym
+        if i < keys.length - 1
+          nesting[key] ||= {}
+          nesting = nesting[key]
+        else
+          nesting[key] = parse_possible_boolean(value)
+        end
+      end
+      options
+    end
+
+    def parse_possible_boolean(value)
+      case value
+      when "true"
+        true
+      when "false"
+        false
+      else
+        value
+      end
     end
   end
 end
