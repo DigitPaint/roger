@@ -8,6 +8,8 @@ module Roger
   # The renderer will set up an environment so you can consistently render templates
   # within that environment
   class Renderer
+    MAX_ALLOWED_TEMPLATE_NESTING = 10
+
     class << self
       # Register a helper module that should be included in
       # every template context.
@@ -142,22 +144,13 @@ module Roger
     #
     # @options options [Hash] :locals
     def render_file(path, options = {})
-      pn = Pathname.new(path)
-
-      if pn.relative?
-        # We're explicitly checking for source_path instead of real_source_path
-        # as you could also just have an inline template.
-        if current_template && current_template.source_path
-          pn = (Pathname.new(current_template.source_path).dirname + pn).realpath
-        else
-          err = "Only within another template you can use relative paths"
-          fail ArgumentError, err
-        end
-      else
-        pn = pn.realpath
-      end
+      pn = absolute_path_from_current_template(path)
 
       template = template(pn.to_s, nil)
+
+      # Track rendered file also on the rendered stack
+      template_nesting.push(template)
+
       template.render(options[:locals] || {})
     end
 
@@ -172,6 +165,23 @@ module Roger
     end
 
     protected
+
+    def absolute_path_from_current_template(path)
+      pn = Pathname.new(path)
+
+      if pn.relative?
+        # We're explicitly checking for source_path instead of real_source_path
+        # as you could also just have an inline template.
+        if current_template && current_template.source_path
+          (Pathname.new(current_template.source_path).dirname + pn).realpath
+        else
+          err = "Only within another template you can use relative paths"
+          fail ArgumentError, err
+        end
+      else
+        pn.realpath
+      end
+    end
 
     def template_and_layout_for_render(path, options = {})
       # A previous template has been set so it's a partial
@@ -196,12 +206,12 @@ module Roger
       # If this template is not a real file it cannot ever conflict.
       return unless template.real_source_path
 
-      caller_template = template_nesting.detect do |t|
+      caller_templates = template_nesting.select do |t|
         t.real_source_path == template.real_source_path
       end
 
-      # We're good, no recursion!
-      return unless caller_template
+      # We're good, no deeper recursion then MAX_ALLOWED_TEMPLATE_NESTING
+      return if caller_templates.length <= MAX_ALLOWED_TEMPLATE_NESTING
 
       err = "Recursive render detected for '#{template.source_path}'"
       err += " in '#{current_template.source_path}'"

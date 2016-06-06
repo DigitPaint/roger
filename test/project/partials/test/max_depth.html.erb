@@ -1,0 +1,5 @@
+<% if depth < max_depth %>
+  <%= partial 'test/max_depth', locals: { depth: locals[:depth] + 1, max_depth: locals[:max_depth] } %>
+<% else %>
+  Stop! Hammertime!
+<% end %>

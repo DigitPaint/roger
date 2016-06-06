@@ -81,6 +81,16 @@ module Roger
       end
     end
 
+    def test_partial_ten_max_depth_recursion
+      r = render_erb_template "<%= partial 'test/max_depth', locals: {depth: 0, max_depth: 10} %>"
+
+      assert_match(/Hammertime/, r)
+
+      assert_raise(ArgumentError) do
+        render_erb_template "<%= partial 'test/max_depth', locals: {depth: 0, max_depth: 11} %>"
+      end
+    end
+
     def render_erb_template(template)
       @renderer.render(@base + "html/partials/test.html.erb", source: template)
     end
