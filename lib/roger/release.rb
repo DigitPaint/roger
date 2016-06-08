@@ -304,5 +304,5 @@ end
 require File.dirname(__FILE__) + "/release/scm"
 require File.dirname(__FILE__) + "/release/injector"
 require File.dirname(__FILE__) + "/release/cleaner"
-require File.dirname(__FILE__) + "/release/finalizers"
 require File.dirname(__FILE__) + "/release/processors"
+require File.dirname(__FILE__) + "/release/finalizers"
