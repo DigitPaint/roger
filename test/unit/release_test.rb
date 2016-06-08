@@ -33,14 +33,13 @@ module Roger
       @project.release.run!
 
       assert @project.release.stack.empty?
-      assert @project.release.finalizers.empty?
     end
 
     def test_release_should_add_mockup_processor_as_first_by_default
       release = @rogerfile.release
       release.run!
 
-      assert release.stack.length > 0
+      assert !release.stack.empty?
       assert_equal Roger::Release::Processors::Mockup, release.stack.first.first.class
     end
 
@@ -48,8 +47,16 @@ module Roger
       release = @rogerfile.release
       release.run!
 
-      assert release.stack.length > 0
-      assert_equal Roger::Release::Processors::UrlRelativizer, release.stack.last.first.class
+      assert !release.stack.empty?
+      assert_equal Roger::Release::Processors::UrlRelativizer, release.stack[-2].first.class
+    end
+
+    def test_release_should_add_dir_finalizer_by_default
+      release = @rogerfile.release
+      release.run!
+
+      assert !release.stack.empty?
+      assert_equal Roger::Release::Finalizers::Dir, release.stack.last.first.class
     end
 
     #  =============================
