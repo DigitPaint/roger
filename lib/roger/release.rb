@@ -16,10 +16,6 @@ module Roger
 
     class << self
      include Roger::Helpers::GetCallable
-
-     def default_stack
-       []
-     end
     end
 
     # @option config [:git, :fixed] :scm The SCM to use (default = :git)
@@ -288,8 +284,6 @@ module Roger
     end
 
     def run_stack!
-      @stack = self.class.default_stack.dup if @stack.empty?
-
       # call all objects in @stack
       @stack.each do |task|
         if task.is_a?(Array)
