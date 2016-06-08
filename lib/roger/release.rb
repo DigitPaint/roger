@@ -12,17 +12,13 @@ module Roger
 
     attr_reader :config, :project
 
-    attr_reader :finalizers, :stack
+    attr_reader :stack
 
     class << self
      include Roger::Helpers::GetCallable
 
      def default_stack
        []
-     end
-
-     def default_finalizers
-       [[get_callable(:dir, Roger::Release::Finalizers.map), {}]]
      end
     end
 
@@ -51,7 +47,6 @@ module Roger
 
       @project = project
       @stack = []
-      @finalizers = []
     end
 
     # Accessor for target_path
@@ -121,7 +116,7 @@ module Roger
     # @examples
     #   release.finalize :zip
     def finalize(finalizer, options = {})
-      @finalizers << [self.class.get_callable(finalizer, Roger::Release::Finalizers.map), options]
+      @stack << [self.class.get_callable(finalizer, Roger::Release::Finalizers.map), options]
     end
 
     # Files to clean up in the build directory just before finalization happens
@@ -179,9 +174,6 @@ module Roger
 
       # Run stack
       run_stack!
-
-      # Run finalizers
-      run_finalizers!
 
       # Cleanup
       cleanup! if config[:cleanup_build]
@@ -262,16 +254,17 @@ module Roger
     def validate_stack!
       return if config[:blank]
 
-      mockup_options = {}
-      relativizer_options = {}
-
       unless find_in_stack(Roger::Release::Processors::Mockup)
-        @stack.unshift([Roger::Release::Processors::Mockup.new, mockup_options])
+        @stack.unshift([Roger::Release::Processors::Mockup.new, {}])
+      end
+
+      unless find_in_stack(Roger::Release::Processors::UrlRelativizer)
+        @stack.push([Roger::Release::Processors::UrlRelativizer.new, {}])
       end
 
       # rubocop:disable Style/GuardClause
-      unless find_in_stack(Roger::Release::Processors::UrlRelativizer)
-        @stack.push([Roger::Release::Processors::UrlRelativizer.new, relativizer_options])
+      unless find_in_stack(Roger::Release::Finalizers::Dir)
+        @stack.push([Roger::Release::Finalizers::Dir.new, {}])
       end
     end
 
@@ -304,19 +297,6 @@ module Roger
         else
           task.call(self)
         end
-      end
-    end
-
-    # Will run all finalizers, if no finalizers are set it will take the
-    # default finalizers.
-    #
-    # If config[:blank] is true, it will not use the default finalizers
-    def run_finalizers!
-      @finalizers = self.class.default_finalizers.dup if @finalizers.empty? && !config[:blank]
-
-      # call all objects in @finalizes
-      @finalizers.each do |finalizer|
-        finalizer[0].call(self, finalizer[1])
       end
     end
 
