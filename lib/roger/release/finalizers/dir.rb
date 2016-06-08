@@ -6,17 +6,20 @@ module Roger::Release::Finalizers
   # The directory name will have the format PREFIX-VERSION
   #
   class Dir < Base
+    self.name = :dir
+
     # @option options :prefix Prefix to put before the version (default = "html")
-    def call(release, call_options = {})
-      options = {
+    def default_options
+      {
         prefix: "html",
         target_path: release.target_path
-      }.update(@options)
-      options.update(call_options) if call_options
+      }
+    end
 
-      name = [options[:prefix], release.scm.version].join("-")
+    def perform
+      name = [@options[:prefix], @release.scm.version].join("-")
 
-      target_dir = Pathname.new(options[:target_path])
+      target_dir = Pathname.new(@options[:target_path])
       FileUtils.mkdir_p(target_dir) unless target_dir.exist?
 
       target_path = target_dir + name
@@ -33,4 +36,4 @@ module Roger::Release::Finalizers
   end
 end
 
-Roger::Release::Finalizers.register(:dir, Roger::Release::Finalizers::Dir)
+Roger::Release::Finalizers.register(Roger::Release::Finalizers::Dir)

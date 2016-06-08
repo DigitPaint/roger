@@ -1,34 +1,34 @@
 module Roger::Release::Finalizers
   # The zip finalizer
-  # The zip finalizer will
   class Zip < Base
-    attr_reader :release
+    self.name = :zip
 
     # @option options [String] :prefix Prefix to put before the version (default = "html")
     # @option options [String] :zip The zip command
     # @option options [String, Pathname] :target_path (release.target_path) The path to zip to
-    def call(release, call_options = {})
-      options = {
+
+    def default_options
+      {
         zip: "zip",
         prefix: "html",
         target_path: release.target_path
-      }.update(@options)
+      }
+    end
 
-      options.update(call_options) if call_options
+    def perform
+      target_path = ensure_target_path(@options[:target_path])
 
-      target_path = ensure_target_path(options[:target_path])
-
-      name = [options[:prefix], release.scm.version].join("-") + ".zip"
+      name = [options[:prefix], @release.scm.version].join("-") + ".zip"
       zip_path = target_path + name
 
-      release.log(self, "Finalizing release to #{zip_path}")
+      @release.log(self, "Finalizing release to #{zip_path}")
 
-      cleanup_existing_zip(release, zip_path)
+      cleanup_existing_zip(zip_path)
 
-      check_zip_command(options[:zip])
+      check_zip_command(@options[:zip])
 
-      ::Dir.chdir(release.build_path) do
-        `#{options[:zip]} -r -9 "#{zip_path}" ./*`
+      ::Dir.chdir(@release.build_path) do
+        `#{@options[:zip]} -r -9 "#{zip_path}" ./*`
       end
     end
 
@@ -40,7 +40,7 @@ module Roger::Release::Finalizers
       target_path
     end
 
-    def cleanup_existing_zip(release, path)
+    def cleanup_existing_zip(path)
       return unless File.exist?(path)
 
       release.log(self, "Removing existing target #{path}")
@@ -54,4 +54,4 @@ module Roger::Release::Finalizers
     end
   end
 end
-Roger::Release::Finalizers.register(:zip, Roger::Release::Finalizers::Zip)
+Roger::Release::Finalizers.register(Roger::Release::Finalizers::Zip)
