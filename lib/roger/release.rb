@@ -1,6 +1,7 @@
 require File.dirname(__FILE__) + "/helpers/get_callable"
 require File.dirname(__FILE__) + "/helpers/get_files"
 require File.dirname(__FILE__) + "/helpers/logging"
+require File.dirname(__FILE__) + "/helpers/registration"
 
 require "shellwords"
 
