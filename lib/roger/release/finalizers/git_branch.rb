@@ -55,15 +55,15 @@ module Roger::Release::Finalizers
       ::Dir.chdir(clone_dir) do
         # 3. Copy changes
         FileUtils.rm_rf("*")
-        FileUtils.cp_r release.build_path.to_s + "/.", clone_dir.to_s
+        FileUtils.cp_r @release.build_path.to_s + "/.", clone_dir.to_s
 
         commands = [
           %w(git add .), # 4. Add all files
-          %w(git commit -a -m) << "Release #{release.scm.version}" # 5. Commit
+          %w(git commit -a -m) << "Release #{@release.scm.version}" # 5. Commit
         ]
 
         # 6. Git push if in options
-        commands << (%w(git push origin) << branch) if options[:push]
+        commands << (%w(git push origin) << branch) if @options[:push]
 
         commands.each do |command|
           `#{Shellwords.join(command)}`

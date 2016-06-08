@@ -95,9 +95,9 @@ module Roger::Release::Processors
     def log_call
       release.log(self, "Processing mockup files")
 
-      release.log(self, "  Matching: #{options[:match].inspect}", true)
-      release.log(self, "  Skiping : #{options[:skip].inspect}", true)
-      release.log(self, "  Env     : #{options[:env].inspect}", true)
+      release.log(self, "  Matching: #{@options[:match].inspect}", true)
+      release.log(self, "  Skiping : #{@options[:skip].inspect}", true)
+      release.log(self, "  Env     : #{@options[:env].inspect}", true)
       release.log(self, "  Files   :", true)
     end
   end
