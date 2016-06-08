@@ -33,7 +33,7 @@ module Roger::Release::Processors
     def log_call
       log_message = "Relativizing all URLS in #{@options[:match].inspect}"
       log_message << "files in attributes #{@options[:url_attributes].inspect},"
-      log_message << "skipping #{@options[:skip].any? ? @options[:skip].inspect : 'none' }"
+      log_message << "skipping #{@options[:skip].any? ? @options[:skip].inspect : 'none'}"
       release.log(self, log_message)
     end
 

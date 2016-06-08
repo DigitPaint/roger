@@ -39,7 +39,7 @@ module Roger::Release::Processors
         # in the roger.base_path
         next if File.basename(file_path).start_with? "_"
 
-        self.run_on_file!(file_path, @options[:env])
+        run_on_file!(file_path, @options[:env])
       end
     end
 
