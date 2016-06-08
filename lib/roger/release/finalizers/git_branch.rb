@@ -3,6 +3,8 @@ require "tmpdir"
 module Roger::Release::Finalizers
   # Finalizes the release into a specific branch of a repository and pushes it
   class GitBranch < Roger::Release::Finalizers::Base
+    self.name = :git_branch
+
     # @param Hash options The options
     #
     # @option options String :remote The remote repository (default is the
@@ -11,8 +13,8 @@ module Roger::Release::Finalizers
     # @option options Boolean :cleanup Cleanup temp dir afterwards (default is
     #   true)
     # @option options Boolean :push Push to remote (default is true)
-    def initialize
-      @options = {
+    def default_options
+      {
         remote: nil,
         branch: "gh-pages",
         cleanup: true,
@@ -20,8 +22,7 @@ module Roger::Release::Finalizers
       }
     end
 
-    def call(release, options = {})
-      @options = @options.dup.update(options)
+    def perform
       remote = find_git_remote(release.project.path)
       branch = @options[:branch]
 
@@ -37,9 +38,9 @@ module Roger::Release::Finalizers
         create_empty_branch(clone_dir, remote, branch)
       end
 
-      release.log(self, "Working git magic in #{clone_dir}")
+      @release.log(self, "Working git magic in #{clone_dir}")
 
-      commit_and_push_release(clone_dir, release, branch, @options)
+      commit_and_push_release(clone_dir, branch)
 
       if @options[:cleanup]
         FileUtils.rm_rf(tmp_dir)
@@ -50,7 +51,7 @@ module Roger::Release::Finalizers
 
     protected
 
-    def commit_and_push_release(clone_dir, release, branch, options)
+    def commit_and_push_release(clone_dir, branch)
       ::Dir.chdir(clone_dir) do
         # 3. Copy changes
         FileUtils.rm_rf("*")
@@ -140,7 +141,4 @@ module Roger::Release::Finalizers
   end
 end
 
-Roger::Release::Finalizers.register(
-  :git_branch,
-  Roger::Release::Finalizers::GitBranch
-)
+Roger::Release::Finalizers.register(Roger::Release::Finalizers::GitBranch)

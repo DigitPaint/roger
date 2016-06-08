@@ -6,20 +6,18 @@ module Roger::Release::Processors
   # The relativizer can be used to rewrite absolute paths in attributes to relative paths
   # during release.
   class UrlRelativizer < Base
-    def initialize(options = {})
-      @options = {
+    self.name = :url_relativizer
+
+    def default_options
+      {
         url_attributes: %w(src href action),
         match: ["**/*.html"],
         skip: []
       }
-
-      @options.update(options) if options
     end
 
-    def call(release, options = {})
-      options = {}.update(@options).update(options)
-
-      log_call(release, options)
+    def perform
+      log_call
 
       @resolver = Roger::Resolver.new(release.build_path)
 
@@ -32,10 +30,10 @@ module Roger::Release::Processors
 
     protected
 
-    def log_call(release, options)
-      log_message = "Relativizing all URLS in #{options[:match].inspect}"
-      log_message << "files in attributes #{options[:url_attributes].inspect},"
-      log_message << "skipping #{options[:skip].any? ? options[:skip].inspect : 'none' }"
+    def log_call
+      log_message = "Relativizing all URLS in #{@options[:match].inspect}"
+      log_message << "files in attributes #{@options[:url_attributes].inspect},"
+      log_message << "skipping #{@options[:skip].any? ? @options[:skip].inspect : 'none' }"
       release.log(self, log_message)
     end
 
@@ -73,4 +71,4 @@ module Roger::Release::Processors
   end
 end
 
-Roger::Release::Processors.register(:url_relativizer, Roger::Release::Processors::UrlRelativizer)
+Roger::Release::Processors.register(Roger::Release::Processors::UrlRelativizer)

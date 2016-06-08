@@ -3,7 +3,7 @@ require File.dirname(__FILE__) + "/../../renderer"
 module Roger::Release::Processors
   # The Mockup processor that will process all templates
   class Mockup < Base
-    attr_accessor :project
+    self.name = :mockup
 
     MIME_TYPES_TO_EXTENSION = {
       "text/html" => "html",
@@ -15,31 +15,31 @@ module Roger::Release::Processors
       "application/json" => "json"
     }
 
-    def initialize(options = {})
-      @options = {
+    def default_options
+      {
         env: {},
         match: ["**/*.{html,md,html.erb}"],
         skip: [/\Astylesheets/, /\Ajavascripts/]
       }
-
-      @options.update(options) if options
     end
 
-    def call(release, options = {})
-      self.project = release.project
+    def project
+      release.project
+    end
 
-      options = update_call_options(options)
+    def perform
+      @options[:env].update("roger.project" => project, "MOCKUP_PROJECT" => project)
 
-      log_call(release, options)
+      log_call
 
-      release.get_files(options[:match], options[:skip]).each do |file_path|
+      release.get_files(@options[:match], @options[:skip]).each do |file_path|
         release.log(self, "    Extract: #{file_path}", true)
 
         # Avoid rendering partials which can also be included
         # in the roger.base_path
         next if File.basename(file_path).start_with? "_"
 
-        self.run_on_file!(file_path, options[:env])
+        self.run_on_file!(file_path, @options[:env])
       end
     end
 
@@ -92,18 +92,7 @@ module Roger::Release::Processors
 
     protected
 
-    def update_call_options(options)
-      updated_options = {}
-      updated_options.update(@options)
-
-      updated_options.update(options) if options
-
-      updated_options[:env].update("roger.project" => project, "MOCKUP_PROJECT" => project)
-
-      updated_options
-    end
-
-    def log_call(release, options)
+    def log_call
       release.log(self, "Processing mockup files")
 
       release.log(self, "  Matching: #{options[:match].inspect}", true)
@@ -113,4 +102,4 @@ module Roger::Release::Processors
     end
   end
 end
-Roger::Release::Processors.register(:mockup, Roger::Release::Processors::Mockup)
+Roger::Release::Processors.register(Roger::Release::Processors::Mockup)
