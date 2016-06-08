@@ -1,5 +1,7 @@
 # Processors can perform any action on a release
 module Roger::Release::Processors
+  extend Roger::Helpers::Registration
+
   # Abstract Processor class
   class Base
     attr_reader :options, :release
@@ -49,20 +51,6 @@ module Roger::Release::Processors
     def perform
       fail ArgumentError, "Implement in subclass"
     end
-  end
-
-  def self.register(name, processor = nil)
-    if name.is_a?(Class)
-      processor = name
-      name = processor.name
-    end
-    fail ArgumentError, "Processor name '#{name.inspect}' already in use" if map.key?(name)
-    fail ArgumentError, "Name must be a symbol" unless name.is_a?(Symbol)
-    map[name] = processor
-  end
-
-  def self.map
-    @_map ||= {}
   end
 end
 
