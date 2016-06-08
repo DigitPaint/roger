@@ -54,8 +54,8 @@ module Roger::Release::Finalizers
 
     def rsync(command, local_path, remote_path)
       target_path = remote_path
-      target_path = "#{options[:host]}:#{target_path}" if options[:host]
-      target_path = "#{options[:username]}@#{target_path}" if options[:username]
+      target_path = "#{@options[:host]}:#{target_path}" if @options[:host]
+      target_path = "#{@options[:username]}@#{target_path}" if @options[:username]
 
       command = [
         options[:rsync],
@@ -73,15 +73,15 @@ module Roger::Release::Finalizers
 
     def prompt_for_upload
       !options[:ask] ||
-        (prompt("Do you wish to upload to #{options[:host]}? [y/N]: ")) =~ /\Ay(es)?\Z/
+        prompt("Do you wish to upload to #{@options[:host]}? [y/N]: ") =~ /\Ay(es)?\Z/
     end
 
     def validate_options!
       must_have_keys = [:remote_path]
-      return if (options.keys & must_have_keys).size == must_have_keys.size
+      return if (@options.keys & must_have_keys).size == must_have_keys.size
 
-      release.log(self, "Missing options: #{(must_have_keys - options.keys).inspect}")
-      fail "Missing keys: #{(must_have_keys - options.keys).inspect}"
+      release.log(self, "Missing options: #{(must_have_keys - @options.keys).inspect}")
+      fail "Missing keys: #{(must_have_keys - @options.keys).inspect}"
     end
 
     def prompt(question = "Do you wish to continue?")
