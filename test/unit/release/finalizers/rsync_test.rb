@@ -27,25 +27,27 @@ module Roger
     end
 
     def test_basic_functionality
-      finalizer = Roger::Release::Finalizers::Rsync.new(
+      finalizer = Roger::Release::Finalizers::Rsync.new
+
+      finalizer.call(
+        @release,
         remote_path: @target_path.to_s,
         ask: false
       )
-
-      finalizer.call(@release)
 
       assert File.exist?(@target_path + "index.html"), @release.target_path.inspect
     end
 
     def test_rsync_command_works
-      finalizer = Roger::Release::Finalizers::Rsync.new(
-        rsync: "rsync-0123456789", # Let's hope nobody actually has this command
-        remote_path: @target_path.to_s,
-        ask: false
-      )
+      finalizer = Roger::Release::Finalizers::Rsync.new
 
       assert_raise(RuntimeError) do
-        finalizer.call(@release)
+        finalizer.call(
+          @release,
+          rsync: "rsync-0123456789", # Let's hope nobody actually has this command
+          remote_path: @target_path.to_s,
+          ask: false
+        )
       end
     end
   end
