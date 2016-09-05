@@ -6,6 +6,7 @@ module Roger
   module Generators
     # Base Generator class
     class Base < Cli::Command
+      include Thor::Actions
     end
 
     def self.register(name, klass = nil)

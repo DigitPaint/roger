@@ -131,7 +131,9 @@ module Roger
         render_result
       end
     ensure
-      template_nesting.pop
+      # Only pop the template from the nesting if we actually
+      # put it on the nesting stack.
+      template_nesting.pop if template
     end
 
     # Render any file on disk. No magic. Just rendering.

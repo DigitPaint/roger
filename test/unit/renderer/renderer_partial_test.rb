@@ -91,6 +91,17 @@ module Roger
       end
     end
 
+    def test_no_partial_state
+      r = render_erb_template '
+         <%= begin
+               partial "../html/bla/partials/dunno"
+               rescue ArgumentError
+         end %>
+         <%= partial "test/simple" %>'
+
+      assert_match(/ERB/, r)
+    end
+
     def render_erb_template(template)
       @renderer.render(@base + "html/partials/test.html.erb", source: template)
     end

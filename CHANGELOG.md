@@ -2,6 +2,7 @@
 
 ## Version 1.6.2
 * Allow for tempalte recursion for up to 10 levels.
+* Fix issue with missing partials that would screw up the current_template nesting stack.
 
 ## Version 1.6.1
 * No longer process partials in html directory on release.
