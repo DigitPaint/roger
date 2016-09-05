@@ -1,5 +1,8 @@
 # Changelog
 
+## Version 1.6.2
+* Allow for tempalte recursion for up to 10 levels.
+
 ## Version 1.6.1
 * No longer process partials in html directory on release.
 
