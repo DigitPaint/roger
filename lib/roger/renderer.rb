@@ -154,6 +154,10 @@ module Roger
       template_nesting.push(template)
 
       template.render(options[:locals] || {})
+    ensure
+      # Only pop the template from the nesting if we actually
+      # put it on the nesting stack.
+      template_nesting.pop if template
     end
 
     # The current template being rendered

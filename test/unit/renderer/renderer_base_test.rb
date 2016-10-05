@@ -42,6 +42,12 @@ module Roger
       end
     end
 
+    def test_render_file_pop_nesting
+      assert_equal nil, @renderer.current_template
+      @renderer.render_file(@base + "html/renderer/file.html.erb")
+      assert_equal nil, @renderer.current_template
+    end
+
     # Formats
 
     def test_render_md

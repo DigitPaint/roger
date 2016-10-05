@@ -1,5 +1,8 @@
 # Changelog
 
+## Version 1.6.3
+* Fix issue with `render_file` screwing up the current_template nesting stack.
+
 ## Version 1.6.2
 * Allow for tempalte recursion for up to 10 levels.
 * Fix issue with missing partials that would screw up the current_template nesting stack.
