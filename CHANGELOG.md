@@ -1,5 +1,8 @@
 # Changelog
 
+## Version next
+* Add support for automatic port selection if the current port has bene taken.
+
 ## Version 1.6.4
 * Fix bug with block partials in layouts by correctly determine the current Tilt template we're rendering.
 
