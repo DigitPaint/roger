@@ -36,7 +36,7 @@ module Roger
 
         # rubocop:disable Lint/Eval
         def capture(&block)
-          unless template.current_tilt_template == Tilt::ERBTemplate
+          unless Thread.current[:tilt_current_template].is_a?(Tilt::ERBTemplate)
             err  = "content_for works only with ERB Templates"
             err += "(was: #{template.current_tilt_template.inspect})"
             fail ArgumentError, err
