@@ -3,7 +3,12 @@ module Roger
     module Helpers
       # The partial helper
       module Partial
-        def partial(name, options = {}, &block)
+        def partial(name, locals = {}, &block)
+          if locals[:locals]
+            options = locals
+          else
+            options = { locals: locals }
+          end
           if block_given?
             partial_with_block(name, options, &block)
           else

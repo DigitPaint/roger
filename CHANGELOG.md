@@ -2,6 +2,7 @@
 
 ## Version next
 * Add support for automatic port selection if the current port has bene taken.
+* Add support for using partials with directly passing locals. Instead of doing `partial "x", locals: {a: 1}` you can now do `partial "x", a: 1`. The old method still works and allows for setting other template options.
 
 ## Version 1.6.4
 * Fix bug with block partials in layouts by correctly determine the current Tilt template we're rendering.

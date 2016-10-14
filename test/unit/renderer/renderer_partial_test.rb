@@ -51,6 +51,16 @@ module Roger
       assert_equal result, "{ key: value }"
     end
 
+    def test_partial_pass_locals
+      result = render_erb_template "<%= partial 'test/locals', variable: 'variable' %>"
+      assert_equal result, "variable"
+    end
+
+    def test_partial_pass_options
+      result = render_erb_template "<%= partial 'test/locals', locals: {variable: 'variable'} %>"
+      assert_equal result, "variable"
+    end
+
     def test_partial_with_block
       result = render_erb_template "<% partial 'test/yield' do %>CONTENT<% end %>"
       assert_equal result, "B-CONTENT-A"
@@ -82,12 +92,12 @@ module Roger
     end
 
     def test_partial_ten_max_depth_recursion
-      r = render_erb_template "<%= partial 'test/max_depth', locals: {depth: 0, max_depth: 10} %>"
+      r = render_erb_template "<%= partial 'test/max_depth', {depth: 0, max_depth: 10} %>"
 
       assert_match(/Hammertime/, r)
 
       assert_raise(ArgumentError) do
-        render_erb_template "<%= partial 'test/max_depth', locals: {depth: 0, max_depth: 11} %>"
+        render_erb_template "<%= partial 'test/max_depth', {depth: 0, max_depth: 11} %>"
       end
     end
 
