@@ -25,5 +25,25 @@ module Roger
       template = Template.new("<%= yield %>", {}, source_path: "test.erb")
       assert_equal "inner", template.render { "inner" }
     end
+
+    def test_data
+      template = Template.new("---\nkey: value\n---\ndata", {}, source_path: "test.erb")
+      assert_equal "value", template.data[:key]
+    end
+
+    def test_faulty_data
+      template = Template.new("---\nkey value\n---\ndata", {}, source_path: "test.erb")
+      assert_equal({}, template.data)
+    end
+
+    def test_strip_data_block
+      template = Template.new("---\nkey: value\n---\ndata", {}, source_path: "test.erb")
+      assert_equal "data", template.render
+    end
+
+    def test_strip_faulty_data_block
+      template = Template.new("---\nkey value\n---\ndata", {}, source_path: "test.erb")
+      assert_equal "data", template.render
+    end
   end
 end
