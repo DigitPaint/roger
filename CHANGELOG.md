@@ -1,5 +1,8 @@
 # Changelog
 
+## Version 1.6.4
+* Fix bug with block partials in layouts by correctly determine the current Tilt template we're rendering.
+
 ## Version 1.6.3
 * Fix issue with `render_file` screwing up the current_template nesting stack.
 
