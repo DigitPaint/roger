@@ -111,8 +111,9 @@ module Roger
     #
     # If you just want to render an arbitrary file, use #render_file instead
     #
-    # @option options [Hash] :locals
-    # @option options [String] :source
+    # @option options [Hash] :locals Locals to use during rendering
+    # @option options [String] :source The source for the template
+    # @option options [String, nil] :layout The default layout to use
     def render(path, options = {}, &block)
       template, layout = template_and_layout_for_render(path, options)
 
@@ -196,14 +197,21 @@ module Roger
       template_type = current_template ? :partial : :template
       template = template(path, options[:source], template_type)
 
-      # Only attempt to load layout for toplevel
-      if !current_template && template.data[:layout]
-        layout = template(template.data[:layout], nil, :layout)
-      else
-        layout = BlankTemplate.new
-      end
+      layout = layout_for_template(template, options)
 
       [template, layout]
+    end
+
+    # Gets the layout for a specific template
+    def layout_for_template(template, options)
+      layout_name = template.data.key?(:layout) ? template.data[:layout] : options[:layout]
+
+      # Only attempt to load layout when:
+      # - Template is the toplevel template
+      # - A layout_name is available
+      return BlankTemplate.new if current_template || !layout_name
+
+      template(layout_name, nil, :layout)
     end
 
     # Will check the template nesting if we haven't already
