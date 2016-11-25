@@ -7,6 +7,38 @@ module Roger
     def setup
       @project = Project.new(File.dirname(__FILE__) + "/../../project", rogerfile_path: false)
       @server = Server.new(@project)
+      @host = "127.0.0.1"
+    end
+
+    def test_port_free
+      port = 5192
+
+      # Port is free
+      assert @server.send(:port_free?, @host, port)
+
+      s = TCPServer.new(@host, port)
+
+      # Port is not free
+      assert !@server.send(:port_free?, @host, port)
+    ensure
+      s.close
+    end
+
+    def test_free_port_for_host_above
+      port = 9000
+
+      # Make sure something is running on port
+      begin
+        s = TCPServer.new(@host, port)
+      rescue SocketError, Errno::EADDRINUSE # rubocop:disable all
+        # Something already must be running on port
+      end
+
+      next_port = @server.send(:free_port_for_host_above, @host, port)
+      assert next_port > port
+
+    ensure
+      s.close
     end
 
     # Test to see if env["roger.project"] is set

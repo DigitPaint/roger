@@ -5,11 +5,26 @@ require File.dirname(__FILE__) + "/../../helpers/cli"
 
 module Roger
   module Cli
-    # Overwrite Roger::Cli::Serve#start method as we don't want
-    # to actually start the server
+    # Monkeypatching the server command for testing
     class Serve
-      def start
-        # Let's not start it.
+      # Stop start from being called
+      remove_invocation :start
+
+      # Wrap start so we can immediately stop it
+      def real_start
+        # Let's stop immediately so we can inspect output.
+        start do |server|
+          case server
+          when Puma::Launcher
+            # Most unfortunately we have to do it using an exception because
+            # Puma will yield before actually starting the server resulting in failures
+            fail "Stop"
+          else
+            server.stop
+          end
+        end
+      rescue # rubocop:disable all
+        # Nothing to do.
       end
     end
   end
