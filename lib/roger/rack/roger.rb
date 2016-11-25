@@ -44,7 +44,7 @@ module Roger
         ::Rack::Response.new do |res|
           res.headers["Content-Type"] = mime if mime
           res.status = 200
-          res.write renderer.render(template_path)
+          res.write renderer.render(template_path, @project.options[:renderer] || {})
         end
       end
     end

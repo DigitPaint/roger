@@ -29,6 +29,7 @@ module Roger
         partial_path: @path + "partials",
         layouts_path: @path + "layouts",
         rogerfile_path: @path + "Rogerfile",
+        renderer: {},
         server: {},
         release: {},
         test: {}

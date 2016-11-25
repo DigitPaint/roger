@@ -62,7 +62,7 @@ module Roger::Release::Processors
         partials_path: project.partial_path,
         layouts_path: project.layouts_path
       )
-      renderer.render(file_path)
+      renderer.render(file_path, project.options[:renderer] || {})
     end
 
     # Determines the output path for a mockup path with a certain template
