@@ -72,6 +72,15 @@ Template
 Layout (after)
 ```
 
+### Default layout
+It is possible to define a global default layout in the Rogerfile. 
+
+```
+roger.project.options[:renderer][:layout] = "my_default_layout"
+```
+
+The layout can of course be overwritten in the frontmatter. Setting an empty layout will disable the default layout.
+
 ### Advanced layouts
 
 #### Using `content_for`
