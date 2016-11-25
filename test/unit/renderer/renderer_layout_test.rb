@@ -33,6 +33,14 @@ module Roger
       assert_equal "TEMPLATEB-PARTIAL-A", render_erb_template(template)
     end
 
+    def test_missing_layout
+      template = "---\nlayout: \"not-there\"\n---\nTEMPLATE"
+
+      assert_raise ArgumentError do
+        render_erb_template(template)
+      end
+    end
+
     def render_erb_template(template)
       @renderer.render(@base + "html/layouts/test.html.erb", source: template)
     end
