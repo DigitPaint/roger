@@ -32,7 +32,7 @@ module Roger
       real_project_path = project.path.realpath
       defaults = {
         scm: :git,
-        source_path: real_project_path + "html",
+        source_path: project.html_path.realpath,
         target_path: real_project_path + "releases",
         build_path: real_project_path + "build",
         cp: ["cp", "-RL"],

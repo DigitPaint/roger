@@ -87,6 +87,22 @@ module Roger
       assert_equal build_path + "test.txt", build_path.children.first
     end
 
+    def test_release_should_use_html_path_as_default_source
+      # Create a file in the web dir
+      @project.construct.file "web/index.html"
+      @project.html_path = @project.path + "web"
+
+      # Blank release, just the copying
+      @rogerfile.release(blank: true, cleanup_build: false)
+
+      @project.release.run!
+
+      build_path = @project.release.build_path
+      assert build_path.exist?
+      assert_equal 1, build_path.children.size
+      assert_equal build_path + "index.html", build_path.children.first
+    end
+
     #  ============================
     #  = Banner and comment tests =
     #  ============================
