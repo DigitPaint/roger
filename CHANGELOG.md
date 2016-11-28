@@ -1,8 +1,16 @@
 # Changelog
 
-## Version next
-* Add support for automatic port selection if the current port has bene taken.
+## Version 1.7.0
+* Finalizers and processors now use the same stack. This means you can run processors after certain finalizers
+* Finalizers and processors now have exactly the same API
+* Roger automatically detects free ports now. This can be disabled by passing `auto_port = false` to the server options ( or passing `--server:auto_port=false` on the commandline)
 * Add support for using partials with directly passing locals. Instead of doing `partial "x", locals: {a: 1}` you can now do `partial "x", a: 1`. The old method still works and allows for setting other template options.
+* Allow setting of a default layout by setting `roger.project.options[:renderer][:layout] = "the_default_layout_name"` in your `Rogerfile`. Or via commandline `--renderer:layout='bla'` if you must.
+* Bug fixes:
+    - Release will take the set `project.html_path` instead of hardcoded path
+    - Fix issues with newer Thor versions
+    - Add more code higiene
+    - Don't fail if there is no Gemfile. This fixes the `roger generate new` command.
 
 ## Version 1.6.4
 * Fix bug with block partials in layouts by correctly determine the current Tilt template we're rendering.
