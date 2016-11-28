@@ -5,6 +5,8 @@ rvm:
 before_script:
   - git config --global user.email "travis-ci@digitpaint.nl"
   - git config --global user.name "Travis-CI"
+after_success:
+  - bundle exec codeclimate-test-reporter
 matrix:
   fast_finish: true
 env:

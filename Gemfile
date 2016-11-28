@@ -3,5 +3,7 @@ source "https://rubygems.org"
 gemspec name: "roger"
 
 gem "rake"
-# Only coverage support in CI, CODECLIMATE TOKEN is part of travis.yml
-gem "codeclimate-test-reporter", group: :test, require: nil if ENV["CODECLIMATE_REPO_TOKEN"]
+
+group :test do
+  gem "codeclimate-test-reporter", "~> 1.0.0"
+end
