@@ -112,25 +112,13 @@ module Roger::Release::Finalizers
       `#{command}`
     end
 
-    # Find the git dir
-    # TODO: this is just a copy from release/scm/git.rb
-    def find_git_dir(path)
-      path = Pathname.new(path).realpath
-      while path.parent != path && !(path + ".git").directory?
-        path = path.parent
-      end
-
-      path += ".git"
-
-      fail "Could not find suitable .git dir in #{path}" unless path.directory?
-
-      path
-    end
-
     def find_git_remote(path)
-      remote =
-        @options[:remote] ||
-        `git --git-dir=#{Shellwords.escape(find_git_dir(path).to_s)} config --get remote.origin.url`
+      if @options[:remote]
+        remote = @options[:remote]
+      else
+        git_dir = Roger::Release::Scm::Git.find_git_dir(path)
+        remote = `git --git-dir=#{Shellwords.escape(git_dir.to_s)} config --get remote.origin.url`
+      end
 
       remote.strip!
 

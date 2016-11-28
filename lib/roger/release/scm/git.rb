@@ -6,6 +6,20 @@ module Roger
     module Scm
       # The GIT SCM implementation for Roger release
       class Git < Base
+        # Find the .git dir in path and all it's parents
+        def self.find_git_dir(path)
+          path = Pathname.new(path).realpath
+          while path.parent != path && !(path + ".git").directory?
+            path = path.parent
+          end
+
+          path += ".git"
+
+          fail "Could not find suitable .git dir in #{path}" unless path.directory?
+
+          path
+        end
+
         # @option config [String] :ref Ref to use for current tag
         # @option config [String, Pathname] :path Path to working dir
         def initialize(config = {})
@@ -51,7 +65,7 @@ module Roger
         end
 
         def git_dir
-          @git_dir ||= find_git_dir(@config[:path])
+          @git_dir ||= self.class.find_git_dir(@config[:path])
         end
 
         # Safely escaped git dir
@@ -95,20 +109,6 @@ module Roger
           Time.at(date.to_i) if date =~ /\d+/
         rescue RuntimeError
           nil
-        end
-
-        # Find the git dir
-        def find_git_dir(path)
-          path = Pathname.new(path).realpath
-          while path.parent != path && !(path + ".git").directory?
-            path = path.parent
-          end
-
-          path += ".git"
-
-          fail "Could not find suitable .git dir in #{path}" unless path.directory?
-
-          path
         end
       end
     end
