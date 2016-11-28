@@ -2,30 +2,7 @@
 require "test_helper"
 require "./lib/roger/generators.rb"
 
-module CustomGens
-  module Generators
-    # Simple Mock generator
-    class MockedGenerator < Roger::Generators::Base
-      desc "@mocked description"
-      argument :path, type: :string, required: false, desc: "Path to generate project into"
-      argument :another_arg, type: :string, required: false, desc: "Mocked or what?!"
-
-      def test
-        # Somewhat ugly way of checking
-        fail NotImplementedError
-      end
-    end
-
-    # Simple Mocku generator that has a project
-    class MockedWithProjectGenerator < Roger::Generators::Base
-      desc "Returns a project"
-      def test
-        # Somewhat ugly way of checking
-        fail StandardError if @project
-      end
-    end
-  end
-end
+require File.dirname(__FILE__) + "/../helpers/generators"
 
 module Roger
   # Test Roger Generators
@@ -39,7 +16,7 @@ module Roger
     end
 
     def test_working_project
-      Roger::Generators.register CustomGens::Generators::MockedWithProjectGenerator
+      Roger::Generators.register ::Generators::MockedWithProjectGenerator
       generators = Cli::Generate.new
 
       assert_raise StandardError do
@@ -48,14 +25,14 @@ module Roger
     end
 
     def test_register_generator
-      Roger::Generators.register CustomGens::Generators::MockedGenerator
+      Roger::Generators.register ::Generators::MockedGenerator
       assert_includes Cli::Generate.tasks, "mocked"
       assert_equal Cli::Generate.tasks["mocked"].description, "@mocked description"
       assert_equal Cli::Generate.tasks["mocked"].usage, "mocked PATH ANOTHER_ARG"
     end
 
     def test_register_generator_with_custom_name
-      Roger::Generators.register :mockery, CustomGens::Generators::MockedGenerator
+      Roger::Generators.register :mockery, ::Generators::MockedGenerator
       assert_includes Cli::Generate.tasks, "mockery"
     end
 
@@ -78,7 +55,7 @@ module Roger
     end
 
     def test_invoke_mocked_generator
-      Roger::Generators.register CustomGens::Generators::MockedGenerator
+      Roger::Generators.register ::Generators::MockedGenerator
 
       generators = Cli::Generate.new
       assert_raise NotImplementedError do
