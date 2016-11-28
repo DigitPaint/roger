@@ -55,6 +55,24 @@ module Roger
       assert_equal "<h1>h1</h1>\n", result
     end
 
+    def test_current_remplate
+      path = @base + "html/dir1/test.html.erb"
+      result = @renderer.render(
+        path,
+        source: "<%= renderer.current_template.source_path %>"
+      )
+      assert_equal((@base + "html/dir1/test.html.erb").to_s, result)
+    end
+
+    def test_parent_template
+      path = @base + "html/dir1/test.html.erb"
+      result = @renderer.render(
+        path,
+        source: "<%= partial 'test/parent_template' %>"
+      )
+      assert_equal((@base + "html/dir1/test.html.erb").to_s, result)
+    end
+
     def test_render_md_erb
       result = @renderer.render("test.md.erb", source: "<%= '# h1' %>")
       assert_equal "<h1>h1</h1>\n", result
