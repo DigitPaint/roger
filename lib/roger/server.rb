@@ -50,7 +50,7 @@ module Roger
     # Sets the options, this is a separate method as we want to override certain
     # things set in the rogerfile from the commandline
     def set_options(options)
-      self.port = options[:port] if options.key?(:port)
+      self.port = options[:port].to_i if options.key?(:port)
       self.handler = options[:handler] if options.key?(:handler)
       self.host = options[:host] if options.key?(:host)
       self.auto_port = options[:auto_port] if options.key?(:auto_port)
