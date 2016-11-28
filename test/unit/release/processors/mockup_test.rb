@@ -43,6 +43,18 @@ module Roger
         @mockup.call(@release)
       end
     end
+
+    def test_renderer_options_are_passed
+      @release.project.options[:renderer][:layout] = "bracket"
+      @release.project.construct.file "layouts/bracket.html.erb", "[<%= yield %>]"
+      @release.project.construct.directory "build" do |dir|
+        dir.file "test.html.erb", "<%= 'test' %>"
+      end
+
+      @mockup.call(@release)
+
+      assert_equal "[test]", File.read(@release.build_path + "test.html")
+    end
   end
 
   # Test the target_path function of Mockup

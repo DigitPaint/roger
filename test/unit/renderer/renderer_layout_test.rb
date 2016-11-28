@@ -41,8 +41,24 @@ module Roger
       end
     end
 
-    def render_erb_template(template)
-      @renderer.render(@base + "html/layouts/test.html.erb", source: template)
+    def test_default_layout
+      template = "TEMPLATE"
+      assert_equal "[TEMPLATE]", render_erb_template(template, layout: "bracket")
+    end
+
+    def test_default_layout_is_overriden_by_frontmatter
+      template = "---\nlayout: \"yield\"\n---\nTEMPLATE"
+      assert_equal "TEMPLATE", render_erb_template(template, layout: "bracket")
+    end
+
+    def test_default_layout_can_by_disabled_in_frontmatter
+      template = "---\nlayout: \n---\nTEMPLATE"
+      assert_equal "TEMPLATE", render_erb_template(template, layout: "bracket")
+    end
+
+    def render_erb_template(template, options = {})
+      options = {}.update(options).update(source: template)
+      @renderer.render(@base + "html/layouts/test.html.erb", options)
     end
   end
 end
