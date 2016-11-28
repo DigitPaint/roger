@@ -1,9 +1,7 @@
 language: ruby
 rvm:
-  - 2.0.0
-  - 2.1.1
-  - 2.2.2
   - 2.3.0
+  - 2.3.3
 before_script:
   - git config --global user.email "travis-ci@digitpaint.nl"
   - git config --global user.name "Travis-CI"
