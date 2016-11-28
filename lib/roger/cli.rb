@@ -103,7 +103,12 @@ module Roger
     protected
 
     def initialize_project
-      if (Pathname.new(options[:path]) + "../partials").exist?
+      # Most unfortunately we have to hack around the
+      # class_options not being set in the help command
+      # since thor v0.19.4
+      path = options[:path] || "."
+
+      if (Pathname.new(path) + "../partials").exist?
         puts "[ERROR]: Don't use the \"html\" path, use the project base path instead"
         exit(1)
       end
@@ -112,7 +117,7 @@ module Roger
       project_options.update(parse_generic_options(args)[0])
       project_options.update(options)
 
-      Project.new(options[:path], project_options)
+      Project.new(path, project_options)
     end
 
     # Very simplified method to parse CLI options
