@@ -36,6 +36,12 @@ module Roger
       assert_equal "file", result
     end
 
+    def test_render_file_relative_fails_from_top_level
+      assert_raise ArgumentError do
+        @renderer.render_file("file.html.erb")
+      end
+    end
+
     def test_render_file_prevent_recursive
       assert_raise(ArgumentError) do
         @renderer.render(@base + "html/renderer/recursive.html.erb")
