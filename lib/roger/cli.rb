@@ -1,7 +1,13 @@
 require "rubygems"
 
-# Require bundler gems if available
-Bundler.require(:default) if Object.const_defined?(:Bundler)
+# Require bundler gems if Bundler and Gemfile is available
+if Object.const_defined?(:Bundler)
+  begin
+    Bundler.require(:default)
+  rescue Bundler::GemfileNotFound # rubocop:disable all
+    # No Gemfile found, not using local bundler
+  end
+end
 
 require "thor"
 require "thor/group"
