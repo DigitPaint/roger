@@ -47,18 +47,15 @@ module Roger
     end
 
     def server(options = {})
-      options = {}.update(@options[:server]).update(options)
-      @server ||= Server.new(self, options)
+      @server ||= Server.new(self, merge_options(options, :server))
     end
 
     def release(options = {})
-      options = {}.update(@options[:release]).update(options)
-      @release ||= Release.new(self, options)
+      @release ||= Release.new(self, merge_options(options, :release))
     end
 
     def test(options = {})
-      options = {}.update(@options[:test]).update(options)
-      @test ||= Test.new(self, options)
+      @test ||= Test.new(self, merge_options(options, :test))
     end
 
     def html_path=(p)
@@ -76,6 +73,14 @@ module Roger
     end
 
     protected
+
+    # Creates new options and merges:
+    # - @options[:key]
+    # - passed options
+    #
+    def merge_options(options, key)
+      {}.update(@options[key]).update(options)
+    end
 
     def initialize_rogerfile_path
       # We stop immediately if rogerfile is not a Pathname
