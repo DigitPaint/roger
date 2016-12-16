@@ -46,11 +46,9 @@ module Roger
         return false
       end
 
-      if path[build_path]
-        return true
-      else
-        raise "Cleaning pattern is not inside build directory"
-      end
+      raise "Cleaning pattern is not inside build directory" unless path[build_path]
+
+      true
     end
   end
 end

@@ -161,7 +161,7 @@ module Roger
 
         # All processable_extensions must be processable
         # by a template_extension
-        next unless (processable_extensions - template_extensions).length == 0
+        next unless (processable_extensions - template_extensions).empty?
 
         if file.start_with?(path)
           # The whole path is found in the filename, not just

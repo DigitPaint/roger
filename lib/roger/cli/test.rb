@@ -9,8 +9,6 @@ module Roger
 
     desc "all", "Run all tests defined in Rogerfile. (this is the default action)"
     def all
-      # If we use fail here the test breaks; no idea why
-      # rubocop:disable Style/SignalException:
       raise(Thor::Error, "Test failed") unless Cli::Base.project.test.run!
     end
   end

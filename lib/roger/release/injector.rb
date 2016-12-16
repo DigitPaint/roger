@@ -56,7 +56,7 @@ module Roger
             injected_vars << variable
           end
         end
-        if injected_vars.size > 0
+        unless injected_vars.empty?
           release.log(self, "Injected variables #{injected_vars.inspect} into #{f}")
         end
         File.open(f, "w") { |fh| fh.write c }
