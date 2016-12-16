@@ -34,7 +34,7 @@ module Roger
 
     # Actually load the rogerfile
     def load
-      return unless File.exist?(@path) && !self.loaded?
+      return unless File.exist?(@path) && !loaded?
 
       @source = File.read(@path)
       context = Context.new(self)
@@ -59,7 +59,7 @@ module Roger
       server
     end
 
-    alias_method :server, :serve
+    alias server serve
 
     def test(options = {})
       test = project.test(options)

@@ -15,13 +15,13 @@ module Roger
     end
 
     def test_register_processor
-      processor = ->(_e) { fail "ProcessorName" }
+      processor = ->(_e) { raise "ProcessorName" }
       assert Roger::Release::Processors.register(:name, processor)
       assert_equal Roger::Release::Processors.map, name: processor
     end
 
     def test_register_processor_with_symbol_only_name
-      processor = ->(_e) { fail "ProcessorName" }
+      processor = ->(_e) { raise "ProcessorName" }
 
       assert_raise(ArgumentError) do
         Roger::Release::Processors.register("name", processor)
@@ -33,7 +33,7 @@ module Roger
     end
 
     def test_register_processor_with_same_name
-      processor = ->(_e) { fail "ProcessorName" }
+      processor = ->(_e) { raise "ProcessorName" }
       Roger::Release::Processors.register(:name, processor)
 
       assert_raise(ArgumentError) do
@@ -42,7 +42,7 @@ module Roger
     end
 
     def test_register_processor_with_same_contents
-      processor = ->(_e) { fail "ProcessorName" }
+      processor = ->(_e) { raise "ProcessorName" }
       Roger::Release::Processors.register(:name, processor)
 
       assert_nothing_raised do

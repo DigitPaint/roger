@@ -18,7 +18,7 @@ module Roger
           when Puma::Launcher
             # Most unfortunately we have to do it using an exception because
             # Puma will yield before actually starting the server resulting in failures
-            fail "Stop"
+            raise "Stop"
           else
             server.stop
           end

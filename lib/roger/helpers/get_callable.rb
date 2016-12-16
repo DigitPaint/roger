@@ -21,7 +21,7 @@ module Roger
           error_message = "Could not resolve #{callable.inspect}. Callable must"
           error_message << "be an object that responds to #call or a symbol that resolve"
           error_message << "to such an object or a class with a #call instance method."
-          fail ArgumentError, error_message
+          raise ArgumentError, error_message
         end
       end
     end

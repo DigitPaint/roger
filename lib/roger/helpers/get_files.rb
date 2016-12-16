@@ -20,7 +20,7 @@ module Roger
 
       # The default path to use when calling get_files
       def get_files_default_path
-        fail "Implement #get_files_default_path in your class"
+        raise "Implement #get_files_default_path in your class"
       end
     end
   end

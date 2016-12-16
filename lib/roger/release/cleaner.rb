@@ -36,11 +36,11 @@ module Roger
       begin
         build_path = Pathname.new(build_path).realpath.to_s
         path = Pathname.new(path)
-        if path.absolute?
-          path = path.realpath.to_s
-        else
-          path = Pathname.new(File.join(build_path.to_s, path)).realpath.to_s
-        end
+        path = if path.absolute?
+                 path.realpath.to_s
+               else
+                 Pathname.new(File.join(build_path.to_s, path)).realpath.to_s
+               end
       rescue Errno::ENOENT
         # Real path does not exist
         return false
@@ -49,7 +49,7 @@ module Roger
       if path[build_path]
         return true
       else
-        fail "Cleaning pattern is not inside build directory"
+        raise "Cleaning pattern is not inside build directory"
       end
     end
   end

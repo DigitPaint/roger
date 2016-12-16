@@ -11,7 +11,7 @@ module Roger::Release::Processors
 
       # Name of this processor
       def name
-        @name || fail(ArgumentError, "Implement in subclass")
+        @name || raise(ArgumentError, "Implement in subclass")
       end
     end
 
@@ -49,7 +49,7 @@ module Roger::Release::Processors
     end
 
     def perform
-      fail ArgumentError, "Implement in subclass"
+      raise ArgumentError, "Implement in subclass"
     end
   end
 end

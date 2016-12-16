@@ -91,7 +91,7 @@ module Roger
       @used_port = nil
       @used_handler = nil
     end
-    alias_method :run, :run!
+    alias run run!
 
     def server_options_for_handler
       # Search for available port
@@ -113,11 +113,11 @@ module Roger
     end
 
     def handler=(h)
-      if h.respond_to?(:run)
-        @handler = h
-      else
-        @handler = get_handler(h)
-      end
+      @handler = if h.respond_to?(:run)
+                   h
+                 else
+                   get_handler(h)
+                 end
     end
 
     protected

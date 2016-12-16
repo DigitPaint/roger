@@ -24,12 +24,12 @@ module Roger
         erubis
         str
       )
-    }
+    }.freeze
 
     attr_reader :load_paths
 
     def initialize(paths)
-      fail ArgumentError, "Resolver base path can't be nil" if paths.nil?
+      raise ArgumentError, "Resolver base path can't be nil" if paths.nil?
 
       # Convert to paths
       @load_paths = [paths].flatten.map { |p| Pathname.new(p) }
@@ -57,7 +57,7 @@ module Roger
 
       output
     end
-    alias_method :url_to_path, :find_template
+    alias url_to_path find_template
 
     # Convert a disk path on file to an url
     def path_to_url(path, relative_to = nil)
@@ -81,7 +81,7 @@ module Roger
       path, qs, anch = strip_query_string_and_anchor(url)
 
       # Get disk path
-      if true_path =  url_to_path(path, exact_match: true)
+      if true_path = url_to_path(path, exact_match: true)
         path = path_to_url(true_path, relative_to_path)
         path += qs if qs
         path += anch if anch
@@ -151,11 +151,11 @@ module Roger
       results = []
 
       files.each do |file|
-        if file.start_with?(path)
-          match = path
-        else
-          match = path_without_extension
-        end
+        match = if file.start_with?(path)
+                  path
+                else
+                  path_without_extension
+                end
 
         processable_extensions = file[(match.length + 1)..-1].split(".")
 

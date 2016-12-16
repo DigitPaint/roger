@@ -12,13 +12,13 @@ module Roger
     def self.register(name, klass = nil)
       name, klass = generator_name(name, klass)
 
-      fail(
+      raise(
         ArgumentError,
         "Generator name '#{name.inspect}' already in use"
       ) if Cli::Generate.tasks.key?(name)
 
       usage = "#{name} #{klass.arguments.map(&:banner).join(' ')}"
-      long_desc =  klass.desc || "Run #{name} generator"
+      long_desc = klass.desc || "Run #{name} generator"
 
       Cli::Generate.register klass, name, usage, long_desc
       Cli::Generate.tasks[name].options = klass.class_options if klass.class_options
@@ -31,7 +31,7 @@ module Roger
         klass = name
         name = klass.to_s.sub(/Generator$/, "").sub(/^.*Generators::/, "").downcase
       else
-        fail ArgumentError, "Name must be a symbol" unless name.is_a?(Symbol)
+        raise ArgumentError, "Name must be a symbol" unless name.is_a?(Symbol)
       end
 
       [name.to_s, klass]

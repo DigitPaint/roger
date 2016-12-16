@@ -19,7 +19,7 @@ module Roger
     end
 
     def start
-      server  = @project.server
+      server = @project.server
 
       @project.server.run! do |server_instance|
         puts "Running Roger with #{server.used_handler.inspect}"

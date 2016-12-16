@@ -13,7 +13,7 @@ module Roger::Release::Processors
       "application/xml" => "xml",
       "text/csv" => "csv",
       "application/json" => "json"
-    }
+    }.freeze
 
     def default_options
       {

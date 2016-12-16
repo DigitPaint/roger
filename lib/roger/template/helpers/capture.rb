@@ -39,7 +39,7 @@ module Roger
           unless Thread.current[:tilt_current_template].is_a?(Tilt::ERBTemplate)
             err  = "content_for works only with ERB Templates"
             err += "(was: #{template.current_tilt_template.inspect})"
-            fail ArgumentError, err
+            raise ArgumentError, err
           end
 
           @block_counter ||= 0

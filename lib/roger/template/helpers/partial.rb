@@ -4,11 +4,11 @@ module Roger
       # The partial helper
       module Partial
         def partial(name, locals = {}, &block)
-          if locals[:locals]
-            options = locals
-          else
-            options = { locals: locals }
-          end
+          options = if locals[:locals]
+                      locals
+                    else
+                      { locals: locals }
+                    end
           if block_given?
             partial_with_block(name, options, &block)
           else

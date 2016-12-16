@@ -80,7 +80,7 @@ module Roger
       when :fixed
         @_scm = Release::Scm::Fixed.new
       else
-        fail "Unknown SCM #{options[:scm].inspect}"
+        raise "Unknown SCM #{options[:scm].inspect}"
       end
     end
 

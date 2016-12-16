@@ -74,12 +74,12 @@ module Roger::Release::Finalizers
     # Check if remote already has branch
     def remote_has_branch?(remote, branch)
       command = Shellwords.join([
-        "git",
-        "ls-remote",
-        "--heads",
-        remote,
-        "refs/heads/#{branch}"
-      ])
+                                  "git",
+                                  "ls-remote",
+                                  "--heads",
+                                  remote,
+                                  "refs/heads/#{branch}"
+                                ])
       `#{command}` != ""
     end
 
@@ -101,14 +101,14 @@ module Roger::Release::Finalizers
 
     def clone_branch(clone_dir, remote, branch)
       command = Shellwords.join([
-        "git",
-        "clone",
-        remote,
-        "--branch",
-        branch,
-        "--single-branch",
-        clone_dir
-      ])
+                                  "git",
+                                  "clone",
+                                  remote,
+                                  "--branch",
+                                  branch,
+                                  "--single-branch",
+                                  clone_dir
+                                ])
       `#{command}`
     end
 
@@ -122,7 +122,7 @@ module Roger::Release::Finalizers
 
       remote.strip!
 
-      fail "No remote found for origin" if remote.nil? || remote.empty?
+      raise "No remote found for origin" if remote.nil? || remote.empty?
 
       remote
     end

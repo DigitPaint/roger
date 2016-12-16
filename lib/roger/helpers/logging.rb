@@ -2,8 +2,8 @@ module Roger
   module Helpers
     # Helper module for logging
     module Logging
-      GRAY = "\e[37m"
-      RED  = "\e[31m"
+      GRAY = "\e[37m".freeze
+      RED  = "\e[31m".freeze
 
       # Write out a log message
       def log(part, msg, verbose = false, &block)
