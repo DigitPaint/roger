@@ -43,22 +43,51 @@ module Roger
 
     def test_default_layout
       template = "TEMPLATE"
-      assert_equal "[TEMPLATE]", render_erb_template(template, layout: "bracket")
+      default_layout = {
+        "html.erb" => "bracket"
+      }
+
+      assert_equal "[TEMPLATE]", render_erb_template(template, layout: default_layout)
     end
 
     def test_default_layout_is_overriden_by_frontmatter
       template = "---\nlayout: \"yield\"\n---\nTEMPLATE"
-      assert_equal "TEMPLATE", render_erb_template(template, layout: "bracket")
+      default_layout = {
+        "html.erb" => "bracket"
+      }
+
+      assert_equal "TEMPLATE", render_erb_template(template, layout: default_layout)
     end
 
     def test_default_layout_can_by_disabled_in_frontmatter
       template = "---\nlayout: \n---\nTEMPLATE"
-      assert_equal "TEMPLATE", render_erb_template(template, layout: "bracket")
+      default_layout = {
+        "html.erb" => "bracket"
+      }
+
+      assert_equal "TEMPLATE", render_erb_template(template, layout: default_layout)
+    end
+
+    def test_default__layouts_is_skipped_for_other_extensions_types
+      template = "TEMPLATE"
+      default_layout = {
+        "html.erb" => "bracket"
+      }
+
+      assert_equal "TEMPLATE", render_css_template(template, layout: default_layout)
     end
 
     def render_erb_template(template, options = {})
+      render_abstract_template(@base + "html/layouts/test.html.erb", template, options)
+    end
+
+    def render_css_template(template, options = {})
+      render_abstract_template(@base + "html/layouts/test.css.erb", template, options)
+    end
+
+    def render_abstract_template(filename, template, options)
       options = {}.update(options).update(source: template)
-      @renderer.render(@base + "html/layouts/test.html.erb", options)
+      @renderer.render(filename, options)
     end
   end
 end

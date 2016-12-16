@@ -22,7 +22,9 @@ module Roger
       end
 
       def test_renderer_options_are_passed
-        @project.options[:renderer][:layout] = "bracket"
+        @project.options[:renderer][:layout] = {
+          "html.erb" => "bracket"
+        }
 
         @project.construct.file "layouts/bracket.html.erb", "[<%= yield %>]"
         @project.construct.file "html/test.html.erb", "<%= 'test' %>"

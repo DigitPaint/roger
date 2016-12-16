@@ -73,10 +73,14 @@ Layout (after)
 ```
 
 ### Default layout
-It is possible to define a global default layout in the Rogerfile. 
+It is possible to define a global default layout per template extension in the Rogerfile. 
 
 ```
-roger.project.options[:renderer][:layout] = "my_default_layout"
+roger.project.options[:renderer][:layout] = {
+  "html.erb" => "my_default_layout",
+  "md.erb" => "my_markdown_layout",
+  "md" => "my_markdown_layout"
+}
 ```
 
 The layout can of course be overwritten in the frontmatter. Setting an empty layout will disable the default layout.
