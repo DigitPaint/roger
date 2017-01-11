@@ -57,7 +57,7 @@ class Roger::Generators::NewGenerator < Thor::Group
   def git_clone_template(template)
     tmp_dir = temp_directory
 
-    if run("git clone --depth=1 #{Shellwords.escape(template)} #{tmp_dir}")
+    if run("git clone -q --depth=1 #{Shellwords.escape(template)} #{tmp_dir}")
       say "Cloned template from #{template}"
       run("rm -rf #{tmp_dir + '.git'}")
       @cleanup << tmp_dir.to_s
