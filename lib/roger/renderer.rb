@@ -204,7 +204,11 @@ module Roger
 
     # Gets the layout for a specific template
     def layout_for_template(template, options)
-      layout_name = template.data.key?(:layout) ? template.data[:layout] : options[:layout]
+      layout_name = if template.data.key?(:layout)
+                      template.data[:layout]
+                    else
+                      get_default_layout(template, options)
+                    end
 
       # Only attempt to load layout when:
       # - Template is the toplevel template
@@ -212,6 +216,15 @@ module Roger
       return BlankTemplate.new if current_template || !layout_name
 
       template(layout_name, nil, :layout)
+    end
+
+    # Gets the default layout that can be specified by the Rogerfile:
+    # roger.project.options[:renderer][:layout] = {
+    #   "html.erb" => "default"
+    # }
+    def get_default_layout(template, options)
+      source_ext = Renderer.source_extension_for(template.source_path)
+      options[:layout][source_ext] if options.key?(:layout)
     end
 
     # Will check the template nesting if we haven't already
