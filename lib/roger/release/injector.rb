@@ -70,11 +70,7 @@ module Roger
       when Hash
         get_complex_injection(injection, release)
       else
-        if injection.respond_to?(:to_s)
-          injection.to_s
-        else
-          raise ArgumentError, "Woah, what's this? #{injection.inspect}"
-        end
+        injection.to_s
       end
     end
 
