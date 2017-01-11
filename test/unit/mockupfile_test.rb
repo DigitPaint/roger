@@ -7,7 +7,7 @@ end
 
 module Roger
   # Test Roger Release
-  class ReleaseTest < ::Test::Unit::TestCase
+  class MockupFileTest < ::Test::Unit::TestCase
     def setup
       @project = Testing::MockProject.new
     end
