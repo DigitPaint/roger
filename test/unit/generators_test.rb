@@ -1,12 +1,17 @@
 # Generators register themself on the CLI module
 require "test_helper"
 require "./lib/roger/generators.rb"
+require "test_construct"
 
 require File.dirname(__FILE__) + "/../helpers/generators"
+require File.dirname(__FILE__) + "/../helpers/cli"
 
 module Roger
   # Test Roger Generators
   class GeneratorTest < ::Test::Unit::TestCase
+    include TestConstruct::Helpers
+    include TestCli
+
     def setup
       @cli = Cli::Base.new
 
@@ -37,21 +42,6 @@ module Roger
     end
 
     def test_cli_help_shows_all_available_generators
-    end
-
-    def test_default_generator
-      assert_includes Cli::Generate.tasks, "new"
-    end
-
-    def test_generator_generator
-      generators = Cli::Generate.new
-      name = "tralal"
-      path = "./tmp"
-      generators.invoke :generator, [name, path]
-      assert File.exist? "#{path}/#{name}_generator.rb"
-
-      # Remove generated generator
-      File.unlink "#{path}/#{name}_generator.rb"
     end
 
     def test_invoke_mocked_generator
