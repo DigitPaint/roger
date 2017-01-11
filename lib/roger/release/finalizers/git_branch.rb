@@ -58,8 +58,8 @@ module Roger::Release::Finalizers
         FileUtils.cp_r @release.build_path.to_s + "/.", clone_dir.to_s
 
         commands = [
-          %w(git add .), # 4. Add all files
-          %w(git commit -a -m) << "Release #{@release.scm.version}" # 5. Commit
+          %w(git add . ), # 4. Add all files
+          %w(git commit -q -a -m) << "Release #{@release.scm.version}" # 5. Commit
         ]
 
         # 6. Git push if in options
@@ -85,9 +85,9 @@ module Roger::Release::Finalizers
 
     def create_empty_branch(clone_dir, remote, branch)
       commands = [
-        %w(git init),
+        %w(git init -q),
         %w(git remote add origin) << remote,
-        %w(git checkout -b) << branch
+        %w(git checkout -q -b) << branch
       ]
 
       # Branch does not exist yet

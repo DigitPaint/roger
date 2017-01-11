@@ -44,10 +44,10 @@ module Roger
       finalizer = Roger::Release::Finalizers::GitBranch.new
       remote_repo = setup_construct(chdir: false)
 
-      `git init`
+      `git init -q`
 
       Dir.chdir(remote_repo.to_s) do
-        `git init --bare`
+        `git init -q --bare`
       end
 
       `git remote add origin #{Shellwords.escape(remote_repo.to_s)}`
