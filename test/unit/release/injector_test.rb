@@ -30,6 +30,17 @@ module Roger
       assert_equal "a1b", File.read(@target_file.to_s)
     end
 
+    def test_to_s_injection
+      injector = Roger::Release::Injector.new(
+        { "VAR" => 1 },
+        into: ["out"]
+      )
+
+      injector.call(@release)
+
+      assert_equal "a1b", File.read(@target_file.to_s)
+    end
+
     def test_regex_injection
       injector = Roger::Release::Injector.new(
         { /V.R/ => "1" },
