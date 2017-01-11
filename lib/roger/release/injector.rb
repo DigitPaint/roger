@@ -56,7 +56,7 @@ module Roger
             injected_vars << variable
           end
         end
-        if injected_vars.size > 0
+        unless injected_vars.empty?
           release.log(self, "Injected variables #{injected_vars.inspect} into #{f}")
         end
         File.open(f, "w") { |fh| fh.write c }
@@ -73,7 +73,7 @@ module Roger
         if injection.respond_to?(:to_s)
           injection.to_s
         else
-          fail ArgumentError, "Woah, what's this? #{injection.inspect}"
+          raise ArgumentError, "Woah, what's this? #{injection.inspect}"
         end
       end
     end
@@ -81,13 +81,13 @@ module Roger
     def get_complex_injection(injection, release)
       content = injection_content(injection, release)
 
-      fail ArgumentError, "No :content or :file specified" unless content
+      raise ArgumentError, "No :content or :file specified" unless content
 
       if injection[:processor]
         if tmpl = Tilt[injection[:processor]]
           (tmpl.new { content }).render
         else
-          fail ArgumentError, "Unknown processor #{injection[:processor]}"
+          raise ArgumentError, "Unknown processor #{injection[:processor]}"
         end
       else
         content

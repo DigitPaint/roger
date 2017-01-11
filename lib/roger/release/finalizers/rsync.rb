@@ -68,7 +68,7 @@ module Roger::Release::Finalizers
       output = `#{command.join(" ")}`
 
       # Check if rsync succeeded
-      fail "Rsync failed.\noutput:\n #{output}" unless $CHILD_STATUS.success?
+      raise "Rsync failed.\noutput:\n #{output}" unless $CHILD_STATUS.success?
     end
 
     def prompt_for_upload
@@ -81,7 +81,7 @@ module Roger::Release::Finalizers
       return if (@options.keys & must_have_keys).size == must_have_keys.size
 
       release.log(self, "Missing options: #{(must_have_keys - @options.keys).inspect}")
-      fail "Missing keys: #{(must_have_keys - @options.keys).inspect}"
+      raise "Missing keys: #{(must_have_keys - @options.keys).inspect}"
     end
 
     def prompt(question = "Do you wish to continue?")

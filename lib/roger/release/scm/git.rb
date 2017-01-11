@@ -15,7 +15,7 @@ module Roger
 
           path += ".git"
 
-          fail "Could not find suitable .git dir in #{path}" unless path.directory?
+          raise "Could not find suitable .git dir in #{path}" unless path.directory?
 
           path
         end

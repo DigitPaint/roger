@@ -63,7 +63,7 @@ module Roger
 
     def test_excludes
       files = @object.get_files(["**/*.js"], ["\Adir"])
-      expect = @files.grep(/\.js\Z/).reject { |f| f =~ /\Adir/ }
+      expect = @files.grep(/\.js\Z/).reject { |f| f.start_with?("dir") }
       assert_array_contains(expect, files)
     end
 

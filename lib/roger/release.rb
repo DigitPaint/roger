@@ -80,7 +80,7 @@ module Roger
       when :fixed
         @_scm = Release::Scm::Fixed.new
       else
-        fail "Unknown SCM #{options[:scm].inspect}"
+        raise "Unknown SCM #{options[:scm].inspect}"
       end
     end
 
@@ -240,7 +240,7 @@ module Roger
         rm_rf(build_path)
       end
 
-      unless target_path.exist? # rubocop:disable Style/GuardClause
+      unless target_path.exist?
         log self, "Creating target path \"#{target_path}\""
         mkdir target_path
       end
@@ -259,7 +259,6 @@ module Roger
         @stack.push([Roger::Release::Processors::UrlRelativizer.new, {}])
       end
 
-      # rubocop:disable Style/GuardClause
       unless find_in_stack(Roger::Release::Finalizers::Dir)
         @stack.push([Roger::Release::Finalizers::Dir.new, {}])
       end

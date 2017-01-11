@@ -183,7 +183,7 @@ module Roger
           (Pathname.new(current_template.source_path).dirname + pn).realpath
         else
           err = "Only within another template you can use relative paths"
-          fail ArgumentError, err
+          raise ArgumentError, err
         end
       else
         pn.realpath
@@ -230,7 +230,7 @@ module Roger
       err = "Recursive render detected for '#{template.source_path}'"
       err += " in '#{current_template.source_path}'"
 
-      fail ArgumentError, err
+      raise ArgumentError, err
     end
 
     # Will instantiate a Template or throw an ArgumentError
@@ -239,14 +239,14 @@ module Roger
       if source
         template = Template.new(source, @context, source_path: path)
       else
-        case type
-        when :partial
-          template_path = find_partial(path)
-        when :layout
-          template_path = find_layout(path)
-        else
-          template_path = path
-        end
+        template_path = case type
+                        when :partial
+                          find_partial(path)
+                        when :layout
+                          find_layout(path)
+                        else
+                          path
+                        end
 
         if template_path && File.exist?(template_path)
           template = Template.open(template_path, @context)
@@ -263,7 +263,7 @@ module Roger
     def template_not_found!(type, path)
       err = "No such #{type} #{path}"
       err += " in #{@current_template.source_path}" if @current_template
-      fail ArgumentError, err
+      raise ArgumentError, err
     end
 
     # Find a partial

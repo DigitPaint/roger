@@ -21,7 +21,7 @@ module Roger
       desc "test", "Run the test"
       def test
         ok = Roger::Cli::Base.project.test.run_test!(self.class.stack_index)
-        fail(Thor::Error, "The test failed") unless ok
+        raise(Thor::Error, "The test failed") unless ok
       end
     end
 
@@ -37,10 +37,10 @@ module Roger
 
       def register(name, test, cli = nil)
         if map.key?(name)
-          fail ArgumentError, "Another test has already claimed the name #{name.inspect}"
+          raise ArgumentError, "Another test has already claimed the name #{name.inspect}"
         end
 
-        fail ArgumentError, "Name must be a symbol" unless name.is_a?(Symbol)
+        raise ArgumentError, "Name must be a symbol" unless name.is_a?(Symbol)
         map[name] = test
         cli_map[name] = cli if cli
       end
@@ -122,7 +122,7 @@ module Roger
         usage = "#{name} #{klass.arguments.map(&:banner).join(' ')}"
         thor_class = klass
       else
-        usage = "#{name}"
+        usage = name.to_s
         thor_class = Class.new(Roger::Test::Cli)
       end
 

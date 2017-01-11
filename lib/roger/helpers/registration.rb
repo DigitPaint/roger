@@ -19,8 +19,8 @@ module Roger
 
         type = to_s.split("::").last
 
-        fail ArgumentError, "#{type} name '#{name.inspect}' already in use" if map.key?(name)
-        fail ArgumentError, "Name must be a symbol" unless name.is_a?(Symbol)
+        raise ArgumentError, "#{type} name '#{name.inspect}' already in use" if map.key?(name)
+        raise ArgumentError, "Name must be a symbol" unless name.is_a?(Symbol)
 
         map[name] = processor
       end

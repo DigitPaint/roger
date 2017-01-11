@@ -66,8 +66,8 @@ module Roger
     def partial_path=(p)
       @partial_path = single_or_multiple_paths(p)
     end
-    alias_method :partials_path, :partial_path
-    alias_method :partials_path=, :partial_path=
+    alias partials_path partial_path
+    alias partials_path= partial_path=
 
     def layouts_path=(p)
       @layouts_path = single_or_multiple_paths(p)

@@ -8,7 +8,7 @@ module Generators
 
     def test
       # Somewhat ugly way of checking
-      fail NotImplementedError
+      raise NotImplementedError
     end
   end
 
@@ -19,7 +19,7 @@ module Generators
     desc "Returns a project"
     def test
       # Somewhat ugly way of checking
-      fail StandardError if @project
+      raise StandardError if @project
     end
   end
 end

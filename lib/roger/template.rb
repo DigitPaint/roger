@@ -59,11 +59,9 @@ module Roger
       return @_real_source_path if @_real_source_path_cached
 
       @_real_source_path_cached = true
-      if File.exist?(source_path)
-        @_real_source_path = Pathname.new(source_path).realpath
-      else
-        @_real_source_path = nil
-      end
+      @_real_source_path = if File.exist?(source_path)
+                             Pathname.new(source_path).realpath
+                           end
     end
 
     protected
@@ -73,11 +71,11 @@ module Roger
       @current_tilt_template = template_class
       template = template_class.new(source_path) { src }
 
-      if block_given?
-        block_content = yield
-      else
-        block_content = ""
-      end
+      block_content = if block_given?
+                        yield
+                      else
+                        ""
+                      end
 
       template.render(@context, locals) do |name|
         if name
@@ -92,20 +90,18 @@ module Roger
     def extract_front_matter(source)
       fm_regex = /\A(---\s*\n.*?\n?)^(---\s*$\n?)/m
 
-      if match = source.match(fm_regex)
-        source = source.sub(fm_regex, "")
+      return [{}, source] unless match = source.match(fm_regex)
 
-        begin
-          data = (YAML.load(match[1]) || {}).inject({}) do |memo, (k, v)|
-            memo[k.to_sym] = v
-            memo
-          end
-        rescue *YAML_ERRORS => e
-          puts "YAML Exception: #{e.message}"
-          return false
+      source = source.sub(fm_regex, "")
+
+      begin
+        data = (YAML.load(match[1]) || {}).inject({}) do |memo, (k, v)|
+          memo[k.to_sym] = v
+          memo
         end
-      else
-        return [{}, source]
+      rescue *YAML_ERRORS => e
+        puts "YAML Exception: #{e.message}"
+        return false
       end
 
       [data, source]
