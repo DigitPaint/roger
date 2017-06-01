@@ -1,5 +1,9 @@
 # Changelog
 
+## Version 1.7.1
+* Allow setting defaults per template extension.
+* Minor fixes
+
 ## Version 1.7.0
 * Finalizers and processors now use the same stack. This means you can run processors after certain finalizers
 * Finalizers and processors now have exactly the same API
