@@ -67,6 +67,14 @@ module Roger
 
       result = render_erb_template "<% partial 'test/yield' do %><%= 'CONTENT' %><% end %>"
       assert_equal result, "B-CONTENT-A"
+
+      result = render_erb_template "<% partial 'test/yield' do %>|<%= [1,2].join(',') %>|<% end %>"
+      assert_equal result, "B-|1,2|-A"
+    end
+
+    def test_partial_with_code_block
+      result = render_erb_template "<% partial 'test/array' do [1,2,3,4] end %>"
+      assert_equal result, "1234"
     end
 
     def test_partial_with_block_without_yield

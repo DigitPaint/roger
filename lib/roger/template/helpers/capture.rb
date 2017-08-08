@@ -48,7 +48,7 @@ module Roger
 
           eval "@_erbout_tmp#{counter} = _erbout", block.binding
           eval "_erbout = \"\"", block.binding
-          t = Tilt::ERBTemplate.new { "<%= yield %>" }
+          t = Tilt::ERBTemplate.new { "<% return yield %>" }
           t.render(&block)
         ensure
           eval "_erbout = @_erbout_tmp#{counter}", block.binding
