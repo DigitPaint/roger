@@ -21,6 +21,14 @@ module Roger
         assert response.body.include?("ERB format")
         assert_equal "Roger", response.headers["X-Handled-By"]
       end
+
+      def test_middleware_does_not_render_unrenderables
+        @project.construct.file "html/myjpeg.jpg", "JPG"
+        request = ::Rack::MockRequest.new(@app)
+        response = request.get("/myjpeg.jpg")
+
+        assert response.body.include?("JPG")
+        assert_equal nil, response.headers["X-Handled-By"]
       end
 
       def test_renderer_options_are_passed

@@ -23,7 +23,8 @@ module Roger
         url = env["PATH_INFO"]
         env["MOCKUP_PROJECT"] = env["roger.project"] || @project
 
-        if template_path = @resolver.url_to_path(url)
+        template_path = @resolver.url_to_path(url)
+        if template_path && ::Roger::Renderer.will_render?(template_path)
           env["rack.errors"].puts "Rendering template #{template_path.inspect} (#{url.inspect})"
           build_response(template_path, env).finish
         else
