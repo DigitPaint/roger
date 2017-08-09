@@ -43,6 +43,7 @@ module Roger
         mime = ::Rack::Mime.mime_type(File.extname(template_path), "text/html")
         ::Rack::Response.new do |res|
           res.headers["Content-Type"] = mime if mime
+          res.headers["X-Handled-By"] = "Roger"
           res.status = 200
           res.write renderer.render(template_path, @project.options[:renderer] || {})
         end

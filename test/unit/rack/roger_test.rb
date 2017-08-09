@@ -19,6 +19,8 @@ module Roger
         response = request.get("/erb")
 
         assert response.body.include?("ERB format")
+        assert_equal "Roger", response.headers["X-Handled-By"]
+      end
       end
 
       def test_renderer_options_are_passed
