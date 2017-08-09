@@ -1,5 +1,8 @@
 # Changelog
 
+## Version 1.7.2
+* Return from partials instead of rendering partial content as string. This allows us to have code in ruby blocks instead of just more ERB.
+
 ## Version 1.7.1
 * Allow setting defaults per template extension.
 * Minor fixes
