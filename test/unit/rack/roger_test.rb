@@ -31,6 +31,15 @@ module Roger
         assert_equal nil, response.headers["X-Handled-By"]
       end
 
+      def test_middleware_does_not_render_unwanteds
+        @project.construct.file "html/mysass.scss", ".scss{}"
+        request = ::Rack::MockRequest.new(@app)
+        response = request.get("/mysass.scss")
+
+        assert response.body.include?(".scss{}")
+        assert_equal nil, response.headers["X-Handled-By"]
+      end
+
       def test_renderer_options_are_passed
         @project.options[:renderer][:layout] = {
           "html.erb" => "bracket"
