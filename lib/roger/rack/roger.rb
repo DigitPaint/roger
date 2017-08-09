@@ -10,7 +10,7 @@ module Roger
     # Roger middleware that processe roger templates
     class Roger
       include ::Roger::Helpers::GetFiles
-      attr_reader :project
+      attr_reader :project, :options
 
       def default_options
         {

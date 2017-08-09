@@ -59,5 +59,26 @@ module Roger
       # This is a bit of a clunky comparison but it suffices for now
       assert_equal @project.object_id.to_s, request.get("/").body
     end
+
+    def test_application_options
+      @server.application_options = { test_option: true }
+
+      test = Class.new do
+        def initialize(app)
+          @app = app
+        end
+
+        def call(_env)
+          [200, {}, [@app.options[:test_option].to_s]]
+        end
+      end
+
+      @server.use test
+
+      request = ::Rack::MockRequest.new(@server.send(:application))
+
+      # This is a bit of a clunky comparison but it suffices for now
+      assert_equal "true", request.get("/").body
+    end
   end
 end
