@@ -22,7 +22,7 @@ module Roger
         @helpers || []
       end
 
-      # Will the renderer render this path to something meaningfull?
+      # Will the renderer render this path to something meaningful?
       def will_render?(path)
         Tilt.templates_for(path.to_s).any?
       end
