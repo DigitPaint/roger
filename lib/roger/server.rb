@@ -28,6 +28,11 @@ module Roger
 
     attr_accessor :port, :handler, :host, :auto_port
 
+    # @attr_accessor [Hash] Options pass to ::Roger::Rack::Roger initialization
+    #
+    # @see ::Roger::Rack:Roger
+    attr_accessor :application_options
+
     def initialize(project, options = {})
       @project = project
 
@@ -143,7 +148,7 @@ module Roger
     def application
       return @app if @app
 
-      @stack.run Rack::Roger.new(project)
+      @stack.run Rack::Roger.new(project, @application_options || {})
 
       @app = @stack
     end

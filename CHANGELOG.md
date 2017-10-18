@@ -1,5 +1,13 @@
 # Changelog
 
+## Edge
+* Roger Rack application now adheres to match/skip options. Pass them in the rogerfile as follows:
+    ```
+    roger.server do |s|
+      s.application_options = { match: [], skip: [] }
+    end
+    ```
+
 ## Version 1.7.2
 * Return from partials instead of rendering partial content as string. This allows us to have code in ruby blocks instead of just more ERB.
 

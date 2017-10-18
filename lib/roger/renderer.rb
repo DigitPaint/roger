@@ -22,6 +22,11 @@ module Roger
         @helpers || []
       end
 
+      # Will the renderer render this path to something meaningful?
+      def will_render?(path)
+        Tilt.templates_for(path.to_s).any?
+      end
+
       # Try to infer the final extension of the output file.
       def target_extension_for(path)
         if type = MIME::Types[target_mime_type_for(path)].first

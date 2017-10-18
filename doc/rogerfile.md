@@ -21,6 +21,8 @@ Sass::Plugin.options[:css_location] = "./html/stylesheets"
 # Server is a regular Rack interface.
 roger.serve do |server|
   server.use :sass
+
+  server.application_options = {match: ["**/*.html.erb"]} # Config for Rack application (call is optional)
 end
 
 # Define tests
