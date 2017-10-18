@@ -1,6 +1,6 @@
 # Changelog
 
-## Edge
+## Version 1.8.0
 * Roger Rack application now adheres to match/skip options. Pass them in the rogerfile as follows:
     ```
     roger.server do |s|
@@ -50,7 +50,7 @@
 
 ## Version 1.5.0
 * Roger won't be tested on Ruby 1.9.x anymore
-* The way we render templates has been revamped. It is now possible to have multi-pass templates so you can do `.md.erb` which will first be processed by `erb` and then by the `md` tilt template handler. 
+* The way we render templates has been revamped. It is now possible to have multi-pass templates so you can do `.md.erb` which will first be processed by `erb` and then by the `md` tilt template handler.
 * The way templates are searched has changed to be more predictable. You may notice the change when you have the same filenames with different extensions.
 * You can now use local partials by just using an underscore as prefix. So `<%= partial('bla') %>` will look for `_bla.*` relative to the current template first and `bla.*` in the partials directory second (current behaviour).
 * Template recursion will be detected and prevented instead of giving a stack overflow.
@@ -110,11 +110,11 @@ This is a dud. It's identical to 1.3.1. Don't use.
 * Fix missing variables in release
 
 ## Version 1.2.1
-* Fix missing env (https://github.com/DigitPaint/roger/issues/24) 
+* Fix missing env (https://github.com/DigitPaint/roger/issues/24)
 
 ## Version 1.2.0
 * `roger.project` is now always in `env` when running as a project or as a release. Use this in favor of `env["MOCKUP_PROJECT"]`
-* All Roger code now is linted by Rubocop. More tests have been added and more documentation as well. Still not everything may have been covered by the tests. 
+* All Roger code now is linted by Rubocop. More tests have been added and more documentation as well. Still not everything may have been covered by the tests.
 
 
 ## Version 1.1.3
