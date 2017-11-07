@@ -14,7 +14,7 @@ module Roger
 
       def default_options
         {
-          match: ["**/*.{html,md,html.erb}"],
+          match: ["**/*.{html,md,erb}"],
           skip: []
         }
       end
