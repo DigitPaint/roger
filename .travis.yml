@@ -1,7 +1,7 @@
 language: ruby
 rvm:
-  - 2.3.0
-  - 2.3.3
+  - 2.3.7
+  - 2.5.1
   - ruby-head
 before_script:
   - git config --global user.email "travis-ci@digitpaint.nl"
