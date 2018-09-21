@@ -55,4 +55,3 @@ module Roger::Release::Processors
 end
 
 require File.dirname(__FILE__) + "/processors/mockup"
-require File.dirname(__FILE__) + "/processors/url_relativizer"

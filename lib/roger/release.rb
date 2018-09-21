@@ -247,16 +247,12 @@ module Roger
     end
 
     # Checks if the project will be runned
-    # If config[:blank] is true it will automatically add UrlRelativizer or Mockup processor
+    # If config[:blank] is true it will automatically add Mockup processor
     def validate_stack!
       return if config[:blank]
 
       unless find_in_stack(Roger::Release::Processors::Mockup)
         @stack.unshift([Roger::Release::Processors::Mockup.new, {}])
-      end
-
-      unless find_in_stack(Roger::Release::Processors::UrlRelativizer)
-        @stack.push([Roger::Release::Processors::UrlRelativizer.new, {}])
       end
 
       unless find_in_stack(Roger::Release::Finalizers::Dir)

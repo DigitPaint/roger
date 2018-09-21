@@ -34,7 +34,6 @@ Gem::Specification.new do |s|
   s.add_dependency("rack", [">= 2.0.0"])
   s.add_dependency("tilt", ["~> 2.0.1"])
   s.add_dependency("mime-types", ["~> 3.1"])
-  s.add_dependency("hpricot", ["= 0.8.6"])
   s.add_dependency("redcarpet", [">= 3.1.1"])
   s.add_dependency("test_construct", "~> 2.0")
 

@@ -17,5 +17,4 @@ end
 
 mockup.release do |r|
   r.use :mockup
-  r.use :url_relativizer, :skip => [/non-relative.*/]
 end

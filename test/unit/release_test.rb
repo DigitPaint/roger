@@ -43,14 +43,6 @@ module Roger
       assert_equal Roger::Release::Processors::Mockup, release.stack.first.first.class
     end
 
-    def test_release_should_add_url_relativizer_by_default
-      release = @rogerfile.release
-      release.run!
-
-      assert !release.stack.empty?
-      assert_equal Roger::Release::Processors::UrlRelativizer, release.stack[-2].first.class
-    end
-
     def test_release_should_add_dir_finalizer_by_default
       release = @rogerfile.release
       release.run!
