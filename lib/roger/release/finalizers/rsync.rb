@@ -60,6 +60,7 @@ module Roger::Release::Finalizers
       command = [
         options[:rsync],
         "-az",
+        "--delete",
         Shellwords.escape(local_path),
         Shellwords.escape(target_path)
       ]
