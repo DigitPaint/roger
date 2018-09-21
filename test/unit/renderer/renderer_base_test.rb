@@ -120,7 +120,7 @@ module Roger
         # "md.erb" => "html",
         "css.erb" => "css",
         "json.erb" => "json",
-        "js.erb" => "js"
+        "js.erb" => "ecma"
       }
 
       mime_types.each do |ext, ext_out|
