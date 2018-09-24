@@ -1,5 +1,11 @@
 # Changelog
 
+## Version 1.9.0
+* Render all *.erb files by default
+* Update dependencies
+* Rsync finalizer now uses `--delete`
+* Removed hpricot dependency and URL relativizer (now lives in roger_url)relativizer gem)
+
 ## Version 1.8.0
 * Roger Rack application now adheres to match/skip options. Pass them in the rogerfile as follows:
     ```
