@@ -235,15 +235,22 @@ module Roger
     # Checks if build path exists (and cleans it up)
     # Checks if target path exists (if not, creates it)
     def validate_paths!
-      if build_path.exist?
-        log self, "Cleaning up previous build \"#{build_path}\""
-        rm_rf(build_path)
-      end
+      ensure_clean_build_path!
+      ensure_existing_target_path!
+    end
 
-      unless target_path.exist?
-        log self, "Creating target path \"#{target_path}\""
-        mkdir target_path
-      end
+    def ensure_clean_build_path!
+      return unless build_path.exist?
+
+      log self, "Cleaning up previous build \"#{build_path}\""
+      rm_rf(build_path)
+    end
+
+    def ensure_existing_target_path!
+      return if target_path.exist?
+
+      log self, "Creating target path \"#{target_path}\""
+      mkdir target_path
     end
 
     # Checks if the project will be runned
@@ -251,13 +258,20 @@ module Roger
     def validate_stack!
       return if config[:blank]
 
-      unless find_in_stack(Roger::Release::Processors::Mockup)
-        @stack.unshift([Roger::Release::Processors::Mockup.new, {}])
-      end
+      ensure_mockup_processor_in_stack!
+      ensure_dir_finalizer_in_stack!
+    end
 
-      unless find_in_stack(Roger::Release::Finalizers::Dir)
-        @stack.push([Roger::Release::Finalizers::Dir.new, {}])
-      end
+    def ensure_mockup_processor_in_stack!
+      return if find_in_stack(Roger::Release::Processors::Mockup)
+
+      @stack.unshift([Roger::Release::Processors::Mockup.new, {}])
+    end
+
+    def ensure_dir_finalizer_in_stack!
+      return if find_in_stack(Roger::Release::Finalizers::Dir)
+
+      @stack.push([Roger::Release::Finalizers::Dir.new, {}])
     end
 
     # Find a processor in the stack

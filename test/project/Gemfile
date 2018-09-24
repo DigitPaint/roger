@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 
+gem "pry"
+gem "redcarpet"
 gem "roger", path: File.dirname(__FILE__) + "/../../"
 gem "sass"
 gem "yui-compressor"
-gem "redcarpet"
-gem "pry"

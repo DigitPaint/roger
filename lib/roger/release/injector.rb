@@ -80,11 +80,10 @@ module Roger
       raise ArgumentError, "No :content or :file specified" unless content
 
       if injection[:processor]
-        if tmpl = Tilt[injection[:processor]]
-          (tmpl.new { content }).render
-        else
-          raise ArgumentError, "Unknown processor #{injection[:processor]}"
-        end
+        tmpl = Tilt[injection[:processor]]
+        raise(ArgumentError, "Unknown processor #{injection[:processor]}") unless tmpl
+
+        (tmpl.new { content }).render
       else
         content
       end

@@ -12,10 +12,12 @@ module Roger
     def self.register(name, klass = nil)
       name, klass = generator_name(name, klass)
 
-      raise(
-        ArgumentError,
-        "Generator name '#{name.inspect}' already in use"
-      ) if Cli::Generate.tasks.key?(name)
+      if Cli::Generate.tasks.key?(name)
+        raise(
+          ArgumentError,
+          "Generator name '#{name.inspect}' already in use"
+        )
+      end
 
       usage = "#{name} #{klass.arguments.map(&:banner).join(' ')}"
       long_desc = klass.desc || "Run #{name} generator"

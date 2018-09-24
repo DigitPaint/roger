@@ -95,7 +95,7 @@ module Roger
       source = source.sub(fm_regex, "")
 
       begin
-        data = (YAML.load(match[1]) || {}).inject({}) do |memo, (k, v)|
+        data = (YAML.safe_load(match[1]) || {}).inject({}) do |memo, (k, v)|
           memo[k.to_sym] = v
           memo
         end

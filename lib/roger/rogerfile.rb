@@ -15,7 +15,7 @@ module Roger
       # @deprecated Please use roger method instead.
       def mockup
         warn("The use of mockup has been deprecated; please use roger instead")
-        warn("  on #{caller.first}")
+        warn("  on #{caller(0..0).first}")
         roger
       end
 

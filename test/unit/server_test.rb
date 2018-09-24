@@ -36,7 +36,6 @@ module Roger
 
       next_port = @server.send(:free_port_for_host_above, @host, port)
       assert next_port > port
-
     ensure
       s.close
     end
@@ -44,8 +43,7 @@ module Roger
     # Test to see if env["roger.project"] is set
     def test_env_roger_project_is_set
       test = Class.new do
-        def initialize(_app)
-        end
+        def initialize(_app); end
 
         def call(env)
           [200, {}, [env["roger.project"].object_id.to_s]]

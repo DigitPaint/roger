@@ -58,7 +58,7 @@ module Roger::Release::Finalizers
         FileUtils.cp_r @release.build_path.to_s + "/.", clone_dir.to_s
 
         commands = [
-          %w(git add . ), # 4. Add all files
+          %w(git add .), # 4. Add all files
           %w(git commit -q -a -m) << "Release #{@release.scm.version}" # 5. Commit
         ]
 

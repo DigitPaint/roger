@@ -19,9 +19,9 @@ module Roger
 
       # Running a blank release
       @rogerfile.release(blank: true) do |r|
-        r.use proc{|release|
+        r.use(proc { |release|
           assert_equal release.project.mode, :release
-        }
+        })
       end
 
       @project.release.run!

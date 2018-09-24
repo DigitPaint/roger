@@ -1,4 +1,5 @@
 # encoding: UTF-8
+
 require "test_helper"
 require "./lib/roger/test.rb"
 require "roger/testing/mock_project"
@@ -27,9 +28,9 @@ module Roger
       assert_equal @project.mode, nil
 
       @rogerfile.test do |t|
-        t.use proc{|test|
+        t.use(proc { |test|
           assert_equal test.project.mode, :test
-        }
+        })
       end
 
       @project.test.run!

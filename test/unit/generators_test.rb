@@ -41,8 +41,7 @@ module Roger
       assert_includes Cli::Generate.tasks, "mockery"
     end
 
-    def test_cli_help_shows_all_available_generators
-    end
+    def test_cli_help_shows_all_available_generators; end
 
     def test_invoke_mocked_generator
       Roger::Generators.register ::Generators::MockedGenerator
