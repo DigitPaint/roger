@@ -11,6 +11,11 @@ steps:
   inputs:
     versionSpec: '>= 2.5'
 
+- script: |
+    git config --global user.email "foo@example.com"
+    git config --global user.name "Foo Bar"
+  displayName: 'Configure Git for tests that call out to Git'
+
 - script: gem install bundler
   displayName: 'gem install bundler'
 
