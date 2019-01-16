@@ -58,15 +58,15 @@ module Roger::Release::Finalizers
         FileUtils.cp_r @release.build_path.to_s + "/.", clone_dir.to_s
 
         commands = [
-          %w(git add .), # 4. Add all files
-          %w(git commit -q -a -m) << "Release #{@release.scm.version}" # 5. Commit
+          "git add .", # 4. Add all files
+          %(git commit -q -m "Release #{Shellwords.escape(release.scm.version)}") # 5. Commit
         ]
 
         # 6. Git push if in options
-        commands << (%w(git push origin) << branch) if @options[:push]
+        commands << ("git push origin" << Shellwords.escape(branch)) if @options[:push]
 
         commands.each do |command|
-          `#{Shellwords.join(command)}`
+          `#{command}`
         end
       end
     end
