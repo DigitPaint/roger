@@ -79,7 +79,7 @@ module Roger
       # .html.erb will look at .html
       def mime_type_from_sub_extension(path)
         parts = File.basename(path.to_s).split(".")
-        MIME::Types.type_for(parts[0..-2].join(".")).first if parts.size > 2
+        MIME::Types.type_for(parts[0..-2].join(".")).sort.first if parts.size > 2
       end
     end
 
