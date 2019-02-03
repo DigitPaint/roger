@@ -86,7 +86,7 @@ module Roger
 
           version = `git --git-dir=#{safe_git_dir} describe --tags #{ref} 2>&1`
 
-          if $CHILD_STATUS.to_i > 0
+          if $CHILD_STATUS.to_i.positive?
             # HEAD is not a tagged version, get the short SHA1 instead
             version = `git --git-dir=#{safe_git_dir} show #{ref} --format=format:"%h" -s 2>&1`
           else
