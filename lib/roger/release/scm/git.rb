@@ -50,12 +50,12 @@ module Roger
 
         def get_previous_tag_name
           # Get list of SHA1 that have a ref
-          sha1s = `git --git-dir=#{safe_git_dir} log --pretty='%H' --simplify-by-decoration`
+          sha1s = `git --git-dir=#{safe_git_dir} log --pretty="%H" --simplify-by-decoration`
           sha1s = sha1s.split("\n")
           tags = []
           while tags.size < 2 && sha1s.any?
             sha1 = sha1s.shift
-            tag = `git --git-dir=#{safe_git_dir} describe --tags --exact-match #{sha1} 2>/dev/null`
+            tag = `git --git-dir=#{safe_git_dir} describe --tags --exact-match #{sha1}`
             tag = tag.strip
             tags << tag unless tag.empty?
           end
@@ -84,11 +84,11 @@ module Roger
         def scm_version(ref)
           return nil unless File.exist?(git_dir)
 
-          version = `git --git-dir=#{safe_git_dir} describe --tags #{ref} 2>&1`
+          version = `git --git-dir=#{safe_git_dir} describe --tags #{ref}`
 
           if $CHILD_STATUS.to_i.positive?
             # HEAD is not a tagged version, get the short SHA1 instead
-            version = `git --git-dir=#{safe_git_dir} show #{ref} --format=format:"%h" -s 2>&1`
+            version = `git --git-dir=#{safe_git_dir} show #{ref} --format=format:"%h" -s`
           else
             # HEAD is a tagged version, if version is prefixed with "v" it will be stripped off
             version.gsub!(/^v/, "")
@@ -105,7 +105,7 @@ module Roger
           return nil unless File.exist?(git_dir)
 
           # Get the date in epoch time
-          date = `git --git-dir=#{safe_git_dir} show #{ref} --format=format:"%ct" -s 2>&1`
+          date = `git --git-dir=#{safe_git_dir} show #{ref} --format=format:"%ct" -s`
           Time.at(date.to_i) if date =~ /\d+/
         rescue RuntimeError
           nil
