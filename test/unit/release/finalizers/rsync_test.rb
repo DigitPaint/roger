@@ -17,6 +17,9 @@ module Roger
 
       # A target dir
       @target_path = setup_construct(chdir: false)
+
+      omit("Skipping rsync test on Windows") if RUBY_PLATFORM.match("mswin") ||
+                                                RUBY_PLATFORM.match("mingw")
     end
 
     # called after every single test
