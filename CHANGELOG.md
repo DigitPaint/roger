@@ -1,5 +1,8 @@
 # Changelog
 
+## Version 1.9.1
+* Make Roger work on Windows (except the rsync finalizer)
+
 ## Version 1.9.0
 * Render all *.erb files by default
 * Update dependencies
