@@ -140,7 +140,7 @@ module Roger
       Addrinfo.tcp(host, port).listen.close
 
       true
-    rescue SocketError, Errno::EADDRINUSE
+    rescue SocketError, Errno::EADDRINUSE, Errno::EACCES
       false
     end
 

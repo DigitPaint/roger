@@ -217,7 +217,7 @@ module Roger
       relative_to = Pathname.new(File.dirname(relative_to.to_s))
 
       # If relative_to is an absolute path
-      if relative_to.to_s =~ %r{\A/}
+      if relative_to.absolute?
         relative_to = relative_to.relative_path_from(base).cleanpath
       end
 

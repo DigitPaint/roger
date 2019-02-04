@@ -48,7 +48,8 @@ module Roger
         c.directory "template" do |t|
           system("git init -q")
           t.file "gitone"
-          system("git add gitone; git commit -q -am 'test'")
+          system("git add gitone")
+          system("git commit -q -am 'test'")
         end
 
         git_path = "file://#{c + 'template/.git'}"
