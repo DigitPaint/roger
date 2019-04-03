@@ -24,8 +24,7 @@ module Roger
     # @option config [String, Pathname]:build_path Temporary path used to build the release
     # @option config [Boolean] :cleanup_build Wether or not to remove the build_path after we're
     #   done (default = true)
-    # @option config [Array,String, nil] :cp CP command to use; Array will be escaped with
-    #   Shellwords. Pass nil to get native Ruby CP. (default = ["cp", "-RL"])
+    # @option config [lambda] :cp Function to be called for copying
     # @option config [Boolean] :blank Keeps the release clean, don't automatically add any
     #   processors or finalizers (default = false)
     def initialize(project, config = {})
@@ -35,7 +34,18 @@ module Roger
         source_path: project.html_path.realpath,
         target_path: real_project_path + "releases",
         build_path: real_project_path + "build",
-        cp: ["cp", "-RL"],
+        cp: lambda do |source, dest|
+          if RUBY_PLATFORM.match("mswin") || RUBY_PLATFORM.match("mingw")
+            unless system(["echo d | xcopy", "/E", "/Y", source.to_s.gsub("/", "\\"),
+                          dest.to_s.gsub("/", "\\")].join(" "))
+              raise "Could not copy build directory using xcopy"
+            end
+          else
+            unless system(Shellwords.join(["cp", "-LR", "#{source}/", dest.to_s]))
+              raise "Could not copy build directory using cp"
+            end
+          end
+        end,
         blank: false,
         cleanup_build: true
       }
@@ -281,16 +291,11 @@ module Roger
 
     def copy_source_path_to_build_path!
       if config[:cp]
-        copy_source_path_to_build_path_using_system
+        config[:cp].call(source_path, build_path)
       else
         mkdir(build_path)
         cp_r(source_path.children, build_path)
       end
-    end
-
-    def copy_source_path_to_build_path_using_system
-      command = [config[:cp]].flatten
-      system(Shellwords.join(command + ["#{source_path}/", build_path.to_s]))
     end
 
     def run_stack!
