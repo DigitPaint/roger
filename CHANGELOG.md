@@ -1,5 +1,8 @@
 # Changelog
 
+## Version 1.10.0
+* Make release-copy command a configurable lambda and use xcopy on Windows by default
+
 ## Version 1.9.1
 * Make Roger work on Windows (except the rsync finalizer)
 

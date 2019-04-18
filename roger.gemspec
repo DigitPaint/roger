@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
   s.name = "roger"
   s.version = Roger::VERSION
 
-  s.authors = ["Flurin Egger", "Edwin van der Graaf", "Joran Kapteijns"]
+  s.authors = ["Flurin Egger", "Edwin van der Graaf", "Joran Kapteijns", "Hans Krutzer"]
   s.email = ["info@digitpaint.nl", "flurin@digitpaint.nl"]
   s.homepage = "http://github.com/digitpaint/roger"
   s.summary = "Roger is a set of tools to create self-containing HTML mockups."
