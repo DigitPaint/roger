@@ -27,6 +27,7 @@ module Roger
     # @option config [lambda] :cp Function to be called for copying
     # @option config [Boolean] :blank Keeps the release clean, don't automatically add any
     #   processors or finalizers (default = false)
+    # rubocop:disable all
     def initialize(project, config = {})
       real_project_path = project.path.realpath
       defaults = {
@@ -36,8 +37,8 @@ module Roger
         build_path: real_project_path + "build",
         cp: lambda do |source, dest|
           if RUBY_PLATFORM.match("mswin") || RUBY_PLATFORM.match("mingw")
-            unless system(["echo d | xcopy", "/E", "/Y", source.to_s.gsub("/", "\\"),
-                          dest.to_s.gsub("/", "\\")].join(" "))
+            unless system(["echo d | xcopy", "/E", "/Y", source.to_s.tr("/", "\\"),
+                           dest.to_s.tr("/", "\\")].join(" "))
               raise "Could not copy build directory using xcopy"
             end
           else
